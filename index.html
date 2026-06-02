@@ -1,0 +1,368 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>HRIS Team — Open Tickets</title>
+  <style>
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+    body {
+      font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
+      background: #f0f2f5;
+      color: #1a1a2e;
+      min-height: 100vh;
+    }
+
+    /* ── Header ── */
+    header {
+      background: linear-gradient(135deg, #002147 0%, #003d80 100%);
+      color: #fff;
+      padding: 28px 40px 24px;
+      display: flex;
+      align-items: flex-end;
+      justify-content: space-between;
+      flex-wrap: wrap;
+      gap: 12px;
+    }
+    header h1 {
+      font-size: 1.6rem;
+      font-weight: 700;
+      letter-spacing: -0.3px;
+    }
+    header .subtitle {
+      font-size: 0.85rem;
+      opacity: 0.75;
+      margin-top: 4px;
+    }
+    .last-updated {
+      font-size: 0.8rem;
+      opacity: 0.7;
+      text-align: right;
+    }
+
+    /* ── Summary bar ── */
+    .summary-bar {
+      display: flex;
+      gap: 16px;
+      padding: 20px 40px;
+      background: #fff;
+      border-bottom: 1px solid #e0e4ea;
+      flex-wrap: wrap;
+    }
+    .stat-card {
+      background: #f7f9fc;
+      border: 1px solid #dce1ea;
+      border-radius: 10px;
+      padding: 14px 24px;
+      min-width: 160px;
+      text-align: center;
+    }
+    .stat-card .stat-number {
+      font-size: 2rem;
+      font-weight: 700;
+      color: #002147;
+      line-height: 1;
+    }
+    .stat-card .stat-number.red { color: #c0392b; }
+    .stat-card .stat-label {
+      font-size: 0.78rem;
+      color: #6b7280;
+      margin-top: 5px;
+      text-transform: uppercase;
+      letter-spacing: 0.4px;
+    }
+
+    /* ── Main content ── */
+    main {
+      padding: 32px 40px;
+      max-width: 1400px;
+      margin: 0 auto;
+    }
+
+    /* ── Person sections ── */
+    .person-section {
+      background: #fff;
+      border-radius: 12px;
+      box-shadow: 0 1px 4px rgba(0,0,0,.07);
+      margin-bottom: 28px;
+      overflow: hidden;
+    }
+    .person-section h2 {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      padding: 16px 24px;
+      background: #f7f9fc;
+      border-bottom: 1px solid #e0e4ea;
+      font-size: 1rem;
+    }
+    .person-name { font-weight: 600; color: #002147; }
+    .person-count {
+      font-size: 0.82rem;
+      background: #002147;
+      color: #fff;
+      border-radius: 20px;
+      padding: 3px 12px;
+      font-weight: 500;
+    }
+
+    /* ── Unassigned section ── */
+    .unassigned-section {
+      background: #fff;
+      border-radius: 12px;
+      box-shadow: 0 1px 4px rgba(0,0,0,.07);
+      margin-bottom: 28px;
+      overflow: hidden;
+      border: 2px solid #e74c3c;
+    }
+    .unassigned-section h2 {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      padding: 16px 24px;
+      background: #fdf2f2;
+      border-bottom: 1px solid #f5c6c6;
+      font-size: 1rem;
+    }
+    .unassigned-label { font-weight: 600; color: #c0392b; }
+    .unassigned-count {
+      font-size: 0.82rem;
+      background: #c0392b;
+      color: #fff;
+      border-radius: 20px;
+      padding: 3px 12px;
+      font-weight: 500;
+    }
+
+    /* ── Tables ── */
+    table {
+      width: 100%;
+      border-collapse: collapse;
+      font-size: 0.875rem;
+    }
+    th {
+      text-align: left;
+      padding: 10px 16px;
+      font-size: 0.75rem;
+      text-transform: uppercase;
+      letter-spacing: 0.5px;
+      color: #6b7280;
+      background: #fafbfc;
+      border-bottom: 1px solid #e0e4ea;
+    }
+    td {
+      padding: 11px 16px;
+      border-bottom: 1px solid #f0f2f5;
+      vertical-align: middle;
+    }
+    tr:last-child td { border-bottom: none; }
+    tr:hover td { background: #f7f9fc; }
+    .subject { max-width: 380px; }
+    .empty {
+      text-align: center;
+      color: #9ca3af;
+      padding: 28px;
+      font-style: italic;
+    }
+
+    td a {
+      color: #0057b8;
+      text-decoration: none;
+      font-weight: 500;
+    }
+    td a:hover { text-decoration: underline; }
+
+    /* ── Badges ── */
+    .badge {
+      display: inline-block;
+      padding: 3px 10px;
+      border-radius: 12px;
+      font-size: 0.73rem;
+      font-weight: 600;
+      letter-spacing: 0.2px;
+      white-space: nowrap;
+    }
+
+    /* ── Footer ── */
+    footer {
+      text-align: center;
+      font-size: 0.78rem;
+      color: #9ca3af;
+      padding: 24px 40px 40px;
+    }
+  </style>
+</head>
+<body>
+
+<header>
+  <div>
+    <h1>HRIS Team — Open Tickets</h1>
+    <div class="subtitle">Ivanti SAASIT · University of Oxford</div>
+  </div>
+  <div class="last-updated">
+    Last updated<br><strong>Tuesday 02 June 2026 at 15:01 UTC</strong>
+  </div>
+</header>
+
+<div class="summary-bar">
+  <div class="stat-card">
+    <div class="stat-number">50</div>
+    <div class="stat-label">Total Open</div>
+  </div>
+  <div class="stat-card">
+    <div class="stat-number">25</div>
+    <div class="stat-label">Assigned</div>
+  </div>
+  <div class="stat-card">
+    <div class="stat-number red">25</div>
+    <div class="stat-label">⚠ Unassigned</div>
+  </div>
+  <div class="stat-card">
+    <div class="stat-number">4</div>
+    <div class="stat-label">Team Members</div>
+  </div>
+</div>
+
+<main>
+
+  
+    <section class="person-section">
+      <h2>
+        <span class="person-name">James Salas Guillen</span>
+        <span class="person-count">0 open</span>
+      </h2>
+      <table>
+        <thead>
+          <tr>
+            <th style="width:110px">Ticket ID</th>
+            <th>Subject</th>
+            <th style="width:115px">Status</th>
+            <th style="width:90px">Priority</th>
+            <th style="width:140px">Category</th>
+            <th style="width:100px">Created</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr><td colspan="6" class="empty">No open tasks</td></tr>
+        </tbody>
+      </table>
+    </section>
+    <section class="person-section">
+      <h2>
+        <span class="person-name">Asta Palmer</span>
+        <span class="person-count">0 open</span>
+      </h2>
+      <table>
+        <thead>
+          <tr>
+            <th style="width:110px">Ticket ID</th>
+            <th>Subject</th>
+            <th style="width:115px">Status</th>
+            <th style="width:90px">Priority</th>
+            <th style="width:140px">Category</th>
+            <th style="width:100px">Created</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr><td colspan="6" class="empty">No open tasks</td></tr>
+        </tbody>
+      </table>
+    </section>
+    <section class="person-section">
+      <h2>
+        <span class="person-name">Michael O'Sullivan</span>
+        <span class="person-count">0 open</span>
+      </h2>
+      <table>
+        <thead>
+          <tr>
+            <th style="width:110px">Ticket ID</th>
+            <th>Subject</th>
+            <th style="width:115px">Status</th>
+            <th style="width:90px">Priority</th>
+            <th style="width:140px">Category</th>
+            <th style="width:100px">Created</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr><td colspan="6" class="empty">No open tasks</td></tr>
+        </tbody>
+      </table>
+    </section>
+    <section class="person-section">
+      <h2>
+        <span class="person-name">Simon Burford</span>
+        <span class="person-count">0 open</span>
+      </h2>
+      <table>
+        <thead>
+          <tr>
+            <th style="width:110px">Ticket ID</th>
+            <th>Subject</th>
+            <th style="width:115px">Status</th>
+            <th style="width:90px">Priority</th>
+            <th style="width:140px">Category</th>
+            <th style="width:100px">Created</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr><td colspan="6" class="empty">No open tasks</td></tr>
+        </tbody>
+      </table>
+    </section>
+
+  <section class="unassigned-section">
+    <h2>
+      <span class="unassigned-label">⚠ Unassigned — HRIS Analysis</span>
+      <span class="unassigned-count">25 open</span>
+    </h2>
+    <table>
+      <thead>
+        <tr>
+          <th style="width:110px">Ticket ID</th>
+          <th>Subject</th>
+          <th style="width:115px">Status</th>
+          <th style="width:90px">Priority</th>
+          <th style="width:140px">Category</th>
+          <th style="width:100px">Created</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr><td><a href="https://oxford.saasiteu.com/servicedesk/WebObjects/ServiceDesk.woa/wa/Tasks/taskDetails?recordId=50958095" target="_blank" rel="noopener">50958095</a></td><td class='subject'>Request to push Adobe Creative cloud to DE011324</td><td><span class="badge" style="background:#7f8c8d;color:#fff">Logged</span></td><td><span class="badge" style="background:#95a5a6;color:#fff">5</span></td><td>Incident</td><td>02 Jun 2026</td></tr>
+<tr><td><a href="https://oxford.saasiteu.com/servicedesk/WebObjects/ServiceDesk.woa/wa/Tasks/taskDetails?recordId=50958093" target="_blank" rel="noopener">50958093</a></td><td class='subject'>New Linknet for 5 Worcester St (frodo-030035)</td><td><span class="badge" style="background:#7f8c8d;color:#fff">Logged</span></td><td><span class="badge" style="background:#95a5a6;color:#fff">5</span></td><td>Incident</td><td>02 Jun 2026</td></tr>
+<tr><td><a href="https://oxford.saasiteu.com/servicedesk/WebObjects/ServiceDesk.woa/wa/Tasks/taskDetails?recordId=50958088" target="_blank" rel="noopener">50958088</a></td><td class='subject'>Please enable Frank's Samsung device</td><td><span class="badge" style="background:#7f8c8d;color:#fff">Logged</span></td><td><span class="badge" style="background:#95a5a6;color:#fff">4</span></td><td>Incident</td><td>02 Jun 2026</td></tr>
+<tr><td><a href="https://oxford.saasiteu.com/servicedesk/WebObjects/ServiceDesk.woa/wa/Tasks/taskDetails?recordId=50958083" target="_blank" rel="noopener">50958083</a></td><td class='subject'>R12 User Confirm Training Preparer  - Svitlana Haiduk</td><td><span class="badge" style="background:#e67e22;color:#fff">Waiting</span></td><td><span class="badge" style="background:#95a5a6;color:#fff">5</span></td><td>ServiceReq</td><td>02 Jun 2026</td></tr>
+<tr><td><a href="https://oxford.saasiteu.com/servicedesk/WebObjects/ServiceDesk.woa/wa/Tasks/taskDetails?recordId=50958080" target="_blank" rel="noopener">50958080</a></td><td class='subject'>HELP Action Required: Payments Compliance Update (Site ID 29251-23)</td><td><span class="badge" style="background:#7f8c8d;color:#fff">Logged</span></td><td><span class="badge" style="background:#95a5a6;color:#fff">5</span></td><td>Incident</td><td>02 Jun 2026</td></tr>
+<tr><td><a href="https://oxford.saasiteu.com/servicedesk/WebObjects/ServiceDesk.woa/wa/Tasks/taskDetails?recordId=50958079" target="_blank" rel="noopener">50958079</a></td><td class='subject'>HELP Add New Donation Option to St Edmund Hall Online Giving Page</td><td><span class="badge" style="background:#7f8c8d;color:#fff">Logged</span></td><td><span class="badge" style="background:#95a5a6;color:#fff">5</span></td><td>Incident</td><td>02 Jun 2026</td></tr>
+<tr><td><a href="https://oxford.saasiteu.com/servicedesk/WebObjects/ServiceDesk.woa/wa/Tasks/taskDetails?recordId=50958078" target="_blank" rel="noopener">50958078</a></td><td class='subject'>[ITSS] A5 Licence Check - Start Date 12-Jun-2026 - Andrea Ko</td><td><span class="badge" style="background:#7f8c8d;color:#fff">Logged</span></td><td><span class="badge" style="background:#95a5a6;color:#fff">3</span></td><td>ServiceReq</td><td>02 Jun 2026</td></tr>
+<tr><td><a href="https://oxford.saasiteu.com/servicedesk/WebObjects/ServiceDesk.woa/wa/Tasks/taskDetails?recordId=50958077" target="_blank" rel="noopener">50958077</a></td><td class='subject'>[ITSS] Managed Desktop New User - Start Date 12-Jun-2026 - Andrea Ko</td><td><span class="badge" style="background:#7f8c8d;color:#fff">Logged</span></td><td><span class="badge" style="background:#95a5a6;color:#fff">5</span></td><td>ServiceReq</td><td>02 Jun 2026</td></tr>
+<tr><td><a href="https://oxford.saasiteu.com/servicedesk/WebObjects/ServiceDesk.woa/wa/Tasks/taskDetails?recordId=50958072" target="_blank" rel="noopener">50958072</a></td><td class='subject'>Add new currency to X5 (Somali Shilling - SOS)</td><td><span class="badge" style="background:#16a085;color:#fff">Assigned</span></td><td><span class="badge" style="background:#95a5a6;color:#fff">5</span></td><td>Incident</td><td>02 Jun 2026</td></tr>
+<tr><td><a href="https://oxford.saasiteu.com/servicedesk/WebObjects/ServiceDesk.woa/wa/Tasks/taskDetails?recordId=50958070" target="_blank" rel="noopener">50958070</a></td><td class='subject'>Add Unit Affiliation - Charles Dukes (cenv0971)</td><td><span class="badge" style="background:#27ae60;color:#fff">Accepted</span></td><td><span class="badge" style="background:#95a5a6;color:#fff">3</span></td><td>ServiceReq</td><td>02 Jun 2026</td></tr>
+<tr><td><a href="https://oxford.saasiteu.com/servicedesk/WebObjects/ServiceDesk.woa/wa/Tasks/taskDetails?recordId=50958066" target="_blank" rel="noopener">50958066</a></td><td class='subject'>Staff SSO Activation Code - Check user status - Sarah Willcox-Jones (paed0419)</td><td><span class="badge" style="background:#7f8c8d;color:#fff">Logged</span></td><td><span class="badge" style="background:#95a5a6;color:#fff">3</span></td><td>ServiceReq</td><td>02 Jun 2026</td></tr>
+<tr><td><a href="https://oxford.saasiteu.com/servicedesk/WebObjects/ServiceDesk.woa/wa/Tasks/taskDetails?recordId=50958065" target="_blank" rel="noopener">50958065</a></td><td class='subject'>ESS set up Leonie Hoff (2418669) worc5029</td><td><span class="badge" style="background:#7f8c8d;color:#fff">Logged</span></td><td><span class="badge" style="background:#95a5a6;color:#fff">5</span></td><td>Incident</td><td>02 Jun 2026</td></tr>
+<tr><td><a href="https://oxford.saasiteu.com/servicedesk/WebObjects/ServiceDesk.woa/wa/Tasks/taskDetails?recordId=50958062" target="_blank" rel="noopener">50958062</a></td><td class='subject'>Cority Emails</td><td><span class="badge" style="background:#7f8c8d;color:#fff">Logged</span></td><td><span class="badge" style="background:#95a5a6;color:#fff">5</span></td><td>Incident</td><td>02 Jun 2026</td></tr>
+<tr><td><a href="https://oxford.saasiteu.com/servicedesk/WebObjects/ServiceDesk.woa/wa/Tasks/taskDetails?recordId=50958056" target="_blank" rel="noopener">50958056</a></td><td class='subject'>Large folder move to Connect Drives</td><td><span class="badge" style="background:#7f8c8d;color:#fff">Logged</span></td><td><span class="badge" style="background:#95a5a6;color:#fff">5</span></td><td>Incident</td><td>02 Jun 2026</td></tr>
+<tr><td><a href="https://oxford.saasiteu.com/servicedesk/WebObjects/ServiceDesk.woa/wa/Tasks/taskDetails?recordId=50958054" target="_blank" rel="noopener">50958054</a></td><td class='subject'>Mailbox edst0298 - waiting for data complaince team to reply</td><td><span class="badge" style="background:#7f8c8d;color:#fff">Logged</span></td><td><span class="badge" style="background:#95a5a6;color:#fff">3</span></td><td>Incident</td><td>02 Jun 2026</td></tr>
+<tr><td><a href="https://oxford.saasiteu.com/servicedesk/WebObjects/ServiceDesk.woa/wa/Tasks/taskDetails?recordId=50958053" target="_blank" rel="noopener">50958053</a></td><td class='subject'>Generic mailbox setup request</td><td><span class="badge" style="background:#7f8c8d;color:#fff">Logged</span></td><td><span class="badge" style="background:#95a5a6;color:#fff">5</span></td><td>Incident</td><td>02 Jun 2026</td></tr>
+<tr><td><a href="https://oxford.saasiteu.com/servicedesk/WebObjects/ServiceDesk.woa/wa/Tasks/taskDetails?recordId=50958046" target="_blank" rel="noopener">50958046</a></td><td class='subject'>Fresco Migrated Site - Jonathan Bath</td><td><span class="badge" style="background:#7f8c8d;color:#fff">Logged</span></td><td><span class="badge" style="background:#95a5a6;color:#fff">5</span></td><td>ServiceReq</td><td>02 Jun 2026</td></tr>
+<tr><td><a href="https://oxford.saasiteu.com/servicedesk/WebObjects/ServiceDesk.woa/wa/Tasks/taskDetails?recordId=50958045" target="_blank" rel="noopener">50958045</a></td><td class='subject'>SS Template New - Shared Device Management Requests</td><td><span class="badge" style="background:#7f8c8d;color:#fff">Logged</span></td><td><span class="badge" style="background:#95a5a6;color:#fff">5</span></td><td>ServiceReq</td><td>02 Jun 2026</td></tr>
+<tr><td><a href="https://oxford.saasiteu.com/servicedesk/WebObjects/ServiceDesk.woa/wa/Tasks/taskDetails?recordId=50958041" target="_blank" rel="noopener">50958041</a></td><td class='subject'>Managed Desktop Service Folder Access - Emily Swaby - 04-Jun-2026</td><td><span class="badge" style="background:#27ae60;color:#fff">Accepted</span></td><td><span class="badge" style="background:#95a5a6;color:#fff">5</span></td><td>ServiceReq</td><td>02 Jun 2026</td></tr>
+<tr><td><a href="https://oxford.saasiteu.com/servicedesk/WebObjects/ServiceDesk.woa/wa/Tasks/taskDetails?recordId=50958040" target="_blank" rel="noopener">50958040</a></td><td class='subject'>Delete Access to Managed Desktop Service Folder - Emily Swaby - 04-Jun-2026</td><td><span class="badge" style="background:#27ae60;color:#fff">Accepted</span></td><td><span class="badge" style="background:#95a5a6;color:#fff">5</span></td><td>ServiceReq</td><td>02 Jun 2026</td></tr>
+<tr><td><a href="https://oxford.saasiteu.com/servicedesk/WebObjects/ServiceDesk.woa/wa/Tasks/taskDetails?recordId=50958037" target="_blank" rel="noopener">50958037</a></td><td class='subject'>R12 Shopper Confirm Training - Kaileen Button</td><td><span class="badge" style="background:#e67e22;color:#fff">Waiting</span></td><td><span class="badge" style="background:#95a5a6;color:#fff">5</span></td><td>ServiceReq</td><td>02 Jun 2026</td></tr>
+<tr><td><a href="https://oxford.saasiteu.com/servicedesk/WebObjects/ServiceDesk.woa/wa/Tasks/taskDetails?recordId=50958036" target="_blank" rel="noopener">50958036</a></td><td class='subject'>Fresco Migrated Site - Uliana Lavrentieva</td><td><span class="badge" style="background:#7f8c8d;color:#fff">Logged</span></td><td><span class="badge" style="background:#95a5a6;color:#fff">5</span></td><td>ServiceReq</td><td>02 Jun 2026</td></tr>
+<tr><td><a href="https://oxford.saasiteu.com/servicedesk/WebObjects/ServiceDesk.woa/wa/Tasks/taskDetails?recordId=50958034" target="_blank" rel="noopener">50958034</a></td><td class='subject'>DARS Skeletonise Record - Ghassen Ayadi</td><td><span class="badge" style="background:#7f8c8d;color:#fff">Logged</span></td><td><span class="badge" style="background:#95a5a6;color:#fff">3</span></td><td>ServiceReq</td><td>02 Jun 2026</td></tr>
+<tr><td><a href="https://oxford.saasiteu.com/servicedesk/WebObjects/ServiceDesk.woa/wa/Tasks/taskDetails?recordId=50958033" target="_blank" rel="noopener">50958033</a></td><td class='subject'>Post outcome suspension OCA (parental leave) - change req. or update?</td><td><span class="badge" style="background:#7f8c8d;color:#fff">Logged</span></td><td><span class="badge" style="background:#95a5a6;color:#fff">4</span></td><td>Incident</td><td>02 Jun 2026</td></tr>
+<tr><td><a href="https://oxford.saasiteu.com/servicedesk/WebObjects/ServiceDesk.woa/wa/Tasks/taskDetails?recordId=50958032" target="_blank" rel="noopener">50958032</a></td><td class='subject'>Manage Testing in R12 DEV - re-testing of XXUO Project Invoice Output Report</td><td><span class="badge" style="background:#16a085;color:#fff">Assigned</span></td><td><span class="badge" style="background:#95a5a6;color:#fff">3</span></td><td>Change</td><td>02 Jun 2026</td></tr>
+      </tbody>
+    </table>
+  </section>
+
+</main>
+
+<footer>
+  Auto-generated by generate_dashboard.py · Data sourced from Ivanti SAASIT OData API
+</footer>
+
+</body>
+</html>
