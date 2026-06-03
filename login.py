@@ -25,7 +25,7 @@ Typically every few weeks.
 #  CONFIGURATION — must match generate_dashboard.py
 # ─────────────────────────────────────────────
 
-GITHUB_PAT   = "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"         # repo + workflow scope PAT
+GITHUB_PAT   = "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"         # repo + workflow scope PAT
 GITHUB_REPO  = "begb0037admin/hris-dashboard"
 SECRET_NAME  = "SAASIT_SESSION"
 
