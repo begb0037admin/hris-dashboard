@@ -35,6 +35,32 @@
       opacity: 0.75;
       margin-top: 4px;
     }
+    .header-right {
+      display: flex;
+      flex-direction: column;
+      align-items: flex-end;
+      gap: 6px;
+    }
+    .refresh-pill {
+      background: rgba(255,255,255,0.15);
+      border: 1px solid rgba(255,255,255,0.45);
+      color: #fff;
+      padding: 7px 20px;
+      border-radius: 20px;
+      font-size: 0.85rem;
+      font-weight: 600;
+      cursor: pointer;
+      letter-spacing: 0.2px;
+      transition: background 0.15s;
+    }
+    .refresh-pill:hover:not(:disabled) { background: rgba(255,255,255,0.28); }
+    .refresh-pill:disabled { opacity: 0.55; cursor: not-allowed; }
+    .refresh-status {
+      font-size: 0.75rem;
+      opacity: 0.85;
+      text-align: right;
+      min-height: 14px;
+    }
     .last-updated {
       font-size: 0.8rem;
       opacity: 0.7;
@@ -165,7 +191,6 @@
       padding: 28px;
       font-style: italic;
     }
-
     td a {
       color: #0057b8;
       text-decoration: none;
@@ -200,22 +225,24 @@
     <h1>HRIS Team — Open Tickets</h1>
     <div class="subtitle">Ivanti SAASIT · University of Oxford</div>
   </div>
-  <div class="last-updated">
-    Last updated<br><strong>Tuesday 02 June 2026 at 19:55 UTC</strong>
+  <div class="header-right">
+    <button id="refresh-btn" class="refresh-pill" onclick="triggerRefresh()">↻ Refresh</button>
+    <div id="refresh-status" class="refresh-status"></div>
+    <div class="last-updated">Last updated<br><strong>Wednesday 03 June 2026 at 10:29 BST</strong></div>
   </div>
 </header>
 
 <div class="summary-bar">
   <div class="stat-card">
-    <div class="stat-number">22</div>
+    <div class="stat-number">20</div>
     <div class="stat-label">Total Open</div>
   </div>
   <div class="stat-card">
-    <div class="stat-number">19</div>
+    <div class="stat-number">18</div>
     <div class="stat-label">Assigned</div>
   </div>
   <div class="stat-card">
-    <div class="stat-number red">3</div>
+    <div class="stat-number red">2</div>
     <div class="stat-label">⚠ Unassigned</div>
   </div>
   <div class="stat-card">
@@ -258,7 +285,7 @@
     <section class="person-section">
       <h2>
         <span class="person-name">Asta Palmer</span>
-        <span class="person-count">3 open</span>
+        <span class="person-count">2 open</span>
       </h2>
       <table>
         <thead>
@@ -272,8 +299,7 @@
           </tr>
         </thead>
         <tbody>
-          <tr><td><a href="https://oxford.saasiteu.com/Default.aspx#50957996" target="_blank" rel="noopener">50957996</a></td><td class='subject'>ESS set up Luke Naessens (2419220) rsda0211</td><td><span class="badge" style="background:#27ae60;color:#fff">Accepted</span></td><td><span class="badge" style="background:#27ae60;color:#fff">Low</span></td><td>Incident</td><td>02 Jun 2026</td></tr>
-<tr><td><a href="https://oxford.saasiteu.com/Default.aspx#50957966" target="_blank" rel="noopener">50957966</a></td><td class='subject'>HR Reporting account - Micaela Canopoli (2401818) clas0485</td><td><span class="badge" style="background:#27ae60;color:#fff">Accepted</span></td><td><span class="badge" style="background:#27ae60;color:#fff">Low</span></td><td>Incident</td><td>02 Jun 2026</td></tr>
+          <tr><td><a href="https://oxford.saasiteu.com/Default.aspx#50957966" target="_blank" rel="noopener">50957966</a></td><td class='subject'>HR Reporting account - Micaela Canopoli (2401818) clas0485</td><td><span class="badge" style="background:#27ae60;color:#fff">Accepted</span></td><td><span class="badge" style="background:#27ae60;color:#fff">Low</span></td><td>Incident</td><td>02 Jun 2026</td></tr>
 <tr><td><a href="https://oxford.saasiteu.com/Default.aspx#50957376" target="_blank" rel="noopener">50957376</a></td><td class='subject'>AG case ref 68967350 - Employee not showing up in Co-Workers Calendar</td><td><span class="badge" style="background:#27ae60;color:#fff">Accepted</span></td><td><span class="badge" style="background:#27ae60;color:#fff">Low</span></td><td>Incident</td><td>28 May 2026</td></tr>
         </tbody>
       </table>
@@ -350,7 +376,7 @@
   <section class="unassigned-section">
     <h2>
       <span class="unassigned-label">⚠ Unassigned — HRIS Analysis</span>
-      <span class="unassigned-count">3 open</span>
+      <span class="unassigned-count">2 open</span>
     </h2>
     <table>
       <thead>
@@ -366,7 +392,6 @@
       <tbody>
         <tr><td><a href="https://oxford.saasiteu.com/Default.aspx#50958062" target="_blank" rel="noopener">50958062</a></td><td class='subject'>Cority Emails</td><td><span class="badge" style="background:#7f8c8d;color:#fff">Logged</span></td><td><span class="badge" style="background:#27ae60;color:#fff">Low</span></td><td>Incident</td><td>02 Jun 2026</td></tr>
 <tr><td><a href="https://oxford.saasiteu.com/Default.aspx#50957374" target="_blank" rel="noopener">50957374</a></td><td class='subject'>IRIS - New Building request</td><td><span class="badge" style="background:#7f8c8d;color:#fff">Logged</span></td><td><span class="badge" style="background:#27ae60;color:#fff">Low</span></td><td>Incident</td><td>28 May 2026</td></tr>
-<tr><td><a href="https://oxford.saasiteu.com/Default.aspx#50958065" target="_blank" rel="noopener">50958065</a></td><td class='subject'>ESS set up Leonie Hoff (2418669) worc5029</td><td><span class="badge" style="background:#7f8c8d;color:#fff">Logged</span></td><td><span class="badge" style="background:#27ae60;color:#fff">Low</span></td><td>Incident</td><td>02 Jun 2026</td></tr>
       </tbody>
     </table>
   </section>
@@ -376,6 +401,43 @@
 <footer>
   Auto-generated by generate_dashboard.py · Data sourced from Ivanti SAASIT OData API
 </footer>
+
+<script>
+async function triggerRefresh() {
+  const btn    = document.getElementById('refresh-btn');
+  const status = document.getElementById('refresh-status');
+  btn.disabled = true;
+  btn.textContent = '↻ Working…';
+  status.textContent = 'Triggering update…';
+
+  try {
+    const resp = await fetch(
+      'https://api.github.com/repos/begb0037admin/hris-dashboard/actions/workflows/update-dashboard.yml/dispatches',
+      {
+        method: 'POST',
+        headers: {
+          'Authorization': 'Bearer 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',
+          'Accept': 'application/vnd.github+json',
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify({ ref: 'main' }),
+      }
+    );
+
+    if (resp.status === 204) {
+      btn.textContent = '✓ Triggered';
+      status.textContent = 'Updating — reload this page in ~60 seconds.';
+    } else {
+      const body = await resp.text();
+      throw new Error('GitHub API ' + resp.status + ': ' + body.slice(0, 120));
+    }
+  } catch (e) {
+    btn.textContent = '↻ Refresh';
+    btn.disabled = false;
+    status.textContent = 'Error: ' + e.message;
+  }
+}
+</script>
 
 </body>
 </html>
