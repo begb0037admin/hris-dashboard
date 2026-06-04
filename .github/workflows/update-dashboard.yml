@@ -1,43 +1,35 @@
-name: Update HRIS Dashboard
-
+﻿name: Update HRIS Dashboard
 # Triggered by the Refresh pill in the dashboard (workflow_dispatch via GitHub API)
 # or manually from the Actions tab on GitHub.
 on:
   workflow_dispatch:
-
 permissions:
   contents: write   # needed to commit and push index.html
-
 jobs:
   update:
     runs-on: self-hosted
-
     steps:
       - name: Check out repo
         uses: actions/checkout@v4
-
-
       - name: Install Python dependencies
         run: |
           pip install playwright requests gitpython tzdata
           python -m playwright install chromium
           python -m playwright install-deps chromium
-
       - name: Run dashboard update
         env:
           SAASIT_SESSION: ${{ secrets.SAASIT_SESSION }}
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
         run: python generate_dashboard.py
-
       - name: Commit and push updated dashboard
-      shell: pwsh
-      run: |
-        git config user.name "HRIS Dashboard Bot"
-        git config user.email "action@github.com"
-        git add index.html
-        git diff --staged --quiet
-        if ($LASTEXITCODE -ne 0) {
-          $ts = (Get-Date).ToUniversalTime().ToString("yyyy-MM-dd HH:mm") + " UTC"
-          git commit -m "dashboard: auto-update $ts"
-          git push https://${{ secrets.GITHUB_TOKEN }}@github.com/begb0037admin/hris-dashboard.git main
-        }
+        shell: pwsh
+        run: |
+          git config user.name "HRIS Dashboard Bot"
+          git config user.email "action@github.com"
+          git add index.html
+          git diff --staged --quiet
+          if ($LASTEXITCODE -ne 0) {
+            $ts = (Get-Date).ToUniversalTime().ToString("yyyy-MM-dd HH:mm") + " UTC"
+            git commit -m "dashboard: auto-update $ts"
+            git push https://${{ secrets.GITHUB_TOKEN }}@github.com/begb0037admin/hris-dashboard.git main
+          }
