@@ -117,22 +117,16 @@ def get_session_cookies() -> dict:
         )
         raise FileNotFoundError("No session available — run login.py")
 
-    log.info("Navigating to SAASIT to activate session ...")
-
-    with sync_playwright() as p:
-        browser = p.chromium.launch(headless=True)
-        # storage_state accepts a dict (parsed JSON) or a file path
-        context = browser.new_context(storage_state=storage)
-        page = context.new_page()
-        page.goto(SAASIT_BASE, timeout=60_000, wait_until="domcontentloaded")
-
-        all_cookies = context.cookies()
-        cookies = {
-            c["name"]: c["value"]
-            for c in all_cookies
-            if "saasiteu.com" in c.get("domain", "")
-        }
-        browser.close()
+    # Extract cookies directly from stored session — no browser navigation needed.
+    # Navigating via headless browser from GitHub Actions IPs causes SSO redirects
+    # that invalidate the session. Reading directly from the JSON is both faster
+    # and more reliable.
+    all_cookies = storage.get("cookies", [])
+    cookies = {
+        c["name"]: c["value"]
+        for c in all_cookies
+        if "saasiteu.com" in c.get("domain", "")
+    }
 
     log.info("Got %d session cookies for oxford.saasiteu.com", len(cookies))
 
