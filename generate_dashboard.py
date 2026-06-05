@@ -653,7 +653,19 @@ async function triggerRefresh() {{
 
     if (resp.status === 204) {{
       btn.textContent = '✓ Triggered';
-      status.textContent = 'Updating — reload this page in ~60 seconds.';
+      let secs = 60;
+      status.textContent = 'Updating — reload in ' + secs + 's…';
+      const timer = setInterval(() => {{
+        secs--;
+        if (secs > 0) {{
+          status.textContent = 'Updating — reload in ' + secs + 's…';
+        }} else {{
+          clearInterval(timer);
+          status.textContent = '✓ Ready — reload now.';
+          status.style.fontWeight = 'bold';
+          status.style.color = '#27ae60';
+        }}
+      }}, 1000);
     }} else {{
       const body = await resp.text();
       throw new Error('GitHub API ' + resp.status + ': ' + body.slice(0, 120));
