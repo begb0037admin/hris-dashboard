@@ -228,7 +228,7 @@
   <div class="header-right">
     <button id="refresh-btn" class="refresh-pill" onclick="triggerRefresh()">↻ Refresh</button>
     <div id="refresh-status" class="refresh-status"></div>
-    <div class="last-updated">Last updated<br><strong>Friday 05 June 2026 at 21:19 BST</strong></div>
+    <div class="last-updated">Last updated<br><strong>Friday 05 June 2026 at 21:26 BST</strong></div>
   </div>
 </header>
 
@@ -439,7 +439,19 @@ async function triggerRefresh() {
 
     if (resp.status === 204) {
       btn.textContent = '✓ Triggered';
-      status.textContent = 'Updating — reload this page in ~60 seconds.';
+      let secs = 60;
+      status.textContent = 'Updating — reload in ' + secs + 's…';
+      const timer = setInterval(() => {
+        secs--;
+        if (secs > 0) {
+          status.textContent = 'Updating — reload in ' + secs + 's…';
+        } else {
+          clearInterval(timer);
+          status.textContent = '✓ Ready — reload now.';
+          status.style.fontWeight = 'bold';
+          status.style.color = '#27ae60';
+        }
+      }, 1000);
     } else {
       const body = await resp.text();
       throw new Error('GitHub API ' + resp.status + ': ' + body.slice(0, 120));
