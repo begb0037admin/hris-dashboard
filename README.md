@@ -8,7 +8,7 @@ Paste any URL below directly into Claude chat to load project context:
 
 ---
 
-# HRIS Dashboard — Project Documentation & Recovery Guide
+# HRIS Dashboard â Project Documentation & Recovery Guide
 **Last updated:** June 2026
 **Owner:** Kevin Lelitte (begb0037)
 **Purpose:** Daily auto-updating HTML dashboard showing HRIS team open tickets from Ivanti SAASIT, published to GitHub Pages.
@@ -35,7 +35,7 @@ Paste any URL below directly into Claude chat to load project context:
 ---
 
 ## Files - Where Everything Lives
-All files live at: C:\Users\admin\Documents\Claude\HRIS-Dashboard\
+All files live at: https://github.com/begb0037admin/hris-dashboard
 
 | File | Purpose |
 |------|---------|
@@ -66,7 +66,7 @@ Just open the live URL. It is always current as of the last hourly run.
 The session.json file holds your Oxford SSO login session. It will expire eventually (days to weeks). When it does, the dashboard will show 0 tickets.
 
 Fix (2 minutes):
-  cd C:\Users\admin\Documents\Claude\HRIS-Dashboard
+  cd https://github.com/begb0037admin/hris-dashboard
   python login.py
 A browser window opens. Log in with Oxford SSO (Microsoft MFA). Once you see the SAASIT dashboard, press Enter. Done - automated again.
 
@@ -80,14 +80,14 @@ How to know the session has expired:
 Task name: HRIS Dashboard
 Schedule: Every hour, 8:00am-5:00pm, every day
 Runs as: admin (highest privileges)
-Working directory: C:\Users\admin\Documents\Claude\HRIS-Dashboard
+Working directory: https://github.com/begb0037admin/hris-dashboard
 
 To verify: schtasks /query /tn "HRIS Dashboard"
 To run now: schtasks /run /tn "HRIS Dashboard"
 
 To recreate:
   schtasks /delete /tn "HRIS Dashboard" /f
-  schtasks /create /tn "HRIS Dashboard" /tr "python C:\Users\admin\Documents\Claude\HRIS-Dashboard\generate_dashboard.py" /sc hourly /mo 1 /st 08:00 /et 17:00 /rl highest /f
+  schtasks /create /tn "HRIS Dashboard" /tr "python https://github.com/begb0037admin/hris-dashboardgenerate_dashboard.py" /sc hourly /mo 1 /st 08:00 /et 17:00 /rl highest /f
 
 ---
 
