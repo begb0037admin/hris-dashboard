@@ -28,7 +28,7 @@ First login (one-time, or when session expires):
 # Personal Access Token — needs scopes: repo, workflow
 # This is baked into the dashboard's Refresh button AND used for local git push.
 # In GitHub Actions the built-in GITHUB_TOKEN env var overrides this for git push.
-GITHUB_PAT     = "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"
+GITHUB_PAT     = ""
 
 GITHUB_REPO    = "begb0037admin/hris-dashboard"
 REPO_BRANCH    = "main"
