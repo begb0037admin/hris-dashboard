@@ -1,3 +1,13 @@
+## Claude Quick Load
+
+Paste any URL below directly into Claude chat to load project context:
+
+| File | Raw URL |
+|---|---|
+| `CLAUDE.md` | https://raw.githubusercontent.com/begb0037admin/hris-dashboard/main/CLAUDE.md |
+
+---
+
 # HRIS Dashboard — Project Documentation & Recovery Guide
 **Last updated:** June 2026
 **Owner:** Kevin Lelitte (begb0037)
