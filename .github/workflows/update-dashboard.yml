@@ -21,6 +21,10 @@ jobs:
           python -m playwright install-deps chromium
       - name: Run dashboard update
         env:
+          # The runner is the same PC where 'Refresh Session.bat' (login.py)
+          # saves session.json — read it straight off disk. No secret needed.
+          SAASIT_SESSION_FILE: C:\Users\admin\Documents\Claude\HRIS-Dashboard\session.json
+          # Legacy fallback if the file is missing:
           SAASIT_SESSION: ${{ secrets.SAASIT_SESSION }}
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
         run: python generate_dashboard.py

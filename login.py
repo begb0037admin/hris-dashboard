@@ -127,12 +127,6 @@ def main():
     print("and press ENTER to save your session.")
     print()
 
-    if not GITHUB_PAT:
-        print("⚠️  No GitHub PAT found.")
-        print("   Set the HRIS_GITHUB_PAT env var, or save the token in a")
-        print("   github_pat.txt file next to this script (git-ignored).")
-        print("   The session will still be saved locally — GitHub push will be skipped.")
-        print()
 
     with sync_playwright() as p:
         browser = p.chromium.launch(headless=False, slow_mo=100)
@@ -155,15 +149,15 @@ def main():
 
     print()
 
+    # The GitHub Actions runner is this same PC and reads session.json
+    # straight from this folder — nothing needs uploading anywhere.
+    # (If a PAT is available we also push to the GitHub secret as a backup.)
     if GITHUB_PAT:
         push_session_to_github(storage)
-    else:
-        print("Skipping GitHub push — no GitHub PAT found.")
-        print("Set HRIS_GITHUB_PAT or create github_pat.txt, then re-run login.py.")
 
     print()
-    print("Done. The dashboard will update next time the workflow runs.")
-    print(f"Trigger it manually at: https://github.com/{GITHUB_REPO}/actions")
+    print("Done. The dashboard will update on the next run (hourly, or click")
+    print("the Refresh button on the dashboard page).")
 
 
 if __name__ == "__main__":

@@ -118,25 +118,33 @@ def get_session_cookies() -> dict:
     Loads the saved browser session and returns cookies for oxford.saasiteu.com.
 
     Source priority:
-      1. SAASIT_SESSION environment variable (base — used in GitHub Actions)
-      2. session.json on disk (local runs)
+      1. SAASIT_SESSION_FILE env var — absolute path to session.json. Used in
+         GitHub Actions: the self-hosted runner is the same PC where login.py
+         saves the session, so the workflow reads it straight off disk and no
+         GitHub secret or PAT is involved.
+      2. session.json next to the script (local runs)
+      3. SAASIT_SESSION environment variable (legacy GitHub-secret path)
 
-    If neither is available, run login.py to create a fresh session.
+    If none is available, run login.py to create a fresh session.
     """
     session_env = os.environ.get("SAASIT_SESSION")
+    session_file_env = os.environ.get("SAASIT_SESSION_FILE")
 
-    if session_env:
-        log.info("Loading session from SAASIT_SESSION environment variable ...")
-        storage = json.loads(session_env)
+    if session_file_env and Path(session_file_env).exists():
+        log.info("Loading session from %s ...", session_file_env)
+        storage = json.loads(Path(session_file_env).read_text(encoding="utf-8"))
     elif SESSION_FILE.exists():
         log.info("Loading session from %s ...", SESSION_FILE)
         storage = json.loads(SESSION_FILE.read_text(encoding="utf-8"))
+    elif session_env:
+        log.info("Loading session from SAASIT_SESSION environment variable ...")
+        storage = json.loads(session_env)
     else:
         log.error(
-            "No session available. Set SAASIT_SESSION env var or run login.py:\n"
+            "No session available. Run login.py on the runner machine:\n"
             "  python login.py"
         )
-        raise FileNotFoundError("No session available — run login.py")
+        raise SessionExpiredError("No session available — run login.py")
 
     # Extract cookies directly from stored session — no browser navigation needed.
     # Navigating via headless browser from GitHub Actions IPs causes SSO redirects
