@@ -1,8 +1,11 @@
 ﻿name: Update HRIS Dashboard
-# Triggered by the Refresh pill in the dashboard (workflow_dispatch via GitHub API)
-# or manually from the Actions tab on GitHub.
+# Triggered hourly during office hours, by the Refresh pill in the dashboard
+# (workflow_dispatch via GitHub API), or manually from the Actions tab on GitHub.
 on:
   workflow_dispatch:
+  schedule:
+    # Hourly, Mon-Fri. Cron is UTC: 7-16 UTC = 8am-5pm BST (7am-4pm GMT in winter).
+    - cron: "0 7-16 * * 1-5"
 permissions:
   contents: write   # needed to commit and push index.html
 jobs:

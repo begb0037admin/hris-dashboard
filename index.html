@@ -389,9 +389,36 @@
 </footer>
 
 <script>
+// No token is embedded in this page: GitHub auto-revokes any PAT it finds in
+// a public repo. Instead the token is requested once and kept in this
+// browser's localStorage only.
+function getGithubToken() {
+  let token = localStorage.getItem('hris_gh_pat');
+  if (!token) {
+    token = prompt(
+      'Paste a GitHub personal access token that can run workflows on\n' +
+      'begb0037admin/hris-dashboard (classic PAT with repo + workflow scope,\n' +
+      'or a fine-grained PAT with Actions read/write).\n\n' +
+      'It is stored only in this browser — never in the repo.'
+    );
+    if (token) {
+      token = token.trim();
+      localStorage.setItem('hris_gh_pat', token);
+    }
+  }
+  return token;
+}
+
 async function triggerRefresh() {
   const btn    = document.getElementById('refresh-btn');
   const status = document.getElementById('refresh-status');
+
+  const token = getGithubToken();
+  if (!token) {
+    status.textContent = 'Cancelled — no token provided.';
+    return;
+  }
+
   btn.disabled = true;
   btn.textContent = '↻ Working…';
   status.textContent = 'Triggering update…';
@@ -402,7 +429,7 @@ async function triggerRefresh() {
       {
         method: 'POST',
         headers: {
-          'Authorization': 'Bearer ',
+          'Authorization': 'Bearer ' + token,
           'Accept': 'application/vnd.github+json',
           'Content-Type': 'application/json',
         },
@@ -425,6 +452,9 @@ async function triggerRefresh() {
           status.style.color = '#27ae60';
         }
       }, 1000);
+    } else if (resp.status === 401) {
+      localStorage.removeItem('hris_gh_pat');
+      throw new Error('GitHub token rejected (401) — it may have expired. Click Refresh again to enter a new one.');
     } else {
       const body = await resp.text();
       throw new Error('GitHub API ' + resp.status + ': ' + body.slice(0, 120));

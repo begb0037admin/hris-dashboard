@@ -25,7 +25,15 @@ Typically every few weeks.
 #  CONFIGURATION — must match generate_dashboard.py
 # ─────────────────────────────────────────────
 
-GITHUB_PAT   = ""         # repo + workflow scope PAT
+# repo + workflow scope PAT. NEVER hardcode it here: GitHub auto-revokes any
+# PAT pushed to a public repo. Set the HRIS_GITHUB_PAT env var, or put the
+# token in a github_pat.txt file next to this script (git-ignored).
+GITHUB_PAT   = __import__("os").environ.get("HRIS_GITHUB_PAT", "").strip()
+if not GITHUB_PAT:
+    _pat_file = __import__("pathlib").Path(__file__).with_name("github_pat.txt")
+    if _pat_file.exists():
+        GITHUB_PAT = _pat_file.read_text(encoding="utf-8").strip()
+
 GITHUB_REPO  = "begb0037admin/hris-dashboard"
 SECRET_NAME  = "SAASIT_SESSION"
 
@@ -119,9 +127,10 @@ def main():
     print("and press ENTER to save your session.")
     print()
 
-    if GITHUB_PAT == "YOUR_GITHUB_PAT_HERE":
-        print("⚠️  GITHUB_PAT is still the placeholder value.")
-        print("   Edit login.py and set GITHUB_PAT to your real GitHub PAT.")
+    if not GITHUB_PAT:
+        print("⚠️  No GitHub PAT found.")
+        print("   Set the HRIS_GITHUB_PAT env var, or save the token in a")
+        print("   github_pat.txt file next to this script (git-ignored).")
         print("   The session will still be saved locally — GitHub push will be skipped.")
         print()
 
@@ -146,10 +155,11 @@ def main():
 
     print()
 
-    if GITHUB_PAT != "YOUR_GITHUB_PAT_HERE":
+    if GITHUB_PAT:
         push_session_to_github(storage)
     else:
-        print("Skipping GitHub push — GITHUB_PAT is not set.")
+        print("Skipping GitHub push — no GitHub PAT found.")
+        print("Set HRIS_GITHUB_PAT or create github_pat.txt, then re-run login.py.")
 
     print()
     print("Done. The dashboard will update next time the workflow runs.")
