@@ -400,7 +400,7 @@ async function triggerRefresh() {
   status.textContent = 'Triggering update…';
 
   try {
-    const resp = await fetch('https://hris-refresh.REPLACE-WITH-YOUR-SUBDOMAIN.workers.dev', { method: 'POST' });
+    const resp = await fetch('https://hris-refresh.kevinlelitte.workers.dev', { method: 'POST' });
     let body = null;
     try { body = await resp.json(); } catch (ignored) {}
 

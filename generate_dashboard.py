@@ -43,7 +43,7 @@ REPO_BRANCH    = "main"
 # Cloudflare Worker the Refresh button calls. The Worker holds the GitHub PAT
 # as a server-side secret, so no token lives in this repo or in any browser.
 # Source + setup instructions: cloudflare-worker/ in this repo.
-REFRESH_PROXY_URL = "https://hris-refresh.REPLACE-WITH-YOUR-SUBDOMAIN.workers.dev"
+REFRESH_PROXY_URL = "https://hris-refresh.kevinlelitte.workers.dev"
 
 SAASIT_BASE    = "https://oxford.saasiteu.com"
 REPO_LOCAL     = "hris-dashboard-local"   # local git clone folder (local mode only)
