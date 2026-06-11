@@ -24,7 +24,7 @@ jobs:
           # The runner is the same PC where 'Refresh Session.bat' (login.py)
           # saves session.json — read it straight off disk. No secret needed.
           # Checks every listed path and uses the newest session it finds.
-          SAASIT_SESSION_FILE: C:\Users\admin\Documents\Claude\Projects\HRIS-Dashboard\session.json;C:\Users\admin\Documents\Claude\HRIS-Dashboard\session.json
+          SAASIT_SESSION_FILE: C:\Users\admin\Documents\Claude\Projects\HRIS-Dashboard\session.json;C:\Users\admin\Documents\Claude\Projects\HRIS-Dashboard\hris-dashboard-local\session.json;C:\Users\admin\Documents\Claude\HRIS-Dashboard\session.json
           # Legacy fallback if the file is missing:
           SAASIT_SESSION: ${{ secrets.SAASIT_SESSION }}
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
