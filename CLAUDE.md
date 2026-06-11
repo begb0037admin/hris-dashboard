@@ -11,7 +11,7 @@ Migrated from Windows Task Scheduler to GitHub Actions with a self-hosted runner
 
 June 2026 fixes:
 - Workflow now has a real cron schedule (it previously only ran on manual dispatch, despite this doc claiming hourly).
-- The Refresh button no longer embeds a GitHub PAT in index.html — GitHub auto-revokes any PAT found in a public repo, which is why the button kept dying with 401. It now prompts once per browser and keeps the token in localStorage.
+- The Refresh button no longer embeds a GitHub PAT in index.html — GitHub auto-revokes any PAT found in a public repo, which is why the button kept dying with 401. It now POSTs to a Cloudflare Worker (source in cloudflare-worker/) that holds the PAT as a server-side secret, so the button works from any browser/machine with no setup. PAT renewal = update the HRIS_GITHUB_PAT secret on the Worker.
 - generate_dashboard.py now FAILS the workflow run when the SAASIT session has expired, instead of silently publishing an all-zero dashboard. A red run in the Actions tab = session needs refreshing.
 - login.py / generate_dashboard.py read the PAT from the HRIS_GITHUB_PAT env var or a git-ignored github_pat.txt file — never hardcode it in source.
 
@@ -20,6 +20,7 @@ June 2026 fixes:
 | Component | Detail |
 |-----------|--------|
 | Trigger | GitHub Actions cron (hourly Mon-Fri, 7-16 UTC = 8am-5pm BST) + workflow_dispatch |
+| Refresh button | Cloudflare Worker proxy (cloudflare-worker/) — PAT stored as Worker secret HRIS_GITHUB_PAT |
 | Runner | Self-hosted on DESKTOP-MJDJM64 |
 | Runner location | C:\\actions-runner\\ |
 | Runner service | Windows service — auto-starts on boot |
