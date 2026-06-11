@@ -130,9 +130,19 @@ def get_session_cookies() -> dict:
     session_env = os.environ.get("SAASIT_SESSION")
     session_file_env = os.environ.get("SAASIT_SESSION_FILE")
 
-    if session_file_env and Path(session_file_env).exists():
-        log.info("Loading session from %s ...", session_file_env)
-        storage = json.loads(Path(session_file_env).read_text(encoding="utf-8"))
+    # SAASIT_SESSION_FILE may list several candidate paths separated by ';'
+    # (the dashboard folder has lived in more than one place). Use the most
+    # recently modified one that exists.
+    newest_session_file = None
+    if session_file_env:
+        candidates = [Path(p.strip()) for p in session_file_env.split(";") if p.strip()]
+        existing = [p for p in candidates if p.exists()]
+        if existing:
+            newest_session_file = max(existing, key=lambda p: p.stat().st_mtime)
+
+    if newest_session_file:
+        log.info("Loading session from %s ...", newest_session_file)
+        storage = json.loads(newest_session_file.read_text(encoding="utf-8"))
     elif SESSION_FILE.exists():
         log.info("Loading session from %s ...", SESSION_FILE)
         storage = json.loads(SESSION_FILE.read_text(encoding="utf-8"))
