@@ -40,6 +40,11 @@ if not GITHUB_PAT:
 GITHUB_REPO    = "begb0037admin/hris-dashboard"
 REPO_BRANCH    = "main"
 
+# Cloudflare Worker the Refresh button calls. The Worker holds the GitHub PAT
+# as a server-side secret, so no token lives in this repo or in any browser.
+# Source + setup instructions: cloudflare-worker/ in this repo.
+REFRESH_PROXY_URL = "https://hris-refresh.REPLACE-WITH-YOUR-SUBDOMAIN.workers.dev"
+
 SAASIT_BASE    = "https://oxford.saasiteu.com"
 REPO_LOCAL     = "hris-dashboard-local"   # local git clone folder (local mode only)
 
@@ -652,55 +657,22 @@ def build_html(assigned: list, unassigned: list) -> str:
 </footer>
 
 <script>
-// No token is embedded in this page: GitHub auto-revokes any PAT it finds in
-// a public repo. Instead the token is requested once and kept in this
-// browser's localStorage only.
-function getGithubToken() {{
-  let token = localStorage.getItem('hris_gh_pat');
-  if (!token) {{
-    token = prompt(
-      'Paste a GitHub personal access token that can run workflows on\\n' +
-      '{GITHUB_REPO} (classic PAT with repo + workflow scope,\\n' +
-      'or a fine-grained PAT with Actions read/write).\\n\\n' +
-      'It is stored only in this browser — never in the repo.'
-    );
-    if (token) {{
-      token = token.trim();
-      localStorage.setItem('hris_gh_pat', token);
-    }}
-  }}
-  return token;
-}}
-
+// The Refresh button calls a Cloudflare Worker that holds the GitHub token
+// as a server-side secret — no credentials in this page or in any browser.
+// Worker source + setup: cloudflare-worker/ in the repo.
 async function triggerRefresh() {{
   const btn    = document.getElementById('refresh-btn');
   const status = document.getElementById('refresh-status');
-
-  const token = getGithubToken();
-  if (!token) {{
-    status.textContent = 'Cancelled — no token provided.';
-    return;
-  }}
-
   btn.disabled = true;
   btn.textContent = '↻ Working…';
   status.textContent = 'Triggering update…';
 
   try {{
-    const resp = await fetch(
-      'https://api.github.com/repos/{GITHUB_REPO}/actions/workflows/update-dashboard.yml/dispatches',
-      {{
-        method: 'POST',
-        headers: {{
-          'Authorization': 'Bearer ' + token,
-          'Accept': 'application/vnd.github+json',
-          'Content-Type': 'application/json',
-        }},
-        body: JSON.stringify({{ ref: '{REPO_BRANCH}' }}),
-      }}
-    );
+    const resp = await fetch('{REFRESH_PROXY_URL}', {{ method: 'POST' }});
+    let body = null;
+    try {{ body = await resp.json(); }} catch (ignored) {{}}
 
-    if (resp.status === 204) {{
+    if (resp.ok && body && body.ok) {{
       btn.textContent = '✓ Triggered';
       let secs = 60;
       status.textContent = 'Updating — reload in ' + secs + 's…';
@@ -715,12 +687,8 @@ async function triggerRefresh() {{
           status.style.color = '#27ae60';
         }}
       }}, 1000);
-    }} else if (resp.status === 401) {{
-      localStorage.removeItem('hris_gh_pat');
-      throw new Error('GitHub token rejected (401) — it may have expired. Click Refresh again to enter a new one.');
     }} else {{
-      const body = await resp.text();
-      throw new Error('GitHub API ' + resp.status + ': ' + body.slice(0, 120));
+      throw new Error(body && body.error ? body.error : 'Refresh proxy error ' + resp.status);
     }}
   }} catch (e) {{
     btn.textContent = '↻ Refresh';
