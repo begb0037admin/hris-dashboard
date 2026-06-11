@@ -1,4 +1,4 @@
-﻿name: Update HRIS Dashboard
+name: Update HRIS Dashboard
 # Triggered hourly during office hours, by the Refresh pill in the dashboard
 # (workflow_dispatch via GitHub API), or manually from the Actions tab on GitHub.
 on:
@@ -11,6 +11,11 @@ permissions:
 jobs:
   update:
     runs-on: self-hosted
+    env:
+      # The runner is the same PC where 'Refresh Session.bat' (login.py)
+      # saves session.json — read it straight off disk. No secret needed.
+      # Checks every listed path and uses the newest session it finds.
+      SAASIT_SESSION_FILE: C:\Users\admin\Documents\Claude\Projects\HRIS-Dashboard\session.json;C:\Users\admin\Documents\Claude\Projects\HRIS-Dashboard\hris-dashboard-local\session.json;C:\Users\admin\Documents\Claude\HRIS-Dashboard\session.json
     steps:
       - name: Check out repo
         uses: actions/checkout@v4
@@ -21,11 +26,7 @@ jobs:
           python -m playwright install-deps chromium
       - name: Run dashboard update
         env:
-          # The runner is the same PC where 'Refresh Session.bat' (login.py)
-          # saves session.json — read it straight off disk. No secret needed.
-          # Checks every listed path and uses the newest session it finds.
-          SAASIT_SESSION_FILE: C:\Users\admin\Documents\Claude\Projects\HRIS-Dashboard\session.json;C:\Users\admin\Documents\Claude\Projects\HRIS-Dashboard\hris-dashboard-local\session.json;C:\Users\admin\Documents\Claude\HRIS-Dashboard\session.json
-          # Legacy fallback if the file is missing:
+          # Legacy fallback if the session file is missing:
           SAASIT_SESSION: ${{ secrets.SAASIT_SESSION }}
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
         run: python generate_dashboard.py
@@ -39,5 +40,44 @@ jobs:
           if ($LASTEXITCODE -ne 0) {
             $ts = (Get-Date).ToUniversalTime().ToString("yyyy-MM-dd HH:mm") + " UTC"
             git commit -m "dashboard: auto-update $ts"
+            git push https://${{ secrets.GITHUB_TOKEN }}@github.com/begb0037admin/hris-dashboard.git main
+          }
+      # Publishes a status file into the repo on every run (success or failure)
+      # so the run can be diagnosed from the repository itself, without
+      # needing access to the Actions logs.
+      - name: Publish run diagnostics
+        if: always()
+        shell: powershell
+        run: |
+          $lines = @()
+          $lines += "run=$env:GITHUB_RUN_NUMBER event=$env:GITHUB_EVENT_NAME utc=$((Get-Date).ToUniversalTime().ToString('yyyy-MM-dd HH:mm:ss'))"
+          $lines += "runner_user=$env:USERDOMAIN\$env:USERNAME"
+          foreach ($p in ($env:SAASIT_SESSION_FILE -split ';')) {
+            if (Test-Path $p) {
+              try {
+                $len = (Get-Content -Raw -ErrorAction Stop $p).Length
+                $mt  = (Get-Item $p).LastWriteTime
+                $lines += "session_file OK: $p (chars=$len, modified=$mt)"
+              } catch {
+                $lines += "session_file UNREADABLE: $p — $($_.Exception.Message)"
+              }
+            } else {
+              $lines += "session_file MISSING (or runner cannot see it): $p"
+            }
+          }
+          if (Test-Path dashboard_run.log) {
+            $lines += "--- last 40 lines of dashboard_run.log ---"
+            $lines += Get-Content dashboard_run.log -Tail 40
+          } else {
+            $lines += "dashboard_run.log not found (python step may not have started)"
+          }
+          Set-Content -Path last_run_status.txt -Value $lines -Encoding UTF8
+          git config user.name "HRIS Dashboard Bot"
+          git config user.email "action@github.com"
+          git pull --no-edit https://${{ secrets.GITHUB_TOKEN }}@github.com/begb0037admin/hris-dashboard.git main
+          git add last_run_status.txt
+          git diff --staged --quiet
+          if ($LASTEXITCODE -ne 0) {
+            git commit -m "diagnostics: run $env:GITHUB_RUN_NUMBER"
             git push https://${{ secrets.GITHUB_TOKEN }}@github.com/begb0037admin/hris-dashboard.git main
           }
