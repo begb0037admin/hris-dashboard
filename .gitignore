@@ -1,5 +1,6 @@
 ﻿session.json
 saasit_cookies.json
+github_pat.txt
 dashboard_run.log
 files.zip
 *.log
@@ -9,3 +10,4 @@ generate_dashboard/
 push_to_github.bat
 test_filter.py
 HRIS_DASHBOARD_README.md
+__pycache__/

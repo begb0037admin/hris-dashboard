@@ -26,9 +26,16 @@ First login (one-time, or when session expires):
 # ─────────────────────────────────────────────
 
 # Personal Access Token — needs scopes: repo, workflow
-# This is baked into the dashboard's Refresh button AND used for local git push.
-# In GitHub Actions the built-in GITHUB_TOKEN env var overrides this for git push.
-GITHUB_PAT     = ""
+# Used ONLY for local git push. NEVER hardcode it here: GitHub auto-revokes any
+# PAT pushed to a public repo (which is why the Refresh button kept breaking).
+# Set the HRIS_GITHUB_PAT env var, or put the token in a github_pat.txt file
+# next to this script (git-ignored). The dashboard's Refresh button no longer
+# embeds a token — it prompts once and stores it in the browser's localStorage.
+GITHUB_PAT     = __import__("os").environ.get("HRIS_GITHUB_PAT", "").strip()
+if not GITHUB_PAT:
+    _pat_file = __import__("pathlib").Path(__file__).with_name("github_pat.txt")
+    if _pat_file.exists():
+        GITHUB_PAT = _pat_file.read_text(encoding="utf-8").strip()
 
 GITHUB_REPO    = "begb0037admin/hris-dashboard"
 REPO_BRANCH    = "main"
@@ -74,6 +81,11 @@ try:
 except Exception:
     _UK_TZ = timezone.utc   # fallback — install tzdata to get correct UK time
 
+# Windows runner consoles default to cp1252, which can't print characters like
+# '→' and crashes the logging StreamHandler. Force UTF-8 with safe fallback.
+if hasattr(sys.stdout, "reconfigure"):
+    sys.stdout.reconfigure(encoding="utf-8", errors="replace")
+
 logging.basicConfig(
     level=logging.INFO,
     format="%(asctime)s  %(levelname)-8s %(message)s",
@@ -90,6 +102,10 @@ log = logging.getLogger(__name__)
 # ─────────────────────────────────────────────
 
 SESSION_FILE = Path("session.json")
+
+
+class SessionExpiredError(RuntimeError):
+    """SAASIT rejected our session cookies — run login.py to refresh."""
 
 
 def get_session_cookies() -> dict:
@@ -131,8 +147,8 @@ def get_session_cookies() -> dict:
     log.info("Got %d session cookies for oxford.saasiteu.com", len(cookies))
 
     if not cookies:
-        log.error(
-            "No cookies found for saasiteu.com — session may have expired.\n"
+        raise SessionExpiredError(
+            "No cookies found for saasiteu.com — session may have expired. "
             "Re-run login.py to refresh the session."
         )
 
@@ -159,6 +175,12 @@ def fetch_odata(session: requests.Session, endpoint: str, params: dict) -> list:
     while url:
         log.info("GET %s %s", endpoint, str(params)[:80])
         resp = session.get(url, params=params, timeout=30)
+        if resp.status_code in (401, 403):
+            # Expired session — abort the whole run rather than silently
+            # publishing an all-zero dashboard.
+            raise SessionExpiredError(
+                f"OData auth error {resp.status_code}: {resp.text[:300]}"
+            )
         if resp.status_code != 200:
             log.error("OData error %d: %s", resp.status_code, resp.text[:300])
             break
@@ -630,9 +652,36 @@ def build_html(assigned: list, unassigned: list) -> str:
 </footer>
 
 <script>
+// No token is embedded in this page: GitHub auto-revokes any PAT it finds in
+// a public repo. Instead the token is requested once and kept in this
+// browser's localStorage only.
+function getGithubToken() {{
+  let token = localStorage.getItem('hris_gh_pat');
+  if (!token) {{
+    token = prompt(
+      'Paste a GitHub personal access token that can run workflows on\\n' +
+      '{GITHUB_REPO} (classic PAT with repo + workflow scope,\\n' +
+      'or a fine-grained PAT with Actions read/write).\\n\\n' +
+      'It is stored only in this browser — never in the repo.'
+    );
+    if (token) {{
+      token = token.trim();
+      localStorage.setItem('hris_gh_pat', token);
+    }}
+  }}
+  return token;
+}}
+
 async function triggerRefresh() {{
   const btn    = document.getElementById('refresh-btn');
   const status = document.getElementById('refresh-status');
+
+  const token = getGithubToken();
+  if (!token) {{
+    status.textContent = 'Cancelled — no token provided.';
+    return;
+  }}
+
   btn.disabled = true;
   btn.textContent = '↻ Working…';
   status.textContent = 'Triggering update…';
@@ -643,7 +692,7 @@ async function triggerRefresh() {{
       {{
         method: 'POST',
         headers: {{
-          'Authorization': 'Bearer {GITHUB_PAT}',
+          'Authorization': 'Bearer ' + token,
           'Accept': 'application/vnd.github+json',
           'Content-Type': 'application/json',
         }},
@@ -666,6 +715,9 @@ async function triggerRefresh() {{
           status.style.color = '#27ae60';
         }}
       }}, 1000);
+    }} else if (resp.status === 401) {{
+      localStorage.removeItem('hris_gh_pat');
+      throw new Error('GitHub token rejected (401) — it may have expired. Click Refresh again to enter a new one.');
     }} else {{
       const body = await resp.text();
       throw new Error('GitHub API ' + resp.status + ': ' + body.slice(0, 120));
@@ -760,4 +812,13 @@ def main():
 
 
 if __name__ == "__main__":
-    main()
+    try:
+        main()
+    except SessionExpiredError as e:
+        log.error("SAASIT session expired: %s", e)
+        log.error(
+            "Dashboard NOT updated — the previous data stays live.\n"
+            "Fix: run 'Refresh Session.bat' (python login.py) and log in via "
+            "Oxford SSO to refresh the SAASIT_SESSION secret."
+        )
+        sys.exit(1)
