@@ -59,7 +59,7 @@ jobs:
                 $mt  = (Get-Item $p).LastWriteTime
                 $lines += "session_file OK: $p (chars=$len, modified=$mt)"
               } catch {
-                $lines += "session_file UNREADABLE: $p — $($_.Exception.Message)"
+                $lines += "session_file UNREADABLE: $p - $($_.Exception.Message)"
               }
             } else {
               $lines += "session_file MISSING (or runner cannot see it): $p"
