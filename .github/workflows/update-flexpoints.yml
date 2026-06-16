@@ -1,0 +1,35 @@
+name: Update FlexPoints Report
+
+on:
+  schedule:
+    # Every Monday at 08:00 UTC (09:00 BST)
+    - cron: '0 8 * * 1'
+  workflow_dispatch:
+
+jobs:
+  update:
+    runs-on: self-hosted
+    timeout-minutes: 15
+
+    steps:
+      - name: Check out ag-flexpoints
+        uses: actions/checkout@v4
+        with:
+          repository: begb0037admin/AG-FlexPoints
+          token: ${{ secrets.FLEXPOINTS_PAT }}
+          path: ag-flexpoints
+
+      - name: Install dependencies
+        working-directory: ag-flexpoints
+        run: |
+          pip install anthropic playwright
+          python -m playwright install chromium
+
+      - name: Run FlexPoints report
+        working-directory: ag-flexpoints
+        env:
+          ACCESS_PORTAL_USER:     ${{ secrets.ACCESS_USERNAME }}
+          ACCESS_PORTAL_PASSWORD: ${{ secrets.ACCESS_PASSWORD }}
+          ANTHROPIC_API_KEY:      ${{ secrets.ANTHROPIC_API_KEY }}
+          GITHUB_PAT:             ${{ secrets.FLEXPOINTS_PAT }}
+        run: python fetch_flexpoints.py
