@@ -6,7 +6,7 @@ Run this on any machine (work laptop or home desktop) when your session expires.
 
 What it does:
   1. Opens a browser window — log in with Oxford SSO (Microsoft MFA)
-  2. Saves the session to session.json locally (so you can run the script locally too)
+  2. Saves the session to session.json next to this script
   3. Automatically pushes the session to GitHub as the SAASIT_SESSION secret
      so GitHub Actions can run the dashboard without any local files
 
@@ -38,7 +38,6 @@ GITHUB_REPO  = "begb0037admin/hris-dashboard"
 SECRET_NAME  = "SAASIT_SESSION"
 
 SAASIT_URL   = "https://oxford.saasiteu.com"
-SESSION_FILE = "session.json"
 
 # ─────────────────────────────────────────────
 
@@ -49,6 +48,9 @@ from pathlib import Path
 
 import requests
 from playwright.sync_api import sync_playwright
+
+# Always save session.json next to this script, regardless of working directory
+SESSION_FILE = Path(__file__).parent / "session.json"
 
 
 # ─────────────────────────────────────────────
@@ -68,8 +70,7 @@ def push_session_to_github(session_data: dict) -> None:
         print("   Run:  pip install PyNaCl")
         print("   Then re-run login.py")
         print()
-        print("   The session has been saved locally to session.json.")
-        print("   You can still run the dashboard locally with: python generate_dashboard.py")
+        print(f"   The session has been saved locally to {SESSION_FILE}")
         return
 
     session_json = json.dumps(session_data)
@@ -109,7 +110,6 @@ def push_session_to_github(session_data: dict) -> None:
     r.raise_for_status()
 
     print(f"✅  Session pushed to GitHub secret '{SECRET_NAME}' successfully.")
-    print("   GitHub Actions can now fetch the dashboard without any local files.")
 
 
 # ─────────────────────────────────────────────
@@ -126,7 +126,8 @@ def main():
     print("Once you can see the SAASIT dashboard, come back here")
     print("and press ENTER to save your session.")
     print()
-
+    print(f"Session will be saved to: {SESSION_FILE}")
+    print()
 
     with sync_playwright() as p:
         browser = p.chromium.launch(headless=False, slow_mo=100)
@@ -139,25 +140,21 @@ def main():
         input(">>> Log in fully in the browser, then press ENTER here to save: ")
 
         storage = context.storage_state()
-        Path(SESSION_FILE).write_text(json.dumps(storage, indent=2), encoding="utf-8")
+        SESSION_FILE.write_text(json.dumps(storage, indent=2), encoding="utf-8")
 
         cookie_count = len(storage.get("cookies", []))
         print()
-        print(f"✅  Session saved locally to {SESSION_FILE}  ({cookie_count} cookies)")
+        print(f"✅  Session saved to {SESSION_FILE}  ({cookie_count} cookies)")
 
         browser.close()
 
     print()
 
-    # The GitHub Actions runner is this same PC and reads session.json
-    # straight from this folder — nothing needs uploading anywhere.
-    # (If a PAT is available we also push to the GitHub secret as a backup.)
     if GITHUB_PAT:
         push_session_to_github(storage)
 
     print()
-    print("Done. The dashboard will update on the next run (hourly, or click")
-    print("the Refresh button on the dashboard page).")
+    print("Done. Click the Refresh button on the dashboard to update now.")
 
 
 if __name__ == "__main__":
