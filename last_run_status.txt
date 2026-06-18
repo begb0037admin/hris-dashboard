@@ -1,15 +1,15 @@
-﻿run=52 event=schedule utc=2026-06-18 15:18:05
+﻿run=53 event=workflow_dispatch utc=2026-06-18 16:55:00
 runner_user=WORKGROUP\DESKTOP-MJDJM64$
 session_file OK: C:\Users\admin\Documents\Claude\Projects\HRIS-Dashboard\session.json (chars=12495, modified=06/11/2026 18:17:08)
 session_file MISSING (or runner cannot see it): C:\Users\admin\Documents\Claude\Projects\HRIS-Dashboard\hris-dashboard-local\session.json
 session_file MISSING (or runner cannot see it): C:\Users\admin\Documents\Claude\HRIS-Dashboard\session.json
 --- last 40 lines of dashboard_run.log ---
-2026-06-18 16:18:03,699  INFO     === HRIS Dashboard run started ===
-2026-06-18 16:18:03,699  INFO     Loading session from C:\Users\admin\Documents\Claude\Projects\HRIS-Dashboard\session.json ...
-2026-06-18 16:18:03,708  INFO     Got 11 session cookies for oxford.saasiteu.com
-2026-06-18 16:18:03,708  INFO     Fetching assigned tasks ...
-2026-06-18 16:18:03,708  INFO     GET tasks {'$filter': "Owner eq 'musf0100'", '$select': 'AssignmentID,Owner,OwnerTeam,Subj
-2026-06-18 16:18:04,092  ERROR    SAASIT session expired: OData auth error 401: {
+2026-06-18 17:54:58,357  INFO     === HRIS Dashboard run started ===
+2026-06-18 17:54:58,357  INFO     Loading session from C:\Users\admin\Documents\Claude\Projects\HRIS-Dashboard\session.json ...
+2026-06-18 17:54:58,358  INFO     Got 11 session cookies for oxford.saasiteu.com
+2026-06-18 17:54:58,358  INFO     Fetching assigned tasks ...
+2026-06-18 17:54:58,358  INFO     GET tasks {'$filter': "Owner eq 'musf0100'", '$select': 'AssignmentID,Owner,OwnerTeam,Subj
+2026-06-18 17:54:58,788  ERROR    SAASIT session expired: OData auth error 401: {
 
   "code": "ISM_4001",
 
@@ -20,5 +20,5 @@ session_file MISSING (or runner cannot see it): C:\Users\admin\Documents\Claude\
   "help": ""
 
 }
-2026-06-18 16:18:04,093  ERROR    Dashboard NOT updated â€” the previous data stays live.
+2026-06-18 17:54:58,789  ERROR    Dashboard NOT updated â€” the previous data stays live.
 Fix: run 'Refresh Session.bat' (python login.py) and log in via Oxford SSO to refresh the SAASIT_SESSION secret.
