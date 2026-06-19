@@ -1,4 +1,4 @@
 @echo off
-cd /d "C:\actions-runner\_work\hris-dashboard\hris-dashboard"
+cd /d "C:\Users\admin\Documents\Claude\Projects\HRIS-Dashboard"
 python login.py
 pause
