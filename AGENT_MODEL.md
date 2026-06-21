@@ -1,9 +1,9 @@
 # AGENT_MODEL.md
 # Runtime Operating Model
 
-Version : 2.0
+Version : 2.1
 Status  : Ratified
-Updated : 2026-06-10 (v2.0 — single-agent model)
+Updated : 2026-06-21 (v2.1 — scope table correction)
 Author  : Kevin Lelitte, HR Systems, University of Oxford
 
 Governed by: CONSTITUTION.md
@@ -218,7 +218,7 @@ This table reflects current governance scope and may change
 without constitutional amendment.
 
 | Repository           | Status         | Notes                    |
-|----------------------|----------------|-------------------------|
+|----------------------|----------------|---------------------------|
 | clockify             | Active         | Gold standard / template |
 | command-centre       | Active         | Task dashboard (Module 1)|
 | work-inbox           | Active         | Inbox briefing pipeline  |
@@ -227,6 +227,8 @@ without constitutional amendment.
 | hr-fa-knowledge-base | Active         |                          |
 | meeting-records      | Active         |                          |
 | hr-projects          | Active         |                          |
+| hris-change-requests | Active         |                          |
+| ag-flexpoints        | Active         |                          |
 | desktop-tutorial     | Decommissioned | Deletion pending         |
 | aimm                 | Out of scope   | Personal domain — Hope   |
 | personal-finance     | Out of scope   | Personal domain — Hope   |
@@ -248,3 +250,6 @@ without constitutional amendment.
 |         |            | surface ratified. Repo table        |
 |         |            | updated (command-centre,            |
 |         |            | hris-launcher added).               |
+| 2.1     | 2026-06-21 | Section 8 updated: hris-change-     |
+|         |            | requests and ag-flexpoints added    |
+|         |            | as Active. Scope table now complete.|
