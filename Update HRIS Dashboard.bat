@@ -15,6 +15,12 @@ if errorlevel 1 (
 echo Done.
 echo.
 
+:: Ensure dependencies are installed
+echo Checking dependencies...
+pip install openpyxl requests --quiet --disable-pip-version-check
+echo Done.
+echo.
+
 :: Run it
 python "%TEMP%\import_osm_report.py"
 
