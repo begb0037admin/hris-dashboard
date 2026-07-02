@@ -1,0 +1,402 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>HRIS Team — Open Tickets</title>
+  <style>
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+    body {
+      font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
+      background: #f0f2f5;
+      color: #1a1a2e;
+      min-height: 100vh;
+    }
+
+    /* ── Header ── */
+    header {
+      background: linear-gradient(135deg, #002147 0%, #003d80 100%);
+      color: #fff;
+      padding: 28px 40px 24px;
+      display: flex;
+      align-items: flex-end;
+      justify-content: space-between;
+      flex-wrap: wrap;
+      gap: 12px;
+    }
+    header h1 {
+      font-size: 1.6rem;
+      font-weight: 700;
+      letter-spacing: -0.3px;
+    }
+    header .subtitle {
+      font-size: 0.85rem;
+      opacity: 0.75;
+      margin-top: 4px;
+    }
+    .header-right {
+      display: flex;
+      flex-direction: column;
+      align-items: flex-end;
+      gap: 6px;
+    }
+    .last-updated {
+      font-size: 0.8rem;
+      opacity: 0.7;
+      text-align: right;
+    }
+
+    /* ── Summary bar ── */
+    .summary-bar {
+      display: flex;
+      gap: 16px;
+      padding: 20px 40px;
+      background: #fff;
+      border-bottom: 1px solid #e0e4ea;
+      flex-wrap: wrap;
+    }
+    .stat-card {
+      background: #f7f9fc;
+      border: 1px solid #dce1ea;
+      border-radius: 10px;
+      padding: 14px 24px;
+      min-width: 160px;
+      text-align: center;
+    }
+    .stat-card .stat-number {
+      font-size: 2rem;
+      font-weight: 700;
+      color: #002147;
+      line-height: 1;
+    }
+    .stat-card .stat-number.red { color: #c0392b; }
+    .stat-card .stat-label {
+      font-size: 0.78rem;
+      color: #6b7280;
+      margin-top: 5px;
+      text-transform: uppercase;
+      letter-spacing: 0.4px;
+    }
+
+    /* ── Main content ── */
+    main {
+      padding: 32px 40px;
+      max-width: 1400px;
+      margin: 0 auto;
+    }
+
+    /* ── Person sections ── */
+    .person-section {
+      background: #fff;
+      border-radius: 12px;
+      box-shadow: 0 1px 4px rgba(0,0,0,.07);
+      margin-bottom: 28px;
+      overflow: hidden;
+    }
+    .person-section h2 {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      padding: 16px 24px;
+      background: #f7f9fc;
+      border-bottom: 1px solid #e0e4ea;
+      font-size: 1rem;
+    }
+    .person-name { font-weight: 600; color: #002147; }
+    .person-count {
+      font-size: 0.82rem;
+      background: #002147;
+      color: #fff;
+      border-radius: 20px;
+      padding: 3px 12px;
+      font-weight: 500;
+    }
+
+    /* ── Unassigned section ── */
+    .unassigned-section {
+      background: #fff;
+      border-radius: 12px;
+      box-shadow: 0 1px 4px rgba(0,0,0,.07);
+      margin-bottom: 28px;
+      overflow: hidden;
+      border: 2px solid #e74c3c;
+    }
+    .unassigned-section h2 {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      padding: 16px 24px;
+      background: #fdf2f2;
+      border-bottom: 1px solid #f5c6c6;
+      font-size: 1rem;
+    }
+    .unassigned-label { font-weight: 600; color: #c0392b; }
+    .unassigned-count {
+      font-size: 0.82rem;
+      background: #c0392b;
+      color: #fff;
+      border-radius: 20px;
+      padding: 3px 12px;
+      font-weight: 500;
+    }
+
+    /* ── Tables ── */
+    table {
+      width: 100%;
+      border-collapse: collapse;
+      font-size: 0.875rem;
+    }
+    th {
+      text-align: left;
+      padding: 10px 16px;
+      font-size: 0.75rem;
+      text-transform: uppercase;
+      letter-spacing: 0.5px;
+      color: #6b7280;
+      background: #fafbfc;
+      border-bottom: 1px solid #e0e4ea;
+    }
+    td {
+      padding: 11px 16px;
+      border-bottom: 1px solid #f0f2f5;
+      vertical-align: middle;
+    }
+    tr:last-child td { border-bottom: none; }
+    tr:hover td { background: #f7f9fc; }
+    .subject { max-width: 420px; }
+    .empty {
+      text-align: center;
+      color: #9ca3af;
+      padding: 28px;
+      font-style: italic;
+    }
+
+    /* ── Badges ── */
+    .badge {
+      display: inline-block;
+      padding: 3px 10px;
+      border-radius: 12px;
+      font-size: 0.73rem;
+      font-weight: 600;
+      letter-spacing: 0.2px;
+      white-space: nowrap;
+    }
+
+    /* ── Footer ── */
+    footer {
+      text-align: center;
+      font-size: 0.78rem;
+      color: #9ca3af;
+      padding: 24px 40px 40px;
+    }
+  </style>
+</head>
+<body>
+
+<header>
+  <div>
+    <h1>HRIS Team — Open Tickets</h1>
+    <div class="subtitle">Oxford Service Manager (OSM) · University of Oxford</div>
+  </div>
+  <div class="header-right">
+    <div class="last-updated">Last updated<br><strong>Thursday 02 July 2026 at 13:12 BST</strong></div>
+  </div>
+</header>
+
+<div class="summary-bar">
+  <div class="stat-card">
+    <div class="stat-number">41</div>
+    <div class="stat-label">Total Open</div>
+  </div>
+  <div class="stat-card">
+    <div class="stat-number">38</div>
+    <div class="stat-label">Assigned</div>
+  </div>
+  <div class="stat-card">
+    <div class="stat-number red">3</div>
+    <div class="stat-label">&#9888; Unassigned</div>
+  </div>
+  <div class="stat-card">
+    <div class="stat-number">5</div>
+    <div class="stat-label">Team Members</div>
+  </div>
+</div>
+
+<main>
+
+  <section class="person-section">
+      <h2>
+        <span class="person-name">James Salas Guillen</span>
+        <span class="person-count">14 open</span>
+      </h2>
+      <table>
+        <thead>
+          <tr>
+            <th style="width:130px">Ticket</th>
+            <th>Summary</th>
+            <th style="width:115px">Status</th>
+            <th style="width:100px">Priority</th>
+            <th style="width:150px">Category</th>
+            <th style="width:120px">Created</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr><td><strong>50889997</strong></td><td class="subject">498 duplicate clients to be removed from Cority</td><td>Waiting</td><td><span class="badge" style="background:#6b7280;color:#fff">5</span></td><td>Cority - Occupational Health Management Service</td><td>06 Oct 2025 (268.9534722166d)</td></tr>
+          <tr><td><strong>50929404</strong></td><td class="subject">Odyssey</td><td>Waiting</td><td><span class="badge" style="background:#6b7280;color:#fff">5</span></td><td>Odyssey</td><td>18 Feb 2026 (133.9506944333d)</td></tr>
+          <tr><td><strong>50954587</strong></td><td class="subject">Cardinus - Request</td><td>Waiting</td><td><span class="badge" style="background:#6b7280;color:#fff">5</span></td><td>Display Screen Equipment Assessment System</td><td>15 May 2026 (47.9090277666d)</td></tr>
+          <tr><td><strong>50954906</strong></td><td class="subject">Odyssey</td><td>Waiting</td><td><span class="badge" style="background:#6b7280;color:#fff">5</span></td><td>Odyssey</td><td>18 May 2026 (44.9666666666d)</td></tr>
+          <tr><td><strong>50959348</strong></td><td class="subject">Respiratory reminders - another issue</td><td>Accepted</td><td><span class="badge" style="background:#6b7280;color:#fff">5</span></td><td>Cority - Occupational Health Management Service</td><td>09 Jun 2026 (22.8388888833d)</td></tr>
+          <tr><td><strong>50959634</strong></td><td class="subject">Dynanic authorisation question</td><td>Accepted</td><td><span class="badge" style="background:#6b7280;color:#fff">5</span></td><td>Applications/Software</td><td>10 Jun 2026 (21.77430555d)</td></tr>
+          <tr><td><strong>50960710</strong></td><td class="subject">JF struggling to log in -Checked and her profile keeps getting archived. Please can u assist. Thanks</td><td>Waiting</td><td><span class="badge" style="background:#6b7280;color:#fff">5</span></td><td>Display Screen Equipment Assessment System</td><td>17 Jun 2026 (14.8604166666d)</td></tr>
+          <tr><td><strong>50962658</strong></td><td class="subject">Cardinus Access - Ralph said to flag ones like this to Systems Support to investigate. Thanks</td><td>Waiting</td><td><span class="badge" style="background:#6b7280;color:#fff">5</span></td><td></td><td>23 Jun 2026 (8.9d)</td></tr>
+          <tr><td><strong>50963131</strong></td><td class="subject">Cority Issue</td><td>Waiting</td><td><span class="badge" style="background:#6b7280;color:#fff">5</span></td><td>Cority - Occupational Health Management Service</td><td>24 Jun 2026 (7.9152777666d)</td></tr>
+          <tr><td><strong>50963133</strong></td><td class="subject">Cority Issue</td><td>Accepted</td><td><span class="badge" style="background:#6b7280;color:#fff">5</span></td><td>Cority - Occupational Health Management Service</td><td>24 Jun 2026 (7.9145833333d)</td></tr>
+          <tr><td><strong>50964323</strong></td><td class="subject">Cority Issue</td><td>Waiting</td><td><span class="badge" style="background:#6b7280;color:#fff">5</span></td><td>Cority - Occupational Health Management Service</td><td>29 Jun 2026 (2.8354166666d)</td></tr>
+          <tr><td><strong>50964516</strong></td><td class="subject">Cority</td><td>Accepted</td><td><span class="badge" style="background:#6b7280;color:#fff">5</span></td><td>Cority - Occupational Health Management Service</td><td>30 Jun 2026 (2.0444444333d)</td></tr>
+          <tr><td><strong>50964745</strong></td><td class="subject">Cority</td><td>Waiting</td><td><span class="badge" style="background:#6b7280;color:#fff">5</span></td><td>Cority - Occupational Health Management Service</td><td>30 Jun 2026 (1.8638888833d)</td></tr>
+          <tr><td><strong>50891537</strong></td><td class="subject">Incident Summary: FW: Resolved - Support Call# 11592618 - Mixed sources: Unsealed  Incident Details:</td><td>Waiting</td><td><span class="badge" style="background:#6b7280;color:#fff">5</span></td><td>Odyssey</td><td>09 Oct 2025 (265.99375d)</td></tr>
+        </tbody>
+      </table>
+    </section>
+
+  <section class="person-section">
+      <h2>
+        <span class="person-name">Asta Palmer</span>
+        <span class="person-count">14 open</span>
+      </h2>
+      <table>
+        <thead>
+          <tr>
+            <th style="width:130px">Ticket</th>
+            <th>Summary</th>
+            <th style="width:115px">Status</th>
+            <th style="width:100px">Priority</th>
+            <th style="width:150px">Category</th>
+            <th style="width:120px">Created</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr><td><strong>50965042</strong></td><td class="subject">Add Shift Type - Hyeseong Lee</td><td>Accepted</td><td><span class="badge" style="background:#6b7280;color:#fff">3</span></td><td></td><td>01 Jul 2026 (0.97430555d)</td></tr>
+          <tr><td><strong>50965154</strong></td><td class="subject">Manager Self Service Add - Petros Ligoxygakis</td><td>Accepted</td><td><span class="badge" style="background:#6b7280;color:#fff">3</span></td><td></td><td>01 Jul 2026 (0.8888888833d)</td></tr>
+          <tr><td><strong>50965184</strong></td><td class="subject">Create Work Group - Abi Eccles</td><td>Accepted</td><td><span class="badge" style="background:#6b7280;color:#fff">3</span></td><td></td><td>01 Jul 2026 (0.8652777666d)</td></tr>
+          <tr><td><strong>50965354</strong></td><td class="subject">6 JULY - HR User Change Access - Millie Long</td><td>Accepted</td><td><span class="badge" style="background:#6b7280;color:#fff">5</span></td><td></td><td>01 Jul 2026 (0.7583333333d)</td></tr>
+          <tr><td><strong>50965379</strong></td><td class="subject">Manager Self Service Remove - Farai Zhou</td><td>Accepted</td><td><span class="badge" style="background:#6b7280;color:#fff">3</span></td><td></td><td>01 Jul 2026 (0.7444444333d)</td></tr>
+          <tr><td><strong>50965383</strong></td><td class="subject">Manager Self Service Change - Sarah Moore</td><td>Accepted</td><td><span class="badge" style="background:#6b7280;color:#fff">3</span></td><td></td><td>01 Jul 2026 (0.74375d)</td></tr>
+          <tr><td><strong>50965385</strong></td><td class="subject">Manager Self Service Add - Daniela Toale</td><td>Accepted</td><td><span class="badge" style="background:#6b7280;color:#fff">3</span></td><td></td><td>01 Jul 2026 (0.74375d)</td></tr>
+          <tr><td><strong>50965387</strong></td><td class="subject">Manager Self Service Add - Holly Sadler</td><td>Accepted</td><td><span class="badge" style="background:#6b7280;color:#fff">3</span></td><td></td><td>01 Jul 2026 (0.7423611d)</td></tr>
+          <tr><td><strong>50965388</strong></td><td class="subject">Manager Self Service Add - Cornelius Vermaak</td><td>Accepted</td><td><span class="badge" style="background:#6b7280;color:#fff">3</span></td><td></td><td>01 Jul 2026 (0.7416666666d)</td></tr>
+          <tr><td><strong>50965393</strong></td><td class="subject">My Development: Add Manager Dashboards for CDR reviewers (new request)</td><td>Accepted</td><td><span class="badge" style="background:#6b7280;color:#fff">5</span></td><td>My Development</td><td>01 Jul 2026 (0.7326388833d)</td></tr>
+          <tr><td><strong>50965404</strong></td><td class="subject">Manager Self Service Add - Ania Brzozowski</td><td>Accepted</td><td><span class="badge" style="background:#6b7280;color:#fff">3</span></td><td></td><td>02 Jul 2026 (0.1388888833d)</td></tr>
+          <tr><td><strong>50965448</strong></td><td class="subject">HR User Change Access - Emma Smith</td><td>Accepted</td><td><span class="badge" style="background:#6b7280;color:#fff">5</span></td><td></td><td>02 Jul 2026 (0.0465277666d)</td></tr>
+          <tr><td><strong>50965459</strong></td><td class="subject">ESS Katie Hutchinson 2395704  scro4336</td><td>Accepted</td><td><span class="badge" style="background:#6b7280;color:#fff">5</span></td><td>HR Self-Service</td><td>02 Jul 2026 (0.0256944333d)</td></tr>
+          <tr><td><strong>50965464</strong></td><td class="subject">Create Work Group - Lewis Cousins</td><td>Accepted</td><td><span class="badge" style="background:#6b7280;color:#fff">3</span></td><td></td><td>02 Jul 2026 (0.0208333333d)</td></tr>
+        </tbody>
+      </table>
+    </section>
+
+  <section class="person-section">
+      <h2>
+        <span class="person-name">Michael O'Sullivan</span>
+        <span class="person-count">6 open</span>
+      </h2>
+      <table>
+        <thead>
+          <tr>
+            <th style="width:130px">Ticket</th>
+            <th>Summary</th>
+            <th style="width:115px">Status</th>
+            <th style="width:100px">Priority</th>
+            <th style="width:150px">Category</th>
+            <th style="width:120px">Created</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr><td><strong>50959921</strong></td><td class="subject">CR 20020453 -  UOXU - Update OSPS DB and DC Employer Rate Contributions</td><td>Assigned</td><td><span class="badge" style="background:#6b7280;color:#fff">3</span></td><td></td><td>12 Jun 2026 (20.0736111d)</td></tr>
+          <tr><td><strong>50959922</strong></td><td class="subject">CR 20020453 -  UOXU - Test OSPS DB and DC Employer Rate Contributions</td><td>Assigned</td><td><span class="badge" style="background:#6b7280;color:#fff">3</span></td><td></td><td>12 Jun 2026 (20.0729166666d)</td></tr>
+          <tr><td><strong>50961819</strong></td><td class="subject">Request for new Academic holiday balance</td><td>Accepted</td><td><span class="badge" style="background:#6b7280;color:#fff">5</span></td><td>Time and Attendance</td><td>22 Jun 2026 (10.05625d)</td></tr>
+          <tr><td><strong>50964022</strong></td><td class="subject">AG Case # 69040395 - Error messages when trying to use co-workers calendar from Employee Dashboard</td><td>Accepted</td><td><span class="badge" style="background:#6b7280;color:#fff">5</span></td><td>Time and Attendance</td><td>27 Jun 2026 (4.5986111d)</td></tr>
+          <tr><td><strong>50964407</strong></td><td class="subject">CR 20020517 - New pension scheme and related pay codes for NHS needed</td><td>Accepted</td><td><span class="badge" style="background:#6b7280;color:#fff">5</span></td><td>Pensions</td><td>29 Jun 2026 (2.7722222166d)</td></tr>
+          <tr><td><strong>50964825</strong></td><td class="subject">CR 20020517 - UOXU - PeopleXD - Create New NHS AVC Pension Scheme and Associated Deduction Pay Code</td><td>Assigned</td><td><span class="badge" style="background:#6b7280;color:#fff">5</span></td><td></td><td>30 Jun 2026 (1.7722222166d)</td></tr>
+        </tbody>
+      </table>
+    </section>
+
+  <section class="person-section">
+      <h2>
+        <span class="person-name">Simon Burford</span>
+        <span class="person-count">1 open</span>
+      </h2>
+      <table>
+        <thead>
+          <tr>
+            <th style="width:130px">Ticket</th>
+            <th>Summary</th>
+            <th style="width:115px">Status</th>
+            <th style="width:100px">Priority</th>
+            <th style="width:150px">Category</th>
+            <th style="width:120px">Created</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr><td><strong>50948047</strong></td><td class="subject">Applicant Successfully Hired Applicant Status</td><td>Accepted</td><td><span class="badge" style="background:#6b7280;color:#fff">5</span></td><td>Recruitment</td><td>23 Apr 2026 (70.0583333333d)</td></tr>
+        </tbody>
+      </table>
+    </section>
+
+  <section class="person-section">
+      <h2>
+        <span class="person-name">Kevin Lelitte</span>
+        <span class="person-count">3 open</span>
+      </h2>
+      <table>
+        <thead>
+          <tr>
+            <th style="width:130px">Ticket</th>
+            <th>Summary</th>
+            <th style="width:115px">Status</th>
+            <th style="width:100px">Priority</th>
+            <th style="width:150px">Category</th>
+            <th style="width:120px">Created</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr><td><strong>50957361</strong></td><td class="subject">Issue manual payment error</td><td>Waiting</td><td><span class="badge" style="background:#6b7280;color:#fff">5</span></td><td>Payroll</td><td>28 May 2026 (34.9631944333d)</td></tr>
+          <tr><td><strong>50957960</strong></td><td class="subject">PAYPAY25 NMW Check tweak</td><td>Waiting</td><td><span class="badge" style="background:#6b7280;color:#fff">5</span></td><td>Payroll</td><td>02 Jun 2026 (29.97430555d)</td></tr>
+          <tr><td><strong>50964224</strong></td><td class="subject">Visitor Experience team are having difficulties with rostering and the Leave and Absence module</td><td>Assigned</td><td><span class="badge" style="background:#6b7280;color:#fff">5</span></td><td>Roster (WFM)</td><td>29 Jun 2026 (2.9409722166d)</td></tr>
+        </tbody>
+      </table>
+    </section>
+
+  <section class="unassigned-section">
+      <h2>
+        <span class="unassigned-label">&#9888; Unassigned</span>
+        <span class="unassigned-count">3 open</span>
+      </h2>
+      <table>
+        <thead>
+          <tr>
+            <th style="width:130px">Ticket</th>
+            <th>Summary</th>
+            <th style="width:115px">Status</th>
+            <th style="width:100px">Priority</th>
+            <th style="width:150px">Category</th>
+            <th style="width:120px">Created</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr><td><strong>50964499</strong></td><td class="subject">Cority</td><td>Logged</td><td><span class="badge" style="background:#6b7280;color:#fff">5</span></td><td>Cority - Occupational Health Management Service</td><td>30 Jun 2026 (2.06180555d)</td></tr>
+          <tr><td><strong>50965471</strong></td><td class="subject">Odyssey Building Request</td><td>Logged</td><td><span class="badge" style="background:#6b7280;color:#fff">5</span></td><td>Odyssey</td><td>02 Jul 2026 (0.0125d)</td></tr>
+          <tr><td><strong>50964251</strong></td><td class="subject">HR Reporting Email - Hema Akter</td><td>Logged</td><td><span class="badge" style="background:#6b7280;color:#fff">5</span></td><td></td><td>29 Jun 2026 (2.9131944333d)</td></tr>
+        </tbody>
+      </table>
+    </section>
+
+</main>
+
+<footer>
+  Generated by import_osm_report.py &middot; Source: All Open Tasks by Team.xlsx
+</footer>
+
+</body>
+</html>
