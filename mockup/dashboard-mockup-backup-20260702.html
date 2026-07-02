@@ -1,0 +1,554 @@
+
+<title>HRIS Team — Open Tickets (Mockup)</title>
+<style>
+  *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+  :root {
+    --navy:       #002147;
+    --navy-mid:   #003d80;
+    --ground:     #eef0f5;
+    --card:       #ffffff;
+    --linda:      #1a6b4a;
+    --linda-tint: #eef7f3;
+    --linda-mid:  #d0ece3;
+    --alert:      #c0392b;
+    --alert-tint: #fdf2f2;
+    --amber:      #b45309;
+    --amber-tint: #fffbeb;
+    --text:       #1a1a2e;
+    --muted:      #6b7280;
+    --border:     #e0e4ea;
+  }
+
+  body {
+    font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
+    background: var(--ground);
+    color: var(--text);
+    min-height: 100vh;
+    font-size: 14px;
+  }
+
+  /* ── Header ── */
+  header {
+    background: linear-gradient(135deg, var(--navy) 0%, var(--navy-mid) 100%);
+    color: #fff;
+    padding: 22px 36px;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 16px;
+  }
+  .header-left h1 {
+    font-size: 1.45rem;
+    font-weight: 700;
+    letter-spacing: -0.3px;
+  }
+  .header-left .subtitle {
+    font-size: 0.78rem;
+    opacity: 0.65;
+    margin-top: 3px;
+  }
+  .header-right {
+    display: flex;
+    align-items: center;
+    gap: 16px;
+  }
+  .last-updated {
+    font-size: 0.75rem;
+    opacity: 0.7;
+    text-align: right;
+    line-height: 1.5;
+  }
+  .print-btn {
+    background: rgba(255,255,255,0.15);
+    border: 1px solid rgba(255,255,255,0.4);
+    color: #fff;
+    padding: 7px 18px;
+    border-radius: 20px;
+    font-size: 0.8rem;
+    font-weight: 600;
+    cursor: pointer;
+    letter-spacing: 0.2px;
+    transition: background 0.15s;
+  }
+  .print-btn:hover { background: rgba(255,255,255,0.28); }
+
+  /* ── Summary bar ── */
+  .summary-bar {
+    display: flex;
+    gap: 12px;
+    padding: 16px 36px;
+    background: #fff;
+    border-bottom: 1px solid var(--border);
+    flex-wrap: wrap;
+  }
+  .stat {
+    background: var(--ground);
+    border: 1px solid var(--border);
+    border-radius: 10px;
+    padding: 12px 20px;
+    min-width: 140px;
+    text-align: center;
+  }
+  .stat-num {
+    font-size: 1.85rem;
+    font-weight: 700;
+    color: var(--navy);
+    line-height: 1;
+    font-variant-numeric: tabular-nums;
+  }
+  .stat-num.red { color: var(--alert); }
+  .stat-label {
+    font-size: 0.7rem;
+    color: var(--muted);
+    margin-top: 4px;
+    text-transform: uppercase;
+    letter-spacing: 0.5px;
+  }
+
+  /* ── Main ── */
+  main { padding: 24px 36px; max-width: 1600px; margin: 0 auto; }
+
+  /* ── Analyst card ── */
+  .analyst-card {
+    background: var(--card);
+    border-radius: 12px;
+    box-shadow: 0 1px 4px rgba(0,0,0,.06);
+    margin-bottom: 20px;
+    overflow: hidden;
+    border: 1px solid var(--border);
+  }
+  .analyst-header {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding: 14px 20px;
+    background: #f7f9fc;
+    border-bottom: 1px solid var(--border);
+  }
+  .analyst-identity { display: flex; flex-direction: column; gap: 2px; }
+  .analyst-name { font-weight: 700; color: var(--navy); font-size: 0.95rem; }
+  .analyst-title { font-size: 0.72rem; color: var(--muted); letter-spacing: 0.2px; }
+  .count-badge {
+    font-size: 0.75rem;
+    background: var(--navy);
+    color: #fff;
+    border-radius: 20px;
+    padding: 3px 12px;
+    font-weight: 600;
+    font-variant-numeric: tabular-nums;
+  }
+  .count-badge.amber-badge { background: var(--amber); }
+
+  /* ── Two-column body ── */
+  .analyst-body {
+    display: grid;
+    grid-template-columns: 58% 42%;
+  }
+
+  /* ── Ticket panel ── */
+  .ticket-panel {
+    border-right: 1px solid var(--border);
+    overflow-x: auto;
+  }
+  table {
+    width: 100%;
+    border-collapse: collapse;
+    font-size: 0.8rem;
+  }
+  th {
+    text-align: left;
+    padding: 8px 14px;
+    font-size: 0.68rem;
+    text-transform: uppercase;
+    letter-spacing: 0.5px;
+    color: var(--muted);
+    background: #fafbfc;
+    border-bottom: 1px solid var(--border);
+    font-weight: 600;
+    white-space: nowrap;
+  }
+  td {
+    padding: 9px 14px;
+    border-bottom: 1px solid #f0f2f5;
+    vertical-align: middle;
+    font-variant-numeric: tabular-nums;
+  }
+  tr:last-child td { border-bottom: none; }
+  tr:hover td { background: #f7f9fc; }
+  td.summary-cell { max-width: 260px; }
+  .empty-row td { text-align: center; color: var(--muted); font-style: italic; padding: 20px; }
+
+  .ticket-id { font-weight: 600; color: var(--navy); white-space: nowrap; }
+  .days { font-size: 0.75rem; color: var(--muted); white-space: nowrap; }
+  .days.old { color: var(--amber); font-weight: 600; }
+
+  .badge {
+    display: inline-block;
+    padding: 2px 8px;
+    border-radius: 10px;
+    font-size: 0.68rem;
+    font-weight: 700;
+    white-space: nowrap;
+  }
+  .p3 { background: #fef3c7; color: #92400e; }
+  .p5 { background: #f1f5f9; color: #475569; }
+
+  .status-pill {
+    display: inline-block;
+    padding: 2px 8px;
+    border-radius: 10px;
+    font-size: 0.68rem;
+    font-weight: 600;
+    white-space: nowrap;
+  }
+  .s-waiting  { background: #fef9c3; color: #854d0e; }
+  .s-accepted { background: #dbeafe; color: #1e40af; }
+  .s-assigned { background: #e0f2fe; color: #0369a1; }
+  .s-logged   { background: #f1f5f9; color: #475569; }
+
+  /* ── Linda panel ── */
+  .linda-panel {
+    display: flex;
+    flex-direction: column;
+    max-height: 360px;
+  }
+  .linda-header {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    padding: 10px 16px;
+    background: var(--linda-tint);
+    border-bottom: 1px solid var(--linda-mid);
+  }
+  .linda-icon svg { width: 32px; height: 32px; display: block; }
+  .linda-sub { font-size: 0.68rem; color: var(--muted); margin-left: auto; }
+
+  .linda-body {
+    flex: 1;
+    overflow-y: auto;
+    padding: 12px 16px;
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+  }
+
+  .linda-summary {
+    background: var(--linda-tint);
+    border: 1px solid var(--linda-mid);
+    border-radius: 8px;
+    padding: 10px 12px;
+    font-size: 0.78rem;
+    line-height: 1.55;
+    color: #1a3d2e;
+  }
+  .linda-summary strong { color: var(--linda); }
+
+  .linda-flags { display: flex; flex-direction: column; gap: 4px; }
+  .flag {
+    display: flex;
+    align-items: flex-start;
+    gap: 6px;
+    font-size: 0.74rem;
+    color: var(--text);
+    padding: 5px 8px;
+    border-radius: 6px;
+    background: #f8f9fa;
+    border: 1px solid var(--border);
+    line-height: 1.4;
+  }
+  .flag-icon { flex-shrink: 0; margin-top: 1px; }
+  .flag.warn { background: var(--amber-tint); border-color: #fed7aa; color: #7c3a00; }
+  .flag.info { background: #eff6ff; border-color: #bfdbfe; color: #1e3a8a; }
+
+  .chat-divider {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    font-size: 0.67rem;
+    color: var(--muted);
+    letter-spacing: 0.4px;
+    text-transform: uppercase;
+  }
+  .chat-divider::before, .chat-divider::after { content: ''; flex: 1; height: 1px; background: var(--border); }
+
+  .chat-messages { display: flex; flex-direction: column; gap: 8px; }
+  .msg { display: flex; flex-direction: column; gap: 2px; }
+  .msg-bubble {
+    padding: 7px 11px;
+    border-radius: 10px;
+    font-size: 0.76rem;
+    line-height: 1.5;
+    max-width: 90%;
+  }
+  .msg.kevin { align-items: flex-end; }
+  .msg.kevin .msg-bubble { background: var(--navy); color: #fff; border-bottom-right-radius: 3px; }
+  .msg.linda-msg { align-items: flex-start; }
+  .msg.linda-msg .msg-bubble { background: var(--linda-tint); border: 1px solid var(--linda-mid); color: #1a3d2e; border-bottom-left-radius: 3px; }
+  .msg-label { font-size: 0.65rem; color: var(--muted); padding: 0 4px; }
+
+  .linda-input {
+    display: flex;
+    gap: 6px;
+    padding: 10px 12px;
+    border-top: 1px solid var(--border);
+    background: #fafbfc;
+  }
+  .linda-input input {
+    flex: 1;
+    border: 1px solid var(--border);
+    border-radius: 20px;
+    padding: 6px 14px;
+    font-size: 0.78rem;
+    outline: none;
+    color: var(--text);
+    background: #fff;
+  }
+  .linda-input input:focus { border-color: var(--linda); }
+  .linda-input button {
+    background: var(--linda);
+    color: #fff;
+    border: none;
+    border-radius: 20px;
+    padding: 6px 14px;
+    font-size: 0.78rem;
+    font-weight: 600;
+    cursor: pointer;
+  }
+  .linda-input button:hover { background: #155c3d; }
+
+  .unassigned-card {
+    background: var(--card);
+    border-radius: 12px;
+    box-shadow: 0 1px 4px rgba(0,0,0,.06);
+    margin-bottom: 20px;
+    overflow: hidden;
+    border: 2px solid var(--alert);
+  }
+  .unassigned-header {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding: 14px 20px;
+    background: var(--alert-tint);
+    border-bottom: 1px solid #f5c6c6;
+  }
+  .unassigned-label { font-weight: 700; color: var(--alert); font-size: 0.95rem; }
+  .unassigned-badge { font-size: 0.75rem; background: var(--alert); color: #fff; border-radius: 20px; padding: 3px 12px; font-weight: 600; }
+
+  footer { text-align: center; font-size: 0.72rem; color: var(--muted); padding: 20px 36px 36px; }
+
+  @media print {
+    .linda-panel { max-height: none; }
+    .linda-input { display: none; }
+    .print-btn { display: none; }
+    header { print-color-adjust: exact; -webkit-print-color-adjust: exact; }
+    .analyst-card { break-inside: avoid; }
+  }
+
+  .mockup-banner { background: #1e293b; color: #94a3b8; text-align: center; padding: 8px; font-size: 0.72rem; letter-spacing: 0.3px; }
+  .mockup-banner strong { color: #f8fafc; }
+</style>
+
+<div class="mockup-banner"><strong>MOCKUP — RESTORE POINT 02 Jul 2026</strong> — Linda AI panels show representative examples · Chat is non-functional · All data from 02 Jul 2026 report</div>
+
+<header>
+  <div class="header-left">
+    <h1>HRIS Team — Open Tickets</h1>
+    <div class="subtitle">Oxford Service Manager (OSM) · University of Oxford</div>
+  </div>
+  <div class="header-right">
+    <div class="last-updated">Last updated<br><strong>Thursday 02 July 2026 at 13:12 BST</strong></div>
+    <button class="print-btn" onclick="window.print()">&#9113; Print Report</button>
+  </div>
+</header>
+
+<div class="summary-bar">
+  <div class="stat"><div class="stat-num">41</div><div class="stat-label">Total Open</div></div>
+  <div class="stat"><div class="stat-num">38</div><div class="stat-label">Assigned</div></div>
+  <div class="stat"><div class="stat-num red">3</div><div class="stat-label">&#9888; Unassigned</div></div>
+  <div class="stat"><div class="stat-num">5</div><div class="stat-label">Team Members</div></div>
+</div>
+
+<main>
+  <div class="analyst-card">
+    <div class="analyst-header">
+      <div class="analyst-identity"><span class="analyst-name">James Salas Guillen</span><span class="analyst-title">Health &amp; Safety Systems FA Senior Analyst</span></div>
+      <span class="count-badge amber-badge">14 open</span>
+    </div>
+    <div class="analyst-body">
+      <div class="ticket-panel">
+        <table><thead><tr><th>Ticket</th><th>Summary</th><th>Status</th><th>Pri</th><th>Days</th></tr></thead>
+        <tbody>
+          <tr><td class="ticket-id">50889997</td><td class="summary-cell">498 duplicate clients to be removed from Cority</td><td><span class="status-pill s-waiting">Waiting</span></td><td><span class="badge p5">5</span></td><td class="days old">268d</td></tr>
+          <tr><td class="ticket-id">50891537</td><td class="summary-cell">FW: Resolved — Mixed sources: Unsealed Incident</td><td><span class="status-pill s-waiting">Waiting</span></td><td><span class="badge p5">5</span></td><td class="days old">265d</td></tr>
+          <tr><td class="ticket-id">50929404</td><td class="summary-cell">Odyssey</td><td><span class="status-pill s-waiting">Waiting</span></td><td><span class="badge p5">5</span></td><td class="days old">133d</td></tr>
+          <tr><td class="ticket-id">50954587</td><td class="summary-cell">Cardinus - Request</td><td><span class="status-pill s-waiting">Waiting</span></td><td><span class="badge p5">5</span></td><td class="days old">47d</td></tr>
+          <tr><td class="ticket-id">50954906</td><td class="summary-cell">Odyssey</td><td><span class="status-pill s-waiting">Waiting</span></td><td><span class="badge p5">5</span></td><td class="days old">44d</td></tr>
+          <tr><td class="ticket-id">50959348</td><td class="summary-cell">Respiratory reminders - another issue</td><td><span class="status-pill s-accepted">Accepted</span></td><td><span class="badge p5">5</span></td><td class="days">22d</td></tr>
+          <tr><td class="ticket-id">50959634</td><td class="summary-cell">Dynamic authorisation question</td><td><span class="status-pill s-accepted">Accepted</span></td><td><span class="badge p5">5</span></td><td class="days">21d</td></tr>
+          <tr><td class="ticket-id">50960710</td><td class="summary-cell">JF struggling to log in — profile keeps getting archived</td><td><span class="status-pill s-waiting">Waiting</span></td><td><span class="badge p5">5</span></td><td class="days">14d</td></tr>
+          <tr><td class="ticket-id">50963131</td><td class="summary-cell">Cority Issue</td><td><span class="status-pill s-waiting">Waiting</span></td><td><span class="badge p5">5</span></td><td class="days">7d</td></tr>
+          <tr><td class="ticket-id">50964323</td><td class="summary-cell">Cority Issue</td><td><span class="status-pill s-waiting">Waiting</span></td><td><span class="badge p5">5</span></td><td class="days">2d</td></tr>
+        </tbody></table>
+        <div style="padding:8px 14px;font-size:0.7rem;color:var(--muted);border-top:1px solid var(--border)">+ 4 more tickets not shown</div>
+      </div>
+      <div class="linda-panel">
+        <div class="linda-header"><span class="linda-icon"><svg width="32" height="32" viewBox="0 0 36 34" fill="#4f8ef7" xmlns="http://www.w3.org/2000/svg"><path d="M12,7 Q13.5,15.5 22,18 Q13.5,20.5 12,29 Q10.5,20.5 2,18 Q10.5,15.5 12,7 Z"/><path d="M26,2 Q26.9,7.6 32,9 Q26.9,10.4 26,16 Q25.1,10.4 20,9 Q25.1,7.6 26,2 Z"/><path d="M27,21 Q27.5,24 30.5,25 Q27.5,26 27,29 Q26.5,26 23.5,25 Q26.5,24 27,21 Z"/></svg></span><span class="linda-sub">Analysis · 02 Jul 2026</span></div>
+        <div class="linda-body">
+          <div class="linda-summary">James has <strong>14 open tickets</strong> — the highest queue on the team. <strong>10 of 14 are in Waiting status</strong>, strongly suggesting external blockers. Concentrated in <strong>Cority (7)</strong> and <strong>Odyssey (3)</strong>.</div>
+          <div class="linda-flags">
+            <div class="flag warn"><span class="flag-icon">&#9888;</span><span>3 tickets over 100 days — 50889997 (268d), 50891537 (265d), 50929404 (133d). Vendor escalation or closure review needed.</span></div>
+            <div class="flag info"><span class="flag-icon">&#8505;</span><span>Recent tickets (last 7 days) are all Priority 5. No high-priority items currently.</span></div>
+          </div>
+          <div class="chat-divider">Ask Linda</div>
+          <div class="chat-messages">
+            <div class="msg kevin"><span class="msg-label">Kevin</span><div class="msg-bubble">Can you do a deeper dive on the Cority tickets?</div></div>
+            <div class="msg linda-msg"><span class="msg-label">Linda</span><div class="msg-bubble">James has 7 Cority tickets open. The oldest — 50889997 at 268 days — concerns 498 duplicate clients awaiting a data cleanse. The 5 recent tickets are all logged as "Cority Issue" with no further detail. Should I flag this for a vendor chase?</div></div>
+          </div>
+        </div>
+        <div class="linda-input"><input type="text" placeholder="Ask Linda about James's tickets…" /><button>Send</button></div>
+      </div>
+    </div>
+  </div>
+
+  <div class="analyst-card">
+    <div class="analyst-header">
+      <div class="analyst-identity"><span class="analyst-name">Asta Palmer</span><span class="analyst-title">Systems Admin FA Analyst</span></div>
+      <span class="count-badge">14 open</span>
+    </div>
+    <div class="analyst-body">
+      <div class="ticket-panel">
+        <table><thead><tr><th>Ticket</th><th>Summary</th><th>Status</th><th>Pri</th><th>Days</th></tr></thead>
+        <tbody>
+          <tr><td class="ticket-id">50965042</td><td class="summary-cell">Add Shift Type — Hyeseong Lee</td><td><span class="status-pill s-accepted">Accepted</span></td><td><span class="badge p3">3</span></td><td class="days">0d</td></tr>
+          <tr><td class="ticket-id">50965154</td><td class="summary-cell">Manager Self Service Add — Petros Ligoxygakis</td><td><span class="status-pill s-accepted">Accepted</span></td><td><span class="badge p3">3</span></td><td class="days">0d</td></tr>
+          <tr><td class="ticket-id">50965184</td><td class="summary-cell">Create Work Group — Abi Eccles</td><td><span class="status-pill s-accepted">Accepted</span></td><td><span class="badge p3">3</span></td><td class="days">0d</td></tr>
+          <tr><td class="ticket-id">50965354</td><td class="summary-cell">6 JULY — HR User Change Access — Millie Long</td><td><span class="status-pill s-accepted">Accepted</span></td><td><span class="badge p5">5</span></td><td class="days">0d</td></tr>
+          <tr><td class="ticket-id">50965379</td><td class="summary-cell">Manager Self Service Remove — Farai Zhou</td><td><span class="status-pill s-accepted">Accepted</span></td><td><span class="badge p3">3</span></td><td class="days">0d</td></tr>
+          <tr><td class="ticket-id">50965383</td><td class="summary-cell">Manager Self Service Change — Sarah Moore</td><td><span class="status-pill s-accepted">Accepted</span></td><td><span class="badge p3">3</span></td><td class="days">0d</td></tr>
+          <tr><td class="ticket-id">50965393</td><td class="summary-cell">My Development: Add Manager Dashboards for CDR reviewers</td><td><span class="status-pill s-accepted">Accepted</span></td><td><span class="badge p5">5</span></td><td class="days">0d</td></tr>
+          <tr><td class="ticket-id">50965464</td><td class="summary-cell">Create Work Group — Lewis Cousins</td><td><span class="status-pill s-accepted">Accepted</span></td><td><span class="badge p3">3</span></td><td class="days">0d</td></tr>
+        </tbody></table>
+        <div style="padding:8px 14px;font-size:0.7rem;color:var(--muted);border-top:1px solid var(--border)">+ 6 more tickets not shown</div>
+      </div>
+      <div class="linda-panel">
+        <div class="linda-header"><span class="linda-icon"><svg width="32" height="32" viewBox="0 0 36 34" fill="#4f8ef7" xmlns="http://www.w3.org/2000/svg"><path d="M12,7 Q13.5,15.5 22,18 Q13.5,20.5 12,29 Q10.5,20.5 2,18 Q10.5,15.5 12,7 Z"/><path d="M26,2 Q26.9,7.6 32,9 Q26.9,10.4 26,16 Q25.1,10.4 20,9 Q25.1,7.6 26,2 Z"/><path d="M27,21 Q27.5,24 30.5,25 Q27.5,26 27,29 Q26.5,26 23.5,25 Q26.5,24 27,21 Z"/></svg></span><span class="linda-sub">Analysis · 02 Jul 2026</span></div>
+        <div class="linda-body">
+          <div class="linda-summary">Asta has <strong>14 open tickets</strong>, all raised in the last 24 hours, all <strong>Accepted</strong>. High-volume routine admin. <strong>No stale items.</strong></div>
+          <div class="linda-flags">
+            <div class="flag info"><span class="flag-icon">&#8505;</span><span>Ticket 50965354 references a 6 July deadline — flag for completion before end of week.</span></div>
+          </div>
+          <div class="chat-divider">Ask Linda</div>
+          <div class="chat-messages"><div class="msg linda-msg"><span class="msg-label">Linda</span><div class="msg-bubble">Asta's queue looks healthy today. Would you like me to compare her volume against previous weeks once we have more historical data?</div></div></div>
+        </div>
+        <div class="linda-input"><input type="text" placeholder="Ask Linda about Asta's tickets…" /><button>Send</button></div>
+      </div>
+    </div>
+  </div>
+
+  <div class="analyst-card">
+    <div class="analyst-header">
+      <div class="analyst-identity"><span class="analyst-name">Michael O'Sullivan</span><span class="analyst-title">HRIS FA Senior Analyst</span></div>
+      <span class="count-badge">6 open</span>
+    </div>
+    <div class="analyst-body">
+      <div class="ticket-panel">
+        <table><thead><tr><th>Ticket</th><th>Summary</th><th>Status</th><th>Pri</th><th>Days</th></tr></thead>
+        <tbody>
+          <tr><td class="ticket-id">50959921</td><td class="summary-cell">CR 20020453 — UOXU — Update OSPS DB and DC Employer Rate Contributions</td><td><span class="status-pill s-assigned">Assigned</span></td><td><span class="badge p3">3</span></td><td class="days">20d</td></tr>
+          <tr><td class="ticket-id">50959922</td><td class="summary-cell">CR 20020453 — UOXU — Test OSPS DB and DC Employer Rate Contributions</td><td><span class="status-pill s-assigned">Assigned</span></td><td><span class="badge p3">3</span></td><td class="days">20d</td></tr>
+          <tr><td class="ticket-id">50961819</td><td class="summary-cell">Request for new Academic holiday balance</td><td><span class="status-pill s-accepted">Accepted</span></td><td><span class="badge p5">5</span></td><td class="days">10d</td></tr>
+          <tr><td class="ticket-id">50964022</td><td class="summary-cell">AG Case #69040395 — Error messages on co-workers calendar</td><td><span class="status-pill s-accepted">Accepted</span></td><td><span class="badge p5">5</span></td><td class="days">4d</td></tr>
+          <tr><td class="ticket-id">50964407</td><td class="summary-cell">CR 20020517 — New pension scheme and pay codes for NHS</td><td><span class="status-pill s-accepted">Accepted</span></td><td><span class="badge p5">5</span></td><td class="days">2d</td></tr>
+          <tr><td class="ticket-id">50964825</td><td class="summary-cell">CR 20020517 — UOXU — Create New NHS AVC Pension Scheme</td><td><span class="status-pill s-assigned">Assigned</span></td><td><span class="badge p5">5</span></td><td class="days">1d</td></tr>
+        </tbody></table>
+      </div>
+      <div class="linda-panel">
+        <div class="linda-header"><span class="linda-icon"><svg width="32" height="32" viewBox="0 0 36 34" fill="#4f8ef7" xmlns="http://www.w3.org/2000/svg"><path d="M12,7 Q13.5,15.5 22,18 Q13.5,20.5 12,29 Q10.5,20.5 2,18 Q10.5,15.5 12,7 Z"/><path d="M26,2 Q26.9,7.6 32,9 Q26.9,10.4 26,16 Q25.1,10.4 20,9 Q25.1,7.6 26,2 Z"/><path d="M27,21 Q27.5,24 30.5,25 Q27.5,26 27,29 Q26.5,26 23.5,25 Q26.5,24 27,21 Z"/></svg></span><span class="linda-sub">Analysis · 02 Jul 2026</span></div>
+        <div class="linda-body">
+          <div class="linda-summary">Michael has <strong>6 open tickets</strong>. Two active CRs (OSPS pension rates, NHS AVC pension), both in UOXU (UAT).</div>
+          <div class="linda-flags">
+            <div class="flag info"><span class="flag-icon">&#8505;</span><span>CR 20020453 has two tasks at 20 days — both Assigned, not yet Accepted. Worth checking if blocked.</span></div>
+          </div>
+          <div class="chat-divider">Ask Linda</div>
+          <div class="chat-messages"><div class="msg linda-msg"><span class="msg-label">Linda</span><div class="msg-bubble">Michael's queue is focused and low-risk. The two OSPS CR tasks at 20 days are the only items worth watching.</div></div></div>
+        </div>
+        <div class="linda-input"><input type="text" placeholder="Ask Linda about Michael's tickets…" /><button>Send</button></div>
+      </div>
+    </div>
+  </div>
+
+  <div class="analyst-card">
+    <div class="analyst-header">
+      <div class="analyst-identity"><span class="analyst-name">Simon Burford</span><span class="analyst-title">Senior Manager</span></div>
+      <span class="count-badge">1 open</span>
+    </div>
+    <div class="analyst-body">
+      <div class="ticket-panel">
+        <table><thead><tr><th>Ticket</th><th>Summary</th><th>Status</th><th>Pri</th><th>Days</th></tr></thead>
+        <tbody><tr><td class="ticket-id">50948047</td><td class="summary-cell">Applicant Successfully Hired Applicant Status</td><td><span class="status-pill s-accepted">Accepted</span></td><td><span class="badge p5">5</span></td><td class="days old">70d</td></tr></tbody>
+        </table>
+      </div>
+      <div class="linda-panel">
+        <div class="linda-header"><span class="linda-icon"><svg width="32" height="32" viewBox="0 0 36 34" fill="#4f8ef7" xmlns="http://www.w3.org/2000/svg"><path d="M12,7 Q13.5,15.5 22,18 Q13.5,20.5 12,29 Q10.5,20.5 2,18 Q10.5,15.5 12,7 Z"/><path d="M26,2 Q26.9,7.6 32,9 Q26.9,10.4 26,16 Q25.1,10.4 20,9 Q25.1,7.6 26,2 Z"/><path d="M27,21 Q27.5,24 30.5,25 Q27.5,26 27,29 Q26.5,26 23.5,25 Q26.5,24 27,21 Z"/></svg></span><span class="linda-sub">Analysis · 02 Jul 2026</span></div>
+        <div class="linda-body">
+          <div class="linda-summary">Simon has <strong>1 open ticket</strong>, open <strong>70 days</strong>. Accepted status for over two months.</div>
+          <div class="linda-flags"><div class="flag warn"><span class="flag-icon">&#9888;</span><span>70 days with no visible progress. May benefit from reassignment or escalation review.</span></div></div>
+          <div class="chat-divider">Ask Linda</div>
+          <div class="chat-messages"><div class="msg linda-msg"><span class="msg-label">Linda</span><div class="msg-bubble">Is this linked to the Deactivate Applicant Successfully Hired project? If so, it may be intentionally parked.</div></div></div>
+        </div>
+        <div class="linda-input"><input type="text" placeholder="Ask Linda about Simon's tickets…" /><button>Send</button></div>
+      </div>
+    </div>
+  </div>
+
+  <div class="analyst-card">
+    <div class="analyst-header">
+      <div class="analyst-identity"><span class="analyst-name">Kevin Lelitte</span><span class="analyst-title">FA Team Lead</span></div>
+      <span class="count-badge">3 open</span>
+    </div>
+    <div class="analyst-body">
+      <div class="ticket-panel">
+        <table><thead><tr><th>Ticket</th><th>Summary</th><th>Status</th><th>Pri</th><th>Days</th></tr></thead>
+        <tbody>
+          <tr><td class="ticket-id">50957361</td><td class="summary-cell">Issue manual payment error</td><td><span class="status-pill s-waiting">Waiting</span></td><td><span class="badge p5">5</span></td><td class="days old">34d</td></tr>
+          <tr><td class="ticket-id">50957960</td><td class="summary-cell">PAYPAY25 NMW Check tweak</td><td><span class="status-pill s-waiting">Waiting</span></td><td><span class="badge p5">5</span></td><td class="days old">29d</td></tr>
+          <tr><td class="ticket-id">50964224</td><td class="summary-cell">Visitor Experience team — rostering and Leave &amp; Absence module difficulties</td><td><span class="status-pill s-assigned">Assigned</span></td><td><span class="badge p5">5</span></td><td class="days">2d</td></tr>
+        </tbody></table>
+      </div>
+      <div class="linda-panel">
+        <div class="linda-header"><span class="linda-icon"><svg width="32" height="32" viewBox="0 0 36 34" fill="#4f8ef7" xmlns="http://www.w3.org/2000/svg"><path d="M12,7 Q13.5,15.5 22,18 Q13.5,20.5 12,29 Q10.5,20.5 2,18 Q10.5,15.5 12,7 Z"/><path d="M26,2 Q26.9,7.6 32,9 Q26.9,10.4 26,16 Q25.1,10.4 20,9 Q25.1,7.6 26,2 Z"/><path d="M27,21 Q27.5,24 30.5,25 Q27.5,26 27,29 Q26.5,26 23.5,25 Q26.5,24 27,21 Z"/></svg></span><span class="linda-sub">Analysis · 02 Jul 2026</span></div>
+        <div class="linda-body">
+          <div class="linda-summary">Kevin has <strong>3 open tickets</strong>. Two payroll items Waiting 29–34 days. Visitor Experience rostering is new and active.</div>
+          <div class="linda-flags">
+            <div class="flag warn"><span class="flag-icon">&#9888;</span><span>50957361 and 50957960 — both payroll, both Waiting. Are these with the payroll team or Access Group?</span></div>
+          </div>
+          <div class="chat-divider">Ask Linda</div>
+          <div class="chat-messages">
+            <div class="msg kevin"><span class="msg-label">Kevin</span><div class="msg-bubble">Who should I chase on the payroll tickets?</div></div>
+            <div class="msg linda-msg"><span class="msg-label">Linda</span><div class="msg-bubble">50957361 looks like Access Group support; 50957960 may need payroll team to confirm the rule. Can you confirm who you last contacted on each?</div></div>
+          </div>
+        </div>
+        <div class="linda-input"><input type="text" placeholder="Ask Linda about your tickets…" /><button>Send</button></div>
+      </div>
+    </div>
+  </div>
+
+  <div class="unassigned-card">
+    <div class="unassigned-header">
+      <span class="unassigned-label">&#9888; Unassigned — Action Required</span>
+      <span class="unassigned-badge">3 open</span>
+    </div>
+    <div class="ticket-panel" style="border-right:none">
+      <table><thead><tr><th>Ticket</th><th>Summary</th><th>Status</th><th>Pri</th><th>Days</th><th>Team</th></tr></thead>
+      <tbody>
+        <tr><td class="ticket-id">50965471</td><td class="summary-cell">Odyssey Building Request</td><td><span class="status-pill s-logged">Logged</span></td><td><span class="badge p5">5</span></td><td class="days">0d</td><td style="font-size:0.72rem;color:var(--muted)">HRIS Analysis</td></tr>
+        <tr><td class="ticket-id">50964499</td><td class="summary-cell">Cority</td><td><span class="status-pill s-logged">Logged</span></td><td><span class="badge p5">5</span></td><td class="days">2d</td><td style="font-size:0.72rem;color:var(--muted)">H&amp;S 2nd Line</td></tr>
+        <tr><td class="ticket-id">50964251</td><td class="summary-cell">HR Reporting Email — Hema Akter</td><td><span class="status-pill s-logged">Logged</span></td><td><span class="badge p5">5</span></td><td class="days">2d</td><td style="font-size:0.72rem;color:var(--muted)">HRIS Analysis</td></tr>
+      </tbody></table>
+    </div>
+  </div>
+</main>
+
+<footer>Mockup · Restore point 02 Jul 2026 · import_osm_report.py · Source: All Open Tasks by Team.xlsx</footer>
