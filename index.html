@@ -41,26 +41,6 @@
       align-items: flex-end;
       gap: 6px;
     }
-    .refresh-pill {
-      background: rgba(255,255,255,0.15);
-      border: 1px solid rgba(255,255,255,0.45);
-      color: #fff;
-      padding: 7px 20px;
-      border-radius: 20px;
-      font-size: 0.85rem;
-      font-weight: 600;
-      cursor: pointer;
-      letter-spacing: 0.2px;
-      transition: background 0.15s;
-    }
-    .refresh-pill:hover:not(:disabled) { background: rgba(255,255,255,0.28); }
-    .refresh-pill:disabled { opacity: 0.55; cursor: not-allowed; }
-    .refresh-status {
-      font-size: 0.75rem;
-      opacity: 0.85;
-      text-align: right;
-      min-height: 14px;
-    }
     .last-updated {
       font-size: 0.8rem;
       opacity: 0.7;
@@ -184,19 +164,13 @@
     }
     tr:last-child td { border-bottom: none; }
     tr:hover td { background: #f7f9fc; }
-    .subject { max-width: 380px; }
+    .subject { max-width: 420px; }
     .empty {
       text-align: center;
       color: #9ca3af;
       padding: 28px;
       font-style: italic;
     }
-    td a {
-      color: #0057b8;
-      text-decoration: none;
-      font-weight: 500;
-    }
-    td a:hover { text-decoration: underline; }
 
     /* ── Badges ── */
     .badge {
@@ -223,27 +197,25 @@
 <header>
   <div>
     <h1>HRIS Team — Open Tickets</h1>
-    <div class="subtitle">Ivanti SAASIT · University of Oxford</div>
+    <div class="subtitle">Oxford Service Manager (OSM) · University of Oxford</div>
   </div>
   <div class="header-right">
-    <button id="refresh-btn" class="refresh-pill" onclick="triggerRefresh()">↻ Refresh</button>
-    <div id="refresh-status" class="refresh-status"></div>
-    <div class="last-updated">Last updated<br><strong>Saturday 06 June 2026 at 13:40 BST</strong></div>
+    <div class="last-updated">Last updated<br><strong>Thursday 02 July 2026 at 13:12 BST</strong></div>
   </div>
 </header>
 
 <div class="summary-bar">
   <div class="stat-card">
-    <div class="stat-number">0</div>
+    <div class="stat-number">41</div>
     <div class="stat-label">Total Open</div>
   </div>
   <div class="stat-card">
-    <div class="stat-number">0</div>
+    <div class="stat-number">38</div>
     <div class="stat-label">Assigned</div>
   </div>
   <div class="stat-card">
-    <div class="stat-number red">0</div>
-    <div class="stat-label">⚠ Unassigned</div>
+    <div class="stat-number red">3</div>
+    <div class="stat-label">&#9888; Unassigned</div>
   </div>
   <div class="stat-card">
     <div class="stat-number">5</div>
@@ -253,182 +225,178 @@
 
 <main>
 
-  
-    <section class="person-section">
+  <section class="person-section">
       <h2>
         <span class="person-name">James Salas Guillen</span>
-        <span class="person-count">0 open</span>
+        <span class="person-count">14 open</span>
       </h2>
       <table>
         <thead>
           <tr>
-            <th style="width:110px">Ticket ID</th>
-            <th>Subject</th>
+            <th style="width:130px">Ticket</th>
+            <th>Summary</th>
             <th style="width:115px">Status</th>
-            <th style="width:90px">Priority</th>
-            <th style="width:140px">Category</th>
-            <th style="width:100px">Created</th>
+            <th style="width:100px">Priority</th>
+            <th style="width:150px">Category</th>
+            <th style="width:120px">Created</th>
           </tr>
         </thead>
         <tbody>
-          <tr><td colspan="6" class="empty">No open tasks</td></tr>
+          <tr><td><strong>50889997</strong></td><td class="subject">498 duplicate clients to be removed from Cority</td><td>Waiting</td><td><span class="badge" style="background:#6b7280;color:#fff">5</span></td><td>Cority - Occupational Health Management Service</td><td>06 Oct 2025 (268.9534722166d)</td></tr>
+          <tr><td><strong>50929404</strong></td><td class="subject">Odyssey</td><td>Waiting</td><td><span class="badge" style="background:#6b7280;color:#fff">5</span></td><td>Odyssey</td><td>18 Feb 2026 (133.9506944333d)</td></tr>
+          <tr><td><strong>50954587</strong></td><td class="subject">Cardinus - Request</td><td>Waiting</td><td><span class="badge" style="background:#6b7280;color:#fff">5</span></td><td>Display Screen Equipment Assessment System</td><td>15 May 2026 (47.9090277666d)</td></tr>
+          <tr><td><strong>50954906</strong></td><td class="subject">Odyssey</td><td>Waiting</td><td><span class="badge" style="background:#6b7280;color:#fff">5</span></td><td>Odyssey</td><td>18 May 2026 (44.9666666666d)</td></tr>
+          <tr><td><strong>50959348</strong></td><td class="subject">Respiratory reminders - another issue</td><td>Accepted</td><td><span class="badge" style="background:#6b7280;color:#fff">5</span></td><td>Cority - Occupational Health Management Service</td><td>09 Jun 2026 (22.8388888833d)</td></tr>
+          <tr><td><strong>50959634</strong></td><td class="subject">Dynanic authorisation question</td><td>Accepted</td><td><span class="badge" style="background:#6b7280;color:#fff">5</span></td><td>Applications/Software</td><td>10 Jun 2026 (21.77430555d)</td></tr>
+          <tr><td><strong>50960710</strong></td><td class="subject">JF struggling to log in -Checked and her profile keeps getting archived. Please can u assist. Thanks</td><td>Waiting</td><td><span class="badge" style="background:#6b7280;color:#fff">5</span></td><td>Display Screen Equipment Assessment System</td><td>17 Jun 2026 (14.8604166666d)</td></tr>
+          <tr><td><strong>50962658</strong></td><td class="subject">Cardinus Access - Ralph said to flag ones like this to Systems Support to investigate. Thanks</td><td>Waiting</td><td><span class="badge" style="background:#6b7280;color:#fff">5</span></td><td></td><td>23 Jun 2026 (8.9d)</td></tr>
+          <tr><td><strong>50963131</strong></td><td class="subject">Cority Issue</td><td>Waiting</td><td><span class="badge" style="background:#6b7280;color:#fff">5</span></td><td>Cority - Occupational Health Management Service</td><td>24 Jun 2026 (7.9152777666d)</td></tr>
+          <tr><td><strong>50963133</strong></td><td class="subject">Cority Issue</td><td>Accepted</td><td><span class="badge" style="background:#6b7280;color:#fff">5</span></td><td>Cority - Occupational Health Management Service</td><td>24 Jun 2026 (7.9145833333d)</td></tr>
+          <tr><td><strong>50964323</strong></td><td class="subject">Cority Issue</td><td>Waiting</td><td><span class="badge" style="background:#6b7280;color:#fff">5</span></td><td>Cority - Occupational Health Management Service</td><td>29 Jun 2026 (2.8354166666d)</td></tr>
+          <tr><td><strong>50964516</strong></td><td class="subject">Cority</td><td>Accepted</td><td><span class="badge" style="background:#6b7280;color:#fff">5</span></td><td>Cority - Occupational Health Management Service</td><td>30 Jun 2026 (2.0444444333d)</td></tr>
+          <tr><td><strong>50964745</strong></td><td class="subject">Cority</td><td>Waiting</td><td><span class="badge" style="background:#6b7280;color:#fff">5</span></td><td>Cority - Occupational Health Management Service</td><td>30 Jun 2026 (1.8638888833d)</td></tr>
+          <tr><td><strong>50891537</strong></td><td class="subject">Incident Summary: FW: Resolved - Support Call# 11592618 - Mixed sources: Unsealed  Incident Details:</td><td>Waiting</td><td><span class="badge" style="background:#6b7280;color:#fff">5</span></td><td>Odyssey</td><td>09 Oct 2025 (265.99375d)</td></tr>
         </tbody>
       </table>
     </section>
-    <section class="person-section">
+
+  <section class="person-section">
       <h2>
         <span class="person-name">Asta Palmer</span>
-        <span class="person-count">0 open</span>
+        <span class="person-count">14 open</span>
       </h2>
       <table>
         <thead>
           <tr>
-            <th style="width:110px">Ticket ID</th>
-            <th>Subject</th>
+            <th style="width:130px">Ticket</th>
+            <th>Summary</th>
             <th style="width:115px">Status</th>
-            <th style="width:90px">Priority</th>
-            <th style="width:140px">Category</th>
-            <th style="width:100px">Created</th>
+            <th style="width:100px">Priority</th>
+            <th style="width:150px">Category</th>
+            <th style="width:120px">Created</th>
           </tr>
         </thead>
         <tbody>
-          <tr><td colspan="6" class="empty">No open tasks</td></tr>
+          <tr><td><strong>50965042</strong></td><td class="subject">Add Shift Type - Hyeseong Lee</td><td>Accepted</td><td><span class="badge" style="background:#6b7280;color:#fff">3</span></td><td></td><td>01 Jul 2026 (0.97430555d)</td></tr>
+          <tr><td><strong>50965154</strong></td><td class="subject">Manager Self Service Add - Petros Ligoxygakis</td><td>Accepted</td><td><span class="badge" style="background:#6b7280;color:#fff">3</span></td><td></td><td>01 Jul 2026 (0.8888888833d)</td></tr>
+          <tr><td><strong>50965184</strong></td><td class="subject">Create Work Group - Abi Eccles</td><td>Accepted</td><td><span class="badge" style="background:#6b7280;color:#fff">3</span></td><td></td><td>01 Jul 2026 (0.8652777666d)</td></tr>
+          <tr><td><strong>50965354</strong></td><td class="subject">6 JULY - HR User Change Access - Millie Long</td><td>Accepted</td><td><span class="badge" style="background:#6b7280;color:#fff">5</span></td><td></td><td>01 Jul 2026 (0.7583333333d)</td></tr>
+          <tr><td><strong>50965379</strong></td><td class="subject">Manager Self Service Remove - Farai Zhou</td><td>Accepted</td><td><span class="badge" style="background:#6b7280;color:#fff">3</span></td><td></td><td>01 Jul 2026 (0.7444444333d)</td></tr>
+          <tr><td><strong>50965383</strong></td><td class="subject">Manager Self Service Change - Sarah Moore</td><td>Accepted</td><td><span class="badge" style="background:#6b7280;color:#fff">3</span></td><td></td><td>01 Jul 2026 (0.74375d)</td></tr>
+          <tr><td><strong>50965385</strong></td><td class="subject">Manager Self Service Add - Daniela Toale</td><td>Accepted</td><td><span class="badge" style="background:#6b7280;color:#fff">3</span></td><td></td><td>01 Jul 2026 (0.74375d)</td></tr>
+          <tr><td><strong>50965387</strong></td><td class="subject">Manager Self Service Add - Holly Sadler</td><td>Accepted</td><td><span class="badge" style="background:#6b7280;color:#fff">3</span></td><td></td><td>01 Jul 2026 (0.7423611d)</td></tr>
+          <tr><td><strong>50965388</strong></td><td class="subject">Manager Self Service Add - Cornelius Vermaak</td><td>Accepted</td><td><span class="badge" style="background:#6b7280;color:#fff">3</span></td><td></td><td>01 Jul 2026 (0.7416666666d)</td></tr>
+          <tr><td><strong>50965393</strong></td><td class="subject">My Development: Add Manager Dashboards for CDR reviewers (new request)</td><td>Accepted</td><td><span class="badge" style="background:#6b7280;color:#fff">5</span></td><td>My Development</td><td>01 Jul 2026 (0.7326388833d)</td></tr>
+          <tr><td><strong>50965404</strong></td><td class="subject">Manager Self Service Add - Ania Brzozowski</td><td>Accepted</td><td><span class="badge" style="background:#6b7280;color:#fff">3</span></td><td></td><td>02 Jul 2026 (0.1388888833d)</td></tr>
+          <tr><td><strong>50965448</strong></td><td class="subject">HR User Change Access - Emma Smith</td><td>Accepted</td><td><span class="badge" style="background:#6b7280;color:#fff">5</span></td><td></td><td>02 Jul 2026 (0.0465277666d)</td></tr>
+          <tr><td><strong>50965459</strong></td><td class="subject">ESS Katie Hutchinson 2395704  scro4336</td><td>Accepted</td><td><span class="badge" style="background:#6b7280;color:#fff">5</span></td><td>HR Self-Service</td><td>02 Jul 2026 (0.0256944333d)</td></tr>
+          <tr><td><strong>50965464</strong></td><td class="subject">Create Work Group - Lewis Cousins</td><td>Accepted</td><td><span class="badge" style="background:#6b7280;color:#fff">3</span></td><td></td><td>02 Jul 2026 (0.0208333333d)</td></tr>
         </tbody>
       </table>
     </section>
-    <section class="person-section">
+
+  <section class="person-section">
       <h2>
         <span class="person-name">Michael O'Sullivan</span>
-        <span class="person-count">0 open</span>
+        <span class="person-count">6 open</span>
       </h2>
       <table>
         <thead>
           <tr>
-            <th style="width:110px">Ticket ID</th>
-            <th>Subject</th>
+            <th style="width:130px">Ticket</th>
+            <th>Summary</th>
             <th style="width:115px">Status</th>
-            <th style="width:90px">Priority</th>
-            <th style="width:140px">Category</th>
-            <th style="width:100px">Created</th>
+            <th style="width:100px">Priority</th>
+            <th style="width:150px">Category</th>
+            <th style="width:120px">Created</th>
           </tr>
         </thead>
         <tbody>
-          <tr><td colspan="6" class="empty">No open tasks</td></tr>
+          <tr><td><strong>50959921</strong></td><td class="subject">CR 20020453 -  UOXU - Update OSPS DB and DC Employer Rate Contributions</td><td>Assigned</td><td><span class="badge" style="background:#6b7280;color:#fff">3</span></td><td></td><td>12 Jun 2026 (20.0736111d)</td></tr>
+          <tr><td><strong>50959922</strong></td><td class="subject">CR 20020453 -  UOXU - Test OSPS DB and DC Employer Rate Contributions</td><td>Assigned</td><td><span class="badge" style="background:#6b7280;color:#fff">3</span></td><td></td><td>12 Jun 2026 (20.0729166666d)</td></tr>
+          <tr><td><strong>50961819</strong></td><td class="subject">Request for new Academic holiday balance</td><td>Accepted</td><td><span class="badge" style="background:#6b7280;color:#fff">5</span></td><td>Time and Attendance</td><td>22 Jun 2026 (10.05625d)</td></tr>
+          <tr><td><strong>50964022</strong></td><td class="subject">AG Case # 69040395 - Error messages when trying to use co-workers calendar from Employee Dashboard</td><td>Accepted</td><td><span class="badge" style="background:#6b7280;color:#fff">5</span></td><td>Time and Attendance</td><td>27 Jun 2026 (4.5986111d)</td></tr>
+          <tr><td><strong>50964407</strong></td><td class="subject">CR 20020517 - New pension scheme and related pay codes for NHS needed</td><td>Accepted</td><td><span class="badge" style="background:#6b7280;color:#fff">5</span></td><td>Pensions</td><td>29 Jun 2026 (2.7722222166d)</td></tr>
+          <tr><td><strong>50964825</strong></td><td class="subject">CR 20020517 - UOXU - PeopleXD - Create New NHS AVC Pension Scheme and Associated Deduction Pay Code</td><td>Assigned</td><td><span class="badge" style="background:#6b7280;color:#fff">5</span></td><td></td><td>30 Jun 2026 (1.7722222166d)</td></tr>
         </tbody>
       </table>
     </section>
-    <section class="person-section">
+
+  <section class="person-section">
       <h2>
         <span class="person-name">Simon Burford</span>
-        <span class="person-count">0 open</span>
+        <span class="person-count">1 open</span>
       </h2>
       <table>
         <thead>
           <tr>
-            <th style="width:110px">Ticket ID</th>
-            <th>Subject</th>
+            <th style="width:130px">Ticket</th>
+            <th>Summary</th>
             <th style="width:115px">Status</th>
-            <th style="width:90px">Priority</th>
-            <th style="width:140px">Category</th>
-            <th style="width:100px">Created</th>
+            <th style="width:100px">Priority</th>
+            <th style="width:150px">Category</th>
+            <th style="width:120px">Created</th>
           </tr>
         </thead>
         <tbody>
-          <tr><td colspan="6" class="empty">No open tasks</td></tr>
+          <tr><td><strong>50948047</strong></td><td class="subject">Applicant Successfully Hired Applicant Status</td><td>Accepted</td><td><span class="badge" style="background:#6b7280;color:#fff">5</span></td><td>Recruitment</td><td>23 Apr 2026 (70.0583333333d)</td></tr>
         </tbody>
       </table>
     </section>
-    <section class="person-section">
+
+  <section class="person-section">
       <h2>
         <span class="person-name">Kevin Lelitte</span>
-        <span class="person-count">0 open</span>
+        <span class="person-count">3 open</span>
       </h2>
       <table>
         <thead>
           <tr>
-            <th style="width:110px">Ticket ID</th>
-            <th>Subject</th>
+            <th style="width:130px">Ticket</th>
+            <th>Summary</th>
             <th style="width:115px">Status</th>
-            <th style="width:90px">Priority</th>
-            <th style="width:140px">Category</th>
-            <th style="width:100px">Created</th>
+            <th style="width:100px">Priority</th>
+            <th style="width:150px">Category</th>
+            <th style="width:120px">Created</th>
           </tr>
         </thead>
         <tbody>
-          <tr><td colspan="6" class="empty">No open tasks</td></tr>
+          <tr><td><strong>50957361</strong></td><td class="subject">Issue manual payment error</td><td>Waiting</td><td><span class="badge" style="background:#6b7280;color:#fff">5</span></td><td>Payroll</td><td>28 May 2026 (34.9631944333d)</td></tr>
+          <tr><td><strong>50957960</strong></td><td class="subject">PAYPAY25 NMW Check tweak</td><td>Waiting</td><td><span class="badge" style="background:#6b7280;color:#fff">5</span></td><td>Payroll</td><td>02 Jun 2026 (29.97430555d)</td></tr>
+          <tr><td><strong>50964224</strong></td><td class="subject">Visitor Experience team are having difficulties with rostering and the Leave and Absence module</td><td>Assigned</td><td><span class="badge" style="background:#6b7280;color:#fff">5</span></td><td>Roster (WFM)</td><td>29 Jun 2026 (2.9409722166d)</td></tr>
         </tbody>
       </table>
     </section>
 
   <section class="unassigned-section">
-    <h2>
-      <span class="unassigned-label">⚠ Unassigned — HRIS Analysis</span>
-      <span class="unassigned-count">0 open</span>
-    </h2>
-    <table>
-      <thead>
-        <tr>
-          <th style="width:110px">Ticket ID</th>
-          <th>Subject</th>
-          <th style="width:115px">Status</th>
-          <th style="width:90px">Priority</th>
-          <th style="width:140px">Category</th>
-          <th style="width:100px">Created</th>
-        </tr>
-      </thead>
-      <tbody>
-        <tr><td colspan="6" class="empty">No open tasks</td></tr>
-      </tbody>
-    </table>
-  </section>
+      <h2>
+        <span class="unassigned-label">&#9888; Unassigned</span>
+        <span class="unassigned-count">3 open</span>
+      </h2>
+      <table>
+        <thead>
+          <tr>
+            <th style="width:130px">Ticket</th>
+            <th>Summary</th>
+            <th style="width:115px">Status</th>
+            <th style="width:100px">Priority</th>
+            <th style="width:150px">Category</th>
+            <th style="width:120px">Created</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr><td><strong>50964499</strong></td><td class="subject">Cority</td><td>Logged</td><td><span class="badge" style="background:#6b7280;color:#fff">5</span></td><td>Cority - Occupational Health Management Service</td><td>30 Jun 2026 (2.06180555d)</td></tr>
+          <tr><td><strong>50965471</strong></td><td class="subject">Odyssey Building Request</td><td>Logged</td><td><span class="badge" style="background:#6b7280;color:#fff">5</span></td><td>Odyssey</td><td>02 Jul 2026 (0.0125d)</td></tr>
+          <tr><td><strong>50964251</strong></td><td class="subject">HR Reporting Email - Hema Akter</td><td>Logged</td><td><span class="badge" style="background:#6b7280;color:#fff">5</span></td><td></td><td>29 Jun 2026 (2.9131944333d)</td></tr>
+        </tbody>
+      </table>
+    </section>
 
 </main>
 
 <footer>
-  Auto-generated by generate_dashboard.py · Data sourced from Ivanti SAASIT OData API
+  Generated by import_osm_report.py &middot; Source: All Open Tasks by Team.xlsx
 </footer>
-
-<script>
-// The Refresh button calls a Cloudflare Worker that holds the GitHub token
-// as a server-side secret — no credentials in this page or in any browser.
-// Worker source + setup: cloudflare-worker/ in the repo.
-async function triggerRefresh() {
-  const btn    = document.getElementById('refresh-btn');
-  const status = document.getElementById('refresh-status');
-  btn.disabled = true;
-  btn.textContent = '↻ Working…';
-  status.textContent = 'Triggering update…';
-
-  try {
-    const resp = await fetch('https://hris-refresh.kevinlelitte.workers.dev', { method: 'POST' });
-    let body = null;
-    try { body = await resp.json(); } catch (ignored) {}
-
-    if (resp.ok && body && body.ok) {
-      btn.textContent = '✓ Triggered';
-      let secs = 60;
-      status.textContent = 'Updating — reload in ' + secs + 's…';
-      const timer = setInterval(() => {
-        secs--;
-        if (secs > 0) {
-          status.textContent = 'Updating — reload in ' + secs + 's…';
-        } else {
-          clearInterval(timer);
-          status.textContent = '✓ Ready — reload now.';
-          status.style.fontWeight = 'bold';
-          status.style.color = '#27ae60';
-        }
-      }, 1000);
-    } else {
-      throw new Error(body && body.error ? body.error : 'Refresh proxy error ' + resp.status);
-    }
-  } catch (e) {
-    btn.textContent = '↻ Refresh';
-    btn.disabled = false;
-    status.textContent = 'Error: ' + e.message;
-  }
-}
-</script>
 
 </body>
 </html>
