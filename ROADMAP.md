@@ -11,14 +11,38 @@ Migrated from Windows Task Scheduler to GitHub Actions with a self-hosted runner
 - Dashboard confirmed working from home without VPN (Oxford MDM-enrolled)
 - Runner auto-starts on boot
 
+### Linda AI Integration — COMPLETE (03 July 2026)
+
+Added Linda AI panel (right column) powered by `hr-kb-ai.kevinlelitte.workers.dev` (shared Cloudflare Worker with HR FA Knowledge Base).
+
+- Auto-analyses full queue on page load: overall summary + per-analyst breakdown with dividers
+- Coloured insight cards: ✦ Oxford blue (summary), ⚠ red (warnings), ✓ green (ok), ℹ grey (info)
+- Input unlocks after auto-analysis — Kevin can paste ticket threads for deep-dive / KB lookups
+- CORS configured for both `kb.lelitte.co.uk` and `begb0037admin.github.io`
+- Simon Burford excluded from display and analysis
+
+### UI Polish — COMPLETE (03 July 2026)
+
+- Inter font throughout
+- Analyst role titles in card headers and Linda dividers
+- Linda panel widened to 450px
+- Header subtitle Oxford blue
+- Ticket numbers from `task_num` field
+- Unified colour palette across Linda cards and status pills
+- Improved table typography
+
 ## Ongoing
 
-- Dashboard auto-updates hourly 8am-5pm via GitHub Actions
-- Session refresh via Refresh Session.bat when Oxford SSO expires (~every few weeks)
+- Dashboard auto-updates hourly 8am–5pm via GitHub Actions (self-hosted runner DESKTOP-MJDJM64)
+- Session refresh via `Refresh Session.bat` when Oxford SSO expires (~every few weeks)
+- Linda AI live on every page load
 
 ## Backlog
 
-- Nothing currently logged
+- [ ] Move to `oms.lelitte.co.uk` — Kevin to configure domain + Cloudflare Pages
+- [ ] Update Cloudflare `ALLOWED_ORIGIN` when domain is live (remove GitHub Pages entry)
+- [ ] Ticket click-through / expand to open in OSM directly (post-domain move)
+- [ ] Consider scheduled Linda briefing export (daily summary email or Command Centre task)
 
 ---
-Last updated: 4 June 2026 — Lelitte Co.
+Last updated: 03 July 2026 — Lelitte Co.
