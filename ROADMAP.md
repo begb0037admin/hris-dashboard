@@ -39,6 +39,18 @@ Added Linda AI panel (right column) powered by `hr-kb-ai.kevinlelitte.workers.de
 
 ## Backlog
 
+### NEXT: Linda Voice — TTS + STT
+
+Give Linda a voice, matching the implementation already working in the HR FA Knowledge Base.
+
+- **STT (Speech-to-Text):** Mic button → Scribe v2 via `/stt` route on `hr-kb-ai` Worker → transcribed text inserted into Linda input
+- **TTS (Text-to-Speech):** Linda responses read aloud via ElevenLabs `/tts` route on same Worker
+- **Worker:** No new Worker needed — routes already exist on `hr-kb-ai.kevinlelitte.workers.dev`; just wire into Linda's UI
+- **Secrets:** `ELEVENLABS_API_KEY` already stored in the Worker — nothing new to configure in Cloudflare
+- **Reference:** `begb0037admin/hr-fa-knowledge-base/index.html` — copy mic + listen button pattern from there
+
+### Other
+
 - [ ] Move to `oms.lelitte.co.uk` — Kevin to configure domain + Cloudflare Pages
 - [ ] Update Cloudflare `ALLOWED_ORIGIN` when domain is live (remove GitHub Pages entry)
 - [ ] Ticket click-through / expand to open in OSM directly (post-domain move)
