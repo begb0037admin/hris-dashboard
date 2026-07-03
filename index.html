@@ -18,35 +18,97 @@
 
     .layout { display: flex; height: 100vh; overflow: hidden; }
 
-    /* ===== SIDEBAR ===== */
-    .sidebar { width: 310px; min-width: 310px; background: #002147; color: #fff; display: flex; flex-direction: column; height: 100vh; overflow-y: auto; overflow-x: hidden; }
+    /* ── Sidebar ── */
+    .sidebar {
+      width: 310px;
+      flex-shrink: 0;
+      background: #002147;
+      color: #fff;
+      display: flex;
+      flex-direction: column;
+      height: 100vh;
+      overflow-y: auto;
+      overflow-x: hidden;
+    }
     .sidebar::-webkit-scrollbar { width: 4px; }
     .sidebar::-webkit-scrollbar-thumb { background: rgba(255,255,255,0.15); border-radius: 4px; }
-    .sidebar-header { padding: 28px 24px 20px; border-bottom: 1px solid rgba(255,255,255,0.1); }
-    .sidebar-wordmark { font-size: 0.78rem; font-weight: 700; letter-spacing: 1.2px; text-transform: uppercase; color: rgba(255,255,255,0.5); margin-bottom: 6px; }
-    .sidebar-title { font-size: 1.05rem; font-weight: 600; color: #fff; line-height: 1.3; }
-    .sidebar-subtitle { font-size: 0.75rem; color: rgba(255,255,255,0.5); margin-top: 4px; }
-    .sidebar-clock { padding: 16px 24px; border-bottom: 1px solid rgba(255,255,255,0.08); }
-    .clock-time { font-size: 1.6rem; font-weight: 300; letter-spacing: 1px; font-variant-numeric: tabular-nums; color: #fff; }
-    .clock-date { font-size: 0.72rem; color: rgba(255,255,255,0.45); margin-top: 3px; }
-    .sidebar-section { padding: 18px 24px; border-bottom: 1px solid rgba(255,255,255,0.08); }
-    .sidebar-section-label { font-size: 0.65rem; font-weight: 700; letter-spacing: 1.4px; text-transform: uppercase; color: rgba(255,255,255,0.35); margin-bottom: 12px; }
-    .queue-tile { background: rgba(255,255,255,0.07); border-radius: 8px; padding: 14px 16px; margin-bottom: 8px; }
-    .queue-big { font-size: 2.2rem; font-weight: 700; line-height: 1; font-variant-numeric: tabular-nums; }
-    .queue-big-label { font-size: 0.7rem; color: rgba(255,255,255,0.5); text-transform: uppercase; letter-spacing: 0.6px; margin-top: 3px; margin-bottom: 12px; }
-    .queue-row { display: flex; justify-content: space-between; align-items: center; padding: 5px 0; border-top: 1px solid rgba(255,255,255,0.07); font-size: 0.78rem; }
-    .queue-row-label { color: rgba(255,255,255,0.6); }
-    .queue-row-val { font-weight: 600; font-variant-numeric: tabular-nums; }
-    .queue-row-val.amber { color: #f59e0b; }
-    .queue-row-val.red { color: #ef4444; }
-    .queue-updated { font-size: 0.68rem; color: rgba(255,255,255,0.3); margin-top: 10px; }
-    .sidebar-btn { display: block; width: 100%; padding: 9px 14px; background: rgba(255,255,255,0.08); border: 1px solid rgba(255,255,255,0.12); border-radius: 6px; color: #fff; font-size: 0.8rem; font-weight: 500; cursor: pointer; text-align: left; transition: background 0.15s; margin-bottom: 8px; }
-    .sidebar-btn:hover { background: rgba(255,255,255,0.14); }
-    .sidebar-btn-icon { margin-right: 8px; opacity: 0.7; }
-    .sidebar-link { display: flex; align-items: center; gap: 8px; padding: 8px 0; color: rgba(255,255,255,0.65); text-decoration: none; font-size: 0.8rem; border-bottom: 1px solid rgba(255,255,255,0.05); transition: color 0.15s; }
-    .sidebar-link:last-child { border-bottom: none; }
-    .sidebar-link:hover { color: #fff; }
-    .sidebar-link-dot { width: 6px; height: 6px; border-radius: 50%; background: rgba(255,255,255,0.25); flex-shrink: 0; }
+
+    .sb-logo {
+      padding: 18px 18px 16px;
+      border-bottom: 1px solid rgba(255,255,255,0.1);
+      display: flex;
+      align-items: center;
+      gap: 14px;
+    }
+    .sb-crest {
+      width: 52px; height: 52px;
+      border-radius: 50%;
+      background: rgba(255,255,255,0.12);
+      display: flex; align-items: center; justify-content: center;
+      font-size: 22px; flex-shrink: 0;
+    }
+    .sb-brand { display: flex; flex-direction: column; }
+    .sb-univ  { font-size: 9px; font-weight: 400; letter-spacing: 0.28em; text-transform: uppercase; color: rgba(255,255,255,0.6); }
+    .sb-oxford { font-size: 22px; font-weight: 800; letter-spacing: 0.03em; text-transform: uppercase; color: #fff; line-height: 1.1; }
+    .sb-app   { font-size: 10px; font-weight: 700; letter-spacing: 0.06em; text-transform: uppercase; color: rgba(255,255,255,0.75); margin-top: 3px; }
+
+    .sb-date-block {
+      padding: 10px 20px 11px;
+      border-bottom: 1px solid rgba(255,255,255,0.08);
+    }
+    .sb-clock { font-size: 20px; font-weight: 700; color: #fff; letter-spacing: 0.04em; font-variant-numeric: tabular-nums; }
+    .sb-date-val { font-size: 12px; color: rgba(255,255,255,0.62); margin-top: 2px; }
+
+    .sb-ticker {
+      margin: 12px 16px;
+      background: rgba(255,255,255,0.07);
+      border: 1px solid rgba(255,255,255,0.12);
+      border-radius: 10px;
+      padding: 12px 14px;
+    }
+    .sb-ticker-label {
+      font-size: 10px; font-weight: 700;
+      color: rgba(255,255,255,0.38);
+      text-transform: uppercase; letter-spacing: 0.09em;
+      margin-bottom: 8px;
+    }
+    .sb-ticker-stats { display: flex; gap: 0; }
+    .sb-ticker-stat {
+      flex: 1; text-align: center;
+      padding: 6px 2px;
+      border-right: 1px solid rgba(255,255,255,0.1);
+    }
+    .sb-ticker-stat:last-child { border-right: none; }
+    .sb-ticker-num { font-size: 18px; font-weight: 700; color: #fff; line-height: 1; display: block; }
+    .sb-ticker-num.red { color: #f87171; }
+    .sb-ticker-sub { font-size: 9px; color: rgba(255,255,255,0.45); display: block; margin-top: 3px; text-transform: uppercase; letter-spacing: 0.05em; }
+    .sb-ticker-divider { height: 1px; background: rgba(255,255,255,0.1); margin: 10px 0 8px; }
+    .sb-ticker-row { display: flex; align-items: center; justify-content: space-between; padding: 3px 0; }
+    .sb-ticker-row-label { font-size: 11px; color: rgba(255,255,255,0.5); }
+    .sb-ticker-row-val   { font-size: 11px; font-weight: 700; color: rgba(255,255,255,0.75); }
+    .sb-ticker-row-val.amber { color: #fbbf24; }
+    .sb-ticker-row-val.red   { color: #f87171; }
+
+    .sb-print-btn {
+      margin: 0 16px 12px;
+      background: rgba(255,255,255,0.1);
+      border: 1px solid rgba(255,255,255,0.25);
+      color: #fff;
+      border-radius: 8px;
+      padding: 9px 14px;
+      font-size: 12px; font-weight: 600;
+      cursor: pointer; text-align: center;
+      letter-spacing: 0.2px;
+      transition: background 0.15s;
+      width: calc(100% - 32px);
+    }
+    .sb-print-btn:hover { background: rgba(255,255,255,0.18); }
+
+    .sb-section { padding: 12px 20px 5px; font-size: 10.5px; font-weight: 700; color: rgba(255,255,255,0.32); text-transform: uppercase; letter-spacing: 0.09em; }
+    .sb-links { padding: 4px 20px 16px; }
+    .sb-link { display: block; font-size: 13px; color: rgba(255,255,255,0.7); text-decoration: none; padding: 7px 0; border-bottom: 1px solid rgba(255,255,255,0.07); transition: color 0.15s; }
+    .sb-link:hover { color: #60a5fa; }
+    .sb-link:last-child { border-bottom: none; }
 
     /* ===== MAIN ===== */
     .main-content { flex: 1; overflow-y: auto; padding: 24px 28px; min-width: 0; }
@@ -135,38 +197,42 @@
 <div class="layout">
 
   <aside class="sidebar">
-    <div class="sidebar-header">
-      <div class="sidebar-wordmark">University of Oxford</div>
-      <div class="sidebar-title">HRIS Team<br>Open Tickets</div>
-      <div class="sidebar-subtitle">Oxford Service Manager</div>
-    </div>
-    <div class="sidebar-clock">
-      <div class="clock-time" id="clock-time">--:--:--</div>
-      <div class="clock-date" id="clock-date"></div>
-    </div>
-    <div class="sidebar-section">
-      <div class="sidebar-section-label">Queue Summary</div>
-      <div class="queue-tile">
-        <div class="queue-big" id="q-total">&mdash;</div>
-        <div class="queue-big-label">Total Open</div>
-        <div class="queue-row"><span class="queue-row-label">Assigned</span><span class="queue-row-val" id="q-assigned">&mdash;</span></div>
-        <div class="queue-row"><span class="queue-row-label">Unassigned</span><span class="queue-row-val red" id="q-unassigned">&mdash;</span></div>
-        <div class="queue-row"><span class="queue-row-label">Stale (&ge;30d)</span><span class="queue-row-val amber" id="q-stale">&mdash;</span></div>
-        <div class="queue-row"><span class="queue-row-label">Oldest</span><span class="queue-row-val" id="q-oldest">&mdash;</span></div>
+    <div class="sb-logo">
+      <div class="sb-crest">🎓</div>
+      <div class="sb-brand">
+        <span class="sb-univ">University of</span>
+        <span class="sb-oxford">Oxford</span>
+        <span class="sb-app">HRIS Dashboard</span>
       </div>
-      <div class="queue-updated" id="q-updated"></div>
     </div>
-    <div class="sidebar-section">
-      <div class="sidebar-section-label">Actions</div>
-      <button class="sidebar-btn" onclick="window.print()"><span class="sidebar-btn-icon">🖨</span>Print Report</button>
+
+    <div class="sb-date-block">
+      <div class="sb-clock" id="clock-time">--:--:--</div>
+      <div class="sb-date-val" id="clock-date"></div>
     </div>
-    <div class="sidebar-section">
-      <div class="sidebar-section-label">Links</div>
-      <a class="sidebar-link" href="#osm"><span class="sidebar-link-dot"></span>Oxford Service Manager</a>
-      <a class="sidebar-link" href="https://begb0037admin.github.io/command-centre/" target="_blank"><span class="sidebar-link-dot"></span>Command Centre</a>
-      <a class="sidebar-link" href="https://begb0037admin.github.io/hris-launcher/" target="_blank"><span class="sidebar-link-dot"></span>HRIS Launcher</a>
-      <a class="sidebar-link" href="https://begb0037admin.github.io/hr-fa-knowledge-base/" target="_blank"><span class="sidebar-link-dot"></span>FA Knowledge Base</a>
-      <a class="sidebar-link" href="https://accessgroup.my.site.com/Support/s/our-services" target="_blank"><span class="sidebar-link-dot"></span>Access Group Support</a>
+
+    <div class="sb-ticker">
+      <div class="sb-ticker-label">Queue Summary</div>
+      <div class="sb-ticker-stats">
+        <div class="sb-ticker-stat"><span class="sb-ticker-num" id="q-total">&mdash;</span><span class="sb-ticker-sub">Total</span></div>
+        <div class="sb-ticker-stat"><span class="sb-ticker-num" id="q-assigned">&mdash;</span><span class="sb-ticker-sub">Assigned</span></div>
+        <div class="sb-ticker-stat"><span class="sb-ticker-num red" id="q-unassigned">&mdash;</span><span class="sb-ticker-sub">Unassigned</span></div>
+      </div>
+      <div class="sb-ticker-divider"></div>
+      <div class="sb-ticker-row"><span class="sb-ticker-row-label">Stale (&gt;30 days)</span><span class="sb-ticker-row-val amber" id="q-stale">&mdash;</span></div>
+      <div class="sb-ticker-row"><span class="sb-ticker-row-label">Oldest ticket</span><span class="sb-ticker-row-val amber" id="q-oldest">&mdash;</span></div>
+      <div class="sb-ticker-row"><span class="sb-ticker-row-label">Unassigned</span><span class="sb-ticker-row-val red" id="q-unassigned2">&mdash;</span></div>
+    </div>
+
+    <button class="sb-print-btn" onclick="window.print()">&#9113; Print Report</button>
+
+    <div class="sb-section">Links</div>
+    <div class="sb-links">
+      <a href="#osm" class="sb-link">OSM &mdash; Oxford Service Manager</a>
+      <a href="https://begb0037admin.github.io/command-centre/" target="_blank" class="sb-link">Command Centre</a>
+      <a href="https://begb0037admin.github.io/hris-launcher/" target="_blank" class="sb-link">HRIS Launcher</a>
+      <a href="https://begb0037admin.github.io/hr-fa-knowledge-base/" target="_blank" class="sb-link">FA Knowledge Base</a>
+      <a href="https://accessgroup.my.site.com/Support/s/our-services" target="_blank" class="sb-link">Access Group Support</a>
     </div>
   </aside>
 
@@ -348,7 +414,7 @@ function renderDashboard(data){
   document.getElementById('q-unassigned').textContent=s.unassigned!=null?s.unassigned:'—';
   document.getElementById('q-stale').textContent=s.stale!=null?s.stale:'—';
   document.getElementById('q-oldest').textContent=s.oldest_days!=null?s.oldest_days+'d':'—';
-  document.getElementById('q-updated').textContent=data.updated_display?'Updated '+data.updated_display:'';
+  document.getElementById('q-unassigned2').textContent=s.unassigned!=null?s.unassigned:'—';
   document.getElementById('main-sub').textContent='Source: '+(data.report_file||'OSM report')+(data.updated_display?'  ·  '+data.updated_display:'');
   var html='';
   (data.analysts||[]).forEach(function(a){html+=renderCard(a,false);});
