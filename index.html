@@ -4,13 +4,14 @@
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>HRIS Team — Open Tickets</title>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet">
   <style>
     *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
 
     html, body {
       height: 100%;
       overflow: hidden;
-      font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
+      font-family: 'Inter', -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
       background: #f5f7fb;
       color: #1a1a2e;
       font-size: 14px;
@@ -101,6 +102,7 @@
       letter-spacing: 0.2px;
       transition: background 0.15s;
       width: calc(100% - 32px);
+      font-family: inherit;
     }
     .sb-print-btn:hover { background: rgba(255,255,255,0.18); }
 
@@ -115,8 +117,8 @@
     .main-content::-webkit-scrollbar { width: 6px; }
     .main-content::-webkit-scrollbar-thumb { background: #d1d5db; border-radius: 4px; }
     .main-header { margin-bottom: 20px; }
-    .main-header h1 { font-size: 1.25rem; font-weight: 700; color: #002147; }
-    .main-header-sub { font-size: 0.78rem; color: #6b7280; margin-top: 3px; }
+    .main-header h1 { font-size: 1.35rem; font-weight: 800; color: #002147; letter-spacing: -0.01em; }
+    .main-header-sub { font-size: 0.78rem; font-weight: 500; color: #3d6b8f; margin-top: 4px; letter-spacing: 0.01em; }
     .error-state { background: #fff7ed; border: 1px solid #fed7aa; border-radius: 10px; padding: 28px 32px; color: #92400e; }
     .error-state h3 { font-size: 1rem; margin-bottom: 8px; }
     .error-state p { font-size: 0.85rem; line-height: 1.6; }
@@ -124,22 +126,22 @@
     .analyst-card.unassigned { border: 2px solid #ef4444; }
     .card-header { display: flex; align-items: center; justify-content: space-between; padding: 13px 18px; background: #f8fafc; border-bottom: 1px solid #e5e7eb; }
     .analyst-card.unassigned .card-header { background: #fef2f2; border-bottom-color: #fecaca; }
-    .card-name { font-weight: 600; font-size: 0.92rem; color: #002147; }
+    .card-name { font-weight: 700; font-size: 0.92rem; color: #002147; }
     .analyst-card.unassigned .card-name { color: #dc2626; }
     .card-role { font-size: 0.72rem; color: #9ca3af; margin-top: 2px; }
     .card-badge { font-size: 0.75rem; font-weight: 600; background: #002147; color: #fff; border-radius: 20px; padding: 3px 11px; }
     .analyst-card.unassigned .card-badge { background: #dc2626; }
     .ticket-table-wrap { overflow-x: auto; }
     table { width: 100%; border-collapse: collapse; font-size: 0.8rem; }
-    th { text-align: left; padding: 8px 14px; font-size: 0.68rem; text-transform: uppercase; letter-spacing: 0.5px; color: #9ca3af; background: #fafbfc; border-bottom: 1px solid #e5e7eb; white-space: nowrap; }
+    th { text-align: left; padding: 8px 14px; font-size: 0.68rem; text-transform: uppercase; letter-spacing: 0.5px; color: #9ca3af; background: #fafbfc; border-bottom: 1px solid #e5e7eb; white-space: nowrap; font-family: inherit; }
     td { padding: 9px 14px; border-bottom: 1px solid #f3f4f6; vertical-align: middle; }
     tr:last-child td { border-bottom: none; }
     tr:hover td { background: #f9fafb; }
-    .col-ticket { width: 100px; white-space: nowrap; }
+    .col-ticket { width: 110px; white-space: nowrap; }
     .col-status { width: 95px; white-space: nowrap; }
     .col-pri { width: 55px; text-align: center; }
     .col-days { width: 70px; text-align: right; white-space: nowrap; font-variant-numeric: tabular-nums; }
-    .ticket-id { font-weight: 600; color: #002147; font-size: 0.78rem; }
+    .ticket-id { font-weight: 600; color: #002147; font-size: 0.8rem; font-variant-numeric: tabular-nums; }
     .status-pill { display: inline-block; padding: 2px 9px; border-radius: 10px; font-size: 0.68rem; font-weight: 600; white-space: nowrap; }
     .s-accepted { background: #dbeafe; color: #1d4ed8; }
     .s-waiting  { background: #fef3c7; color: #92400e; }
@@ -151,7 +153,7 @@
     .days-red   { color: #dc2626; font-weight: 700; }
 
     /* ===== LINDA PANEL ===== */
-    .linda-panel { width: 360px; min-width: 360px; background: #fff; border-left: 1px solid #e5e7eb; display: flex; flex-direction: column; height: 100vh; overflow: hidden; }
+    .linda-panel { width: 450px; min-width: 450px; background: #fff; border-left: 1px solid #e5e7eb; display: flex; flex-direction: column; height: 100vh; overflow: hidden; }
     .linda-header { padding: 16px 20px; border-bottom: 1px solid #e5e7eb; display: flex; align-items: center; gap: 10px; flex-shrink: 0; }
     .linda-sparkle { font-size: 1.1rem; }
     .linda-title { font-size: 0.95rem; font-weight: 700; color: #002147; flex: 1; }
@@ -160,29 +162,45 @@
     .linda-messages::-webkit-scrollbar { width: 4px; }
     .linda-messages::-webkit-scrollbar-thumb { background: #e5e7eb; border-radius: 4px; }
     .msg { display: flex; flex-direction: column; max-width: 88%; }
-    .msg.linda { align-self: flex-start; }
+    .msg.linda { align-self: flex-start; width: 100%; max-width: 100%; }
     .msg.user  { align-self: flex-end; }
     .msg-bubble { padding: 10px 13px; border-radius: 12px; font-size: 0.8rem; line-height: 1.55; white-space: pre-wrap; word-break: break-word; }
     .msg.linda .msg-bubble { background: #f3f4f6; color: #1f2937; border-bottom-left-radius: 3px; }
+    .msg.linda .msg-bubble.has-insights { background: #fff; border: 1px solid #e5e7eb; padding: 7px; white-space: normal; }
     .msg.user  .msg-bubble { background: #002147; color: #fff; border-bottom-right-radius: 3px; }
-    .msg-label { font-size: 0.65rem; color: #9ca3af; margin-bottom: 4px; }
+    .msg-label { font-size: 0.65rem; color: #9ca3af; margin-bottom: 4px; font-weight: 500; }
     .msg.user .msg-label { text-align: right; }
+
+    /* Linda insight cards */
+    .linda-insight { display: flex; gap: 8px; align-items: flex-start; padding: 7px 10px; border-radius: 7px; font-size: 0.78rem; line-height: 1.55; margin-bottom: 4px; }
+    .linda-insight:last-child { margin-bottom: 0; }
+    .linda-insight-icon { flex-shrink: 0; font-size: 0.78rem; margin-top: 1px; }
+    .linda-insight-main  { background: #f0fdf4; color: #14532d; border: 1px solid #bbf7d0; }
+    .linda-insight-warn  { background: #fffbeb; color: #78350f; border: 1px solid #fde68a; }
+    .linda-insight-ok    { background: #f0fdf4; color: #166534; border: 1px solid #bbf7d0; }
+    .linda-insight-info  { background: #eff6ff; color: #1e3a5f; border: 1px solid #bfdbfe; }
+    .linda-plain { font-size: 0.8rem; color: #1f2937; line-height: 1.55; }
+
     .loading-dots { display: inline-flex; gap: 4px; padding: 12px 14px; }
     .loading-dots span { width: 6px; height: 6px; border-radius: 50%; background: #9ca3af; animation: dot-pulse 1.2s infinite; }
     .loading-dots span:nth-child(2) { animation-delay: 0.2s; }
     .loading-dots span:nth-child(3) { animation-delay: 0.4s; }
     @keyframes dot-pulse { 0%,80%,100% { opacity: 0.3; transform: scale(0.8); } 40% { opacity: 1; transform: scale(1); } }
+
     .analyst-divider { display: flex; align-items: center; gap: 8px; margin: 8px 0 2px; }
     .analyst-divider-line { flex: 1; height: 1px; background: #e5e7eb; }
+    .analyst-divider-center { display: flex; flex-direction: column; align-items: center; gap: 1px; }
     .analyst-divider-label { font-size: 0.68rem; font-weight: 700; color: #6b7280; text-transform: uppercase; letter-spacing: 0.06em; white-space: nowrap; }
+    .analyst-divider-role { font-size: 0.62rem; font-weight: 500; color: #9ca3af; white-space: nowrap; }
     .analyst-divider-count { font-size: 0.68rem; font-weight: 600; color: #fff; background: #002147; border-radius: 10px; padding: 2px 7px; white-space: nowrap; }
     .analyst-divider-count.unassigned { background: #dc2626; }
+
     .linda-footer { padding: 12px 14px; border-top: 1px solid #e5e7eb; flex-shrink: 0; }
     .linda-input-row { display: flex; gap: 8px; }
     .linda-input { flex: 1; padding: 8px 12px; border: 1px solid #d1d5db; border-radius: 6px; font-size: 0.8rem; color: #1f2937; background: #fff; outline: none; font-family: inherit; }
     .linda-input:focus { border-color: #002147; }
     .linda-input:disabled { background: #f9fafb; color: #9ca3af; cursor: not-allowed; }
-    .linda-send-btn { padding: 8px 14px; background: #002147; border: none; border-radius: 6px; color: #fff; font-size: 0.8rem; font-weight: 600; cursor: pointer; transition: background 0.15s; white-space: nowrap; }
+    .linda-send-btn { padding: 8px 14px; background: #002147; border: none; border-radius: 6px; color: #fff; font-size: 0.8rem; font-weight: 600; cursor: pointer; transition: background 0.15s; white-space: nowrap; font-family: inherit; }
     .linda-send-btn:hover:not(:disabled) { background: #003070; }
     .linda-send-btn:disabled { background: #e5e7eb; color: #9ca3af; cursor: not-allowed; }
     .linda-waiting { flex: 1; display: flex; flex-direction: column; align-items: center; justify-content: center; gap: 12px; padding: 24px; }
@@ -243,7 +261,7 @@
 
   <main class="main-content">
     <div class="main-header">
-      <h1>Team Open Tickets</h1>
+      <h1>HRIS Team &mdash; Open Tickets</h1>
       <div class="main-header-sub" id="main-sub">Loading&hellip;</div>
     </div>
     <div id="cards-container"></div>
@@ -284,8 +302,8 @@
 })();
 
 var WORKER_URL='https://hr-kb-ai.kevinlelitte.workers.dev/';
-var LINDA_SYSTEM='You are Linda, an AI assistant for the HRIS Functional Analysis team at the University of Oxford. You analyse the open ticket queue from Oxford Service Manager (OSM). Be concise, direct, and actionable. Use bullet points. Focus on priorities, stale tickets needing attention, workload balance across the team, and recommended next actions. Today is '+new Date().toDateString()+'.';
-var ANALYST_ROLES={'Kevin Lelitte':'FA Team Lead','James Salas Guillen':'FA Analyst','Asta Palmer':'FA Analyst',"Michael O'Sullivan":'FA Analyst','Simon Burford':'Senior Manager'};
+var LINDA_SYSTEM='You are Linda, an AI assistant for the HRIS Functional Analysis team at the University of Oxford. You analyse the open ticket queue from Oxford Service Manager (OSM). Be concise, direct, and actionable. Structure your responses as follows: start with one or two summary sentences as plain text, then use bullet points (•) for individual insights. Prefix each bullet with one of these icons: ⚠ for warnings, stale tickets, or items needing action; ✓ for healthy or no-action items; ℹ for informational or neutral observations. Today is '+new Date().toDateString()+'.';
+var ANALYST_ROLES={'Kevin Lelitte':'FA Team Lead','James Salas Guillen':'Health & Safety Systems FA Senior Analyst','Asta Palmer':'FA Analyst',"Michael O'Sullivan":'FA Analyst','Simon Burford':'Senior Manager'};
 var lindaMessages=[];
 var lindaBusy=false;
 
@@ -293,13 +311,42 @@ function daysClass(d){return d>=30?'days-red':d>=7?'days-amber':'days-fresh';}
 function statusClass(s){var sl=(s||'').toLowerCase();if(sl==='accepted')return 's-accepted';if(sl==='waiting')return 's-waiting';if(sl==='assigned')return 's-assigned';if(sl==='logged')return 's-logged';return 's-default';}
 function esc(str){return(str||'').replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;').replace(/"/g,'&quot;');}
 
+function renderLindaBubble(text){
+  var lines=text.split('\n');
+  var cards=[];
+  var introBuf=[];
+  for(var i=0;i<lines.length;i++){
+    var line=lines[i].trim();
+    if(!line)continue;
+    if(/^⚠/.test(line)){cards.push({cls:'linda-insight-warn',icon:'⚠',text:line.replace(/^⚠\s*/,'')});}
+    else if(/^✓/.test(line)){cards.push({cls:'linda-insight-ok',icon:'✓',text:line.replace(/^✓\s*/,'')});}
+    else if(/^ℹ/.test(line)){cards.push({cls:'linda-insight-info',icon:'ℹ',text:line.replace(/^ℹ\s*/,'')});}
+    else if(/^[•\-\*]\s/.test(line)||/^\d+\.\s/.test(line)){
+      var clean=line.replace(/^[•\-\*\d\.]+\s*/,'');
+      var isWarn=/stale|overdue|escalat|immediate|oldest|urgent|action required/i.test(clean);
+      var isOk=/no action|healthy|on track|within normal|no immediate|manageable/i.test(clean);
+      if(isWarn)cards.push({cls:'linda-insight-warn',icon:'⚠',text:clean});
+      else if(isOk)cards.push({cls:'linda-insight-ok',icon:'✓',text:clean});
+      else cards.push({cls:'linda-insight-info',icon:'ℹ',text:clean});
+    }else{
+      introBuf.push(line);
+    }
+  }
+  var result=[];
+  if(introBuf.length)result.push({cls:'linda-insight-main',icon:'❖',text:introBuf.join(' ')});
+  result=result.concat(cards);
+  if(!result.length)return '<span class="linda-plain">'+esc(text)+'</span>';
+  return result.map(function(c){return '<div class="linda-insight '+c.cls+'"><span class="linda-insight-icon">'+c.icon+'</span><span>'+esc(c.text)+'</span></div>';}).join('');
+}
+
 function renderTable(tickets){
   if(!tickets||tickets.length===0)return '<p style="padding:16px 18px;color:#9ca3af;font-style:italic">No open tickets.</p>';
   var rows=tickets.map(function(t){
     var dc=daysClass(t.days);var daysStr=t.days===0?'<1':t.days;
-    return '<tr><td class="col-ticket"><span class="ticket-id">'+esc(t.id)+'</span></td><td class="col-summary">'+esc(t.summary)+'</td><td class="col-status"><span class="status-pill '+statusClass(t.status)+'">'+esc(t.status)+'</span></td><td class="col-pri" style="text-align:center">'+esc(String(t.priority||''))+'</td><td class="col-days '+dc+'">'+daysStr+'d</td></tr>';
+    var ticketNum=t.ticket_id||t.number||t.id||'';
+    return '<tr><td class="col-ticket"><span class="ticket-id">'+esc(String(ticketNum))+'</span></td><td class="col-summary">'+esc(t.summary)+'</td><td class="col-status"><span class="status-pill '+statusClass(t.status)+'">'+esc(t.status)+'</span></td><td class="col-pri" style="text-align:center">'+esc(String(t.priority||''))+'</td><td class="col-days '+dc+'">'+daysStr+'d</td></tr>';
   }).join('');
-  return '<div class="ticket-table-wrap"><table><thead><tr><th class="col-ticket">Ticket</th><th class="col-summary">Summary</th><th class="col-status">Status</th><th class="col-pri">Pri</th><th class="col-days">Days</th></tr></thead><tbody>'+rows+'</tbody></table></div>';
+  return '<div class="ticket-table-wrap"><table><thead><tr><th class="col-ticket">Ticket No.</th><th class="col-summary">Summary</th><th class="col-status">Status</th><th class="col-pri">Pri</th><th class="col-days">Days</th></tr></thead><tbody>'+rows+'</tbody></table></div>';
 }
 
 function renderCard(analyst,isUnassigned){
@@ -319,7 +366,7 @@ function appendMsg(role,text,isLoading){
     div.id='linda-loading';
     div.innerHTML='<div class="msg-label">Linda</div><div class="msg-bubble"><div class="loading-dots"><span></span><span></span><span></span></div></div>';
   }else if(role==='linda'){
-    div.innerHTML='<div class="msg-label">Linda</div><div class="msg-bubble">'+esc(text)+'</div>';
+    div.innerHTML='<div class="msg-label">Linda</div><div class="msg-bubble has-insights">'+renderLindaBubble(text)+'</div>';
   }else{
     div.innerHTML='<div class="msg-label">You</div><div class="msg-bubble">'+esc(text)+'</div>';
   }
@@ -331,7 +378,9 @@ function resolveLoading(text){
   var loading=document.getElementById('linda-loading');
   if(loading){
     loading.removeAttribute('id');
-    loading.querySelector('.msg-bubble').textContent=text;
+    var bubble=loading.querySelector('.msg-bubble');
+    bubble.className='msg-bubble has-insights';
+    bubble.innerHTML=renderLindaBubble(text);
     document.getElementById('linda-messages').scrollTop=document.getElementById('linda-messages').scrollHeight;
   }
 }
@@ -351,23 +400,24 @@ function buildContext(data){
   var lines=['Open ticket queue — '+(data.updated_display||'latest'),'Total: '+s.total+'  Assigned: '+s.assigned+'  Unassigned: '+s.unassigned+'  Stale (≥30d): '+s.stale+'  Oldest: '+s.oldest_days+'d',''];
   (data.analysts||[]).forEach(function(a){
     lines.push(a.name+' — '+a.ticket_count+' ticket(s):');
-    (a.tickets||[]).forEach(function(t){lines.push('  #'+t.id+' ['+t.status+', '+t.days+'d] '+t.summary);});
+    (a.tickets||[]).forEach(function(t){var tid=t.ticket_id||t.number||t.id||'';lines.push('  #'+tid+' ['+t.status+', '+t.days+'d] '+t.summary);});
     lines.push('');
   });
   if((data.unassigned||[]).length>0){
     lines.push('UNASSIGNED — '+data.unassigned.length+' ticket(s):');
-    data.unassigned.forEach(function(t){lines.push('  #'+t.id+' ['+t.status+', '+t.days+'d] '+t.summary);});
+    data.unassigned.forEach(function(t){var tid=t.ticket_id||t.number||t.id||'';lines.push('  #'+tid+' ['+t.status+', '+t.days+'d] '+t.summary);});
   }
   return lines.join('\n');
 }
 
-function appendDivider(name,count,isUnassigned){
+function appendDivider(name,count,isUnassigned,role){
   var container=document.getElementById('linda-messages');
   var div=document.createElement('div');
   div.className='analyst-divider';
   var labelStyle=isUnassigned?' style="color:#dc2626"':'';
   var countClass=isUnassigned?' unassigned':'';
-  div.innerHTML='<div class="analyst-divider-line"></div><span class="analyst-divider-label"'+labelStyle+'>'+esc(name)+'</span><span class="analyst-divider-count'+countClass+'">'+count+' open</span><div class="analyst-divider-line"></div>';
+  var roleHtml=role?'<span class="analyst-divider-role">'+esc(role)+'</span>':'';
+  div.innerHTML='<div class="analyst-divider-line"></div><div class="analyst-divider-center"><span class="analyst-divider-label"'+labelStyle+'>'+esc(name)+'</span>'+roleHtml+'</div><span class="analyst-divider-count'+countClass+'">'+count+' open</span><div class="analyst-divider-line"></div>';
   container.appendChild(div);
   container.scrollTop=container.scrollHeight;
 }
@@ -378,11 +428,12 @@ function lindaAnalyseQueue(analysts,unassigned,index){
   if(index>=all.length){enableInput();return;}
   var analyst=all[index];
   var isUnassigned=!!analyst.isUnassigned;
-  appendDivider(analyst.name,analyst.ticket_count,isUnassigned);
+  var role=isUnassigned?'':(ANALYST_ROLES[analyst.name]||'Team Member');
+  appendDivider(analyst.name,analyst.ticket_count,isUnassigned,role);
   var lines=[];
-  (analyst.tickets||[]).forEach(function(t){lines.push('#'+t.id+' ['+t.status+', '+t.days+'d] '+t.summary);});
+  (analyst.tickets||[]).forEach(function(t){var tid=t.ticket_id||t.number||t.id||'';lines.push('#'+tid+' ['+t.status+', '+t.days+'d] '+t.summary);});
   var intro=isUnassigned?'UNASSIGNED tickets ('+analyst.ticket_count+'):':analyst.name+' — '+analyst.ticket_count+' open ticket(s):';
-  var prompt=intro+'\n'+lines.join('\n')+'\n\nBrief analysis: any stale tickets needing attention, recommended next action. Concise, bullet points.';
+  var prompt=intro+'\n'+lines.join('\n')+'\n\nBrief analysis: any stale tickets needing attention, recommended next action. Concise, bullet points. Use ⚠ for warnings, ✓ for ok items, ℹ for info.';
   lindaMessages.push({role:'user',content:prompt});
   appendMsg('linda',null,true);
   callWorker(lindaMessages,function(reply){
@@ -394,7 +445,7 @@ function lindaAnalyseQueue(analysts,unassigned,index){
 
 function lindaAnalyse(data){
   var context=buildContext(data);
-  var prompt=context+'\n\nBrief overall queue summary: total tickets, key stats, overall workload health. 2-3 sentences only — per-analyst analysis follows.';
+  var prompt=context+'\n\nBrief overall queue summary: total tickets, key stats, overall workload health. 2-3 sentences only — per-analyst analysis follows. Use ⚠ for warnings and ℹ for info.';
   lindaMessages=[{role:'user',content:prompt}];
   appendMsg('linda',null,true);
   lindaBusy=true;
