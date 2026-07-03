@@ -132,22 +132,22 @@
     .card-badge { font-size: 0.75rem; font-weight: 600; background: #002147; color: #fff; border-radius: 20px; padding: 3px 11px; }
     .analyst-card.unassigned .card-badge { background: #dc2626; }
     .ticket-table-wrap { overflow-x: auto; }
-    table { width: 100%; border-collapse: collapse; font-size: 0.8rem; }
-    th { text-align: left; padding: 8px 14px; font-size: 0.68rem; text-transform: uppercase; letter-spacing: 0.5px; color: #9ca3af; background: #fafbfc; border-bottom: 1px solid #e5e7eb; white-space: nowrap; font-family: inherit; }
-    td { padding: 9px 14px; border-bottom: 1px solid #f3f4f6; vertical-align: middle; }
+    table { width: 100%; border-collapse: collapse; font-size: 0.82rem; }
+    th { text-align: left; padding: 8px 14px; font-size: 0.7rem; font-weight: 700; text-transform: uppercase; letter-spacing: 0.5px; color: #9ca3af; background: #fafbfc; border-bottom: 1px solid #e5e7eb; white-space: nowrap; font-family: inherit; }
+    td { padding: 10px 14px; border-bottom: 1px solid #f3f4f6; vertical-align: middle; font-weight: 500; }
     tr:last-child td { border-bottom: none; }
     tr:hover td { background: #f9fafb; }
     .col-ticket { width: 110px; white-space: nowrap; }
     .col-status { width: 95px; white-space: nowrap; }
     .col-pri { width: 55px; text-align: center; }
     .col-days { width: 70px; text-align: right; white-space: nowrap; font-variant-numeric: tabular-nums; }
-    .ticket-id { font-weight: 600; color: #002147; font-size: 0.8rem; font-variant-numeric: tabular-nums; }
-    .status-pill { display: inline-block; padding: 2px 9px; border-radius: 10px; font-size: 0.68rem; font-weight: 600; white-space: nowrap; }
-    .s-accepted { background: #dbeafe; color: #1d4ed8; }
-    .s-waiting  { background: #fef3c7; color: #92400e; }
-    .s-assigned { background: #f3f4f6; color: #374151; }
-    .s-logged   { background: #fee2e2; color: #991b1b; }
-    .s-default  { background: #f3f4f6; color: #374151; }
+    .ticket-id { font-weight: 600; color: #002147; font-size: 0.82rem; font-variant-numeric: tabular-nums; }
+    .status-pill { display: inline-block; padding: 3px 9px; border-radius: 10px; font-size: 0.7rem; font-weight: 600; white-space: nowrap; border: 1px solid transparent; }
+    .s-accepted { background: #f0fdf4; color: #166534; border-color: #bbf7d0; }
+    .s-waiting  { background: #fff1f0; color: #9f1239; border-color: #fecaca; }
+    .s-assigned { background: #e8f0f7; color: #1a3a5c; border-color: #b8d0e8; }
+    .s-logged   { background: #fff1f0; color: #9f1239; border-color: #fecaca; }
+    .s-default  { background: #f8f9fa; color: #6b7280; border-color: #e5e7eb; }
     .days-fresh { color: #9ca3af; }
     .days-amber { color: #d97706; font-weight: 500; }
     .days-red   { color: #dc2626; font-weight: 700; }
@@ -172,14 +172,15 @@
     .msg.user .msg-label { text-align: right; }
 
     /* Linda insight cards */
-    .linda-insight { display: flex; gap: 8px; align-items: flex-start; padding: 7px 10px; border-radius: 7px; font-size: 0.78rem; line-height: 1.55; margin-bottom: 4px; }
+    .linda-insight { display: flex; gap: 8px; align-items: flex-start; padding: 8px 11px; border-radius: 7px; font-size: 0.82rem; line-height: 1.55; margin-bottom: 4px; }
     .linda-insight:last-child { margin-bottom: 0; }
-    .linda-insight-icon { flex-shrink: 0; font-size: 0.78rem; margin-top: 1px; }
-    .linda-insight-main  { background: #f0fdf4; color: #14532d; border: 1px solid #bbf7d0; }
-    .linda-insight-warn  { background: #fffbeb; color: #78350f; border: 1px solid #fde68a; }
+    .linda-insight-main span:last-child, .linda-insight-warn span:last-child { font-weight: 600; }
+    .linda-insight-icon { flex-shrink: 0; font-size: 1.1rem; margin-top: 0px; font-style: normal; }
+    .linda-insight-main  { background: #e8f0f7; color: #1a3a5c; border: 1px solid #b8d0e8; }
+    .linda-insight-warn  { background: #fff1f0; color: #9f1239; border: 1px solid #fecaca; }
     .linda-insight-ok    { background: #f0fdf4; color: #166534; border: 1px solid #bbf7d0; }
-    .linda-insight-info  { background: #eff6ff; color: #1e3a5f; border: 1px solid #bfdbfe; }
-    .linda-plain { font-size: 0.8rem; color: #1f2937; line-height: 1.55; }
+    .linda-insight-info  { background: #f8f9fa; color: #6b7280; border: 1px solid #e5e7eb; }
+    .linda-plain { font-size: 0.82rem; color: #1f2937; line-height: 1.55; }
 
     .loading-dots { display: inline-flex; gap: 4px; padding: 12px 14px; }
     .loading-dots span { width: 6px; height: 6px; border-radius: 50%; background: #9ca3af; animation: dot-pulse 1.2s infinite; }
