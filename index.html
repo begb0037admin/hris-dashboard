@@ -1,1 +1,465 @@
-CONTENT_PLACEHOLDER
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>HRIS Team — Open Tickets</title>
+  <style>
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+    html, body {
+      height: 100%;
+      overflow: hidden;
+      font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
+      background: #f5f7fb;
+      color: #1a1a2e;
+      font-size: 14px;
+    }
+
+    .layout { display: flex; height: 100vh; overflow: hidden; }
+
+    /* ── Sidebar ── */
+    .sidebar {
+      width: 310px;
+      flex-shrink: 0;
+      background: #002147;
+      color: #fff;
+      display: flex;
+      flex-direction: column;
+      height: 100vh;
+      overflow-y: auto;
+      overflow-x: hidden;
+    }
+    .sidebar::-webkit-scrollbar { width: 4px; }
+    .sidebar::-webkit-scrollbar-thumb { background: rgba(255,255,255,0.15); border-radius: 4px; }
+
+    .sb-logo {
+      padding: 18px 18px 16px;
+      border-bottom: 1px solid rgba(255,255,255,0.1);
+      display: flex;
+      align-items: center;
+      gap: 14px;
+    }
+    .sb-crest {
+      width: 52px; height: 52px;
+      border-radius: 50%;
+      background: rgba(255,255,255,0.12);
+      display: flex; align-items: center; justify-content: center;
+      font-size: 22px; flex-shrink: 0;
+    }
+    .sb-brand { display: flex; flex-direction: column; }
+    .sb-univ  { font-size: 9px; font-weight: 400; letter-spacing: 0.28em; text-transform: uppercase; color: rgba(255,255,255,0.6); }
+    .sb-oxford { font-size: 22px; font-weight: 800; letter-spacing: 0.03em; text-transform: uppercase; color: #fff; line-height: 1.1; }
+    .sb-app   { font-size: 10px; font-weight: 700; letter-spacing: 0.06em; text-transform: uppercase; color: rgba(255,255,255,0.75); margin-top: 3px; }
+
+    .sb-date-block {
+      padding: 10px 20px 11px;
+      border-bottom: 1px solid rgba(255,255,255,0.08);
+    }
+    .sb-clock { font-size: 20px; font-weight: 700; color: #fff; letter-spacing: 0.04em; font-variant-numeric: tabular-nums; }
+    .sb-date-val { font-size: 12px; color: rgba(255,255,255,0.62); margin-top: 2px; }
+
+    .sb-ticker {
+      margin: 12px 16px;
+      background: rgba(255,255,255,0.07);
+      border: 1px solid rgba(255,255,255,0.12);
+      border-radius: 10px;
+      padding: 12px 14px;
+    }
+    .sb-ticker-label {
+      font-size: 10px; font-weight: 700;
+      color: rgba(255,255,255,0.38);
+      text-transform: uppercase; letter-spacing: 0.09em;
+      margin-bottom: 8px;
+    }
+    .sb-ticker-stats { display: flex; gap: 0; }
+    .sb-ticker-stat {
+      flex: 1; text-align: center;
+      padding: 6px 2px;
+      border-right: 1px solid rgba(255,255,255,0.1);
+    }
+    .sb-ticker-stat:last-child { border-right: none; }
+    .sb-ticker-num { font-size: 18px; font-weight: 700; color: #fff; line-height: 1; display: block; }
+    .sb-ticker-num.red { color: #f87171; }
+    .sb-ticker-sub { font-size: 9px; color: rgba(255,255,255,0.45); display: block; margin-top: 3px; text-transform: uppercase; letter-spacing: 0.05em; }
+    .sb-ticker-divider { height: 1px; background: rgba(255,255,255,0.1); margin: 10px 0 8px; }
+    .sb-ticker-row { display: flex; align-items: center; justify-content: space-between; padding: 3px 0; }
+    .sb-ticker-row-label { font-size: 11px; color: rgba(255,255,255,0.5); }
+    .sb-ticker-row-val   { font-size: 11px; font-weight: 700; color: rgba(255,255,255,0.75); }
+    .sb-ticker-row-val.amber { color: #fbbf24; }
+    .sb-ticker-row-val.red   { color: #f87171; }
+
+    .sb-print-btn {
+      margin: 0 16px 12px;
+      background: rgba(255,255,255,0.1);
+      border: 1px solid rgba(255,255,255,0.25);
+      color: #fff;
+      border-radius: 8px;
+      padding: 9px 14px;
+      font-size: 12px; font-weight: 600;
+      cursor: pointer; text-align: center;
+      letter-spacing: 0.2px;
+      transition: background 0.15s;
+      width: calc(100% - 32px);
+    }
+    .sb-print-btn:hover { background: rgba(255,255,255,0.18); }
+
+    .sb-section { padding: 12px 20px 5px; font-size: 10.5px; font-weight: 700; color: rgba(255,255,255,0.32); text-transform: uppercase; letter-spacing: 0.09em; }
+    .sb-links { padding: 4px 20px 16px; }
+    .sb-link { display: block; font-size: 13px; color: rgba(255,255,255,0.7); text-decoration: none; padding: 7px 0; border-bottom: 1px solid rgba(255,255,255,0.07); transition: color 0.15s; }
+    .sb-link:hover { color: #60a5fa; }
+    .sb-link:last-child { border-bottom: none; }
+
+    /* ===== MAIN ===== */
+    .main-content { flex: 1; overflow-y: auto; padding: 24px 28px; min-width: 0; }
+    .main-content::-webkit-scrollbar { width: 6px; }
+    .main-content::-webkit-scrollbar-thumb { background: #d1d5db; border-radius: 4px; }
+    .main-header { margin-bottom: 20px; }
+    .main-header h1 { font-size: 1.25rem; font-weight: 700; color: #002147; }
+    .main-header-sub { font-size: 0.78rem; color: #6b7280; margin-top: 3px; }
+    .error-state { background: #fff7ed; border: 1px solid #fed7aa; border-radius: 10px; padding: 28px 32px; color: #92400e; }
+    .error-state h3 { font-size: 1rem; margin-bottom: 8px; }
+    .error-state p { font-size: 0.85rem; line-height: 1.6; }
+    .analyst-card { background: #fff; border-radius: 10px; box-shadow: 0 1px 3px rgba(0,0,0,0.07); margin-bottom: 20px; overflow: hidden; }
+    .analyst-card.unassigned { border: 2px solid #ef4444; }
+    .card-header { display: flex; align-items: center; justify-content: space-between; padding: 13px 18px; background: #f8fafc; border-bottom: 1px solid #e5e7eb; }
+    .analyst-card.unassigned .card-header { background: #fef2f2; border-bottom-color: #fecaca; }
+    .card-name { font-weight: 600; font-size: 0.92rem; color: #002147; }
+    .analyst-card.unassigned .card-name { color: #dc2626; }
+    .card-role { font-size: 0.72rem; color: #9ca3af; margin-top: 2px; }
+    .card-badge { font-size: 0.75rem; font-weight: 600; background: #002147; color: #fff; border-radius: 20px; padding: 3px 11px; }
+    .analyst-card.unassigned .card-badge { background: #dc2626; }
+    .ticket-table-wrap { overflow-x: auto; }
+    table { width: 100%; border-collapse: collapse; font-size: 0.8rem; }
+    th { text-align: left; padding: 8px 14px; font-size: 0.68rem; text-transform: uppercase; letter-spacing: 0.5px; color: #9ca3af; background: #fafbfc; border-bottom: 1px solid #e5e7eb; white-space: nowrap; }
+    td { padding: 9px 14px; border-bottom: 1px solid #f3f4f6; vertical-align: middle; }
+    tr:last-child td { border-bottom: none; }
+    tr:hover td { background: #f9fafb; }
+    .col-ticket { width: 100px; white-space: nowrap; }
+    .col-status { width: 95px; white-space: nowrap; }
+    .col-pri { width: 55px; text-align: center; }
+    .col-days { width: 70px; text-align: right; white-space: nowrap; font-variant-numeric: tabular-nums; }
+    .ticket-id { font-weight: 600; color: #002147; font-size: 0.78rem; }
+    .status-pill { display: inline-block; padding: 2px 9px; border-radius: 10px; font-size: 0.68rem; font-weight: 600; white-space: nowrap; }
+    .s-accepted { background: #dbeafe; color: #1d4ed8; }
+    .s-waiting  { background: #fef3c7; color: #92400e; }
+    .s-assigned { background: #f3f4f6; color: #374151; }
+    .s-logged   { background: #fee2e2; color: #991b1b; }
+    .s-default  { background: #f3f4f6; color: #374151; }
+    .days-fresh { color: #9ca3af; }
+    .days-amber { color: #d97706; font-weight: 500; }
+    .days-red   { color: #dc2626; font-weight: 700; }
+
+    /* ===== LINDA PANEL ===== */
+    .linda-panel { width: 360px; min-width: 360px; background: #fff; border-left: 1px solid #e5e7eb; display: flex; flex-direction: column; height: 100vh; overflow: hidden; }
+    .linda-header { padding: 16px 20px; border-bottom: 1px solid #e5e7eb; display: flex; align-items: center; gap: 10px; flex-shrink: 0; }
+    .linda-sparkle { font-size: 1.1rem; }
+    .linda-title { font-size: 0.95rem; font-weight: 700; color: #002147; flex: 1; }
+    .linda-live-chip { font-size: 0.65rem; font-weight: 700; letter-spacing: 0.6px; text-transform: uppercase; background: #dcfce7; color: #166534; border-radius: 10px; padding: 3px 9px; }
+    .linda-messages { flex: 1; overflow-y: auto; padding: 16px; display: flex; flex-direction: column; gap: 12px; }
+    .linda-messages::-webkit-scrollbar { width: 4px; }
+    .linda-messages::-webkit-scrollbar-thumb { background: #e5e7eb; border-radius: 4px; }
+    .msg { display: flex; flex-direction: column; max-width: 88%; }
+    .msg.linda { align-self: flex-start; }
+    .msg.user  { align-self: flex-end; }
+    .msg-bubble { padding: 10px 13px; border-radius: 12px; font-size: 0.8rem; line-height: 1.55; white-space: pre-wrap; word-break: break-word; }
+    .msg.linda .msg-bubble { background: #f3f4f6; color: #1f2937; border-bottom-left-radius: 3px; }
+    .msg.user  .msg-bubble { background: #002147; color: #fff; border-bottom-right-radius: 3px; }
+    .msg-label { font-size: 0.65rem; color: #9ca3af; margin-bottom: 4px; }
+    .msg.user .msg-label { text-align: right; }
+    .loading-dots { display: inline-flex; gap: 4px; padding: 12px 14px; }
+    .loading-dots span { width: 6px; height: 6px; border-radius: 50%; background: #9ca3af; animation: dot-pulse 1.2s infinite; }
+    .loading-dots span:nth-child(2) { animation-delay: 0.2s; }
+    .loading-dots span:nth-child(3) { animation-delay: 0.4s; }
+    @keyframes dot-pulse { 0%,80%,100% { opacity: 0.3; transform: scale(0.8); } 40% { opacity: 1; transform: scale(1); } }
+    .analyst-divider { display: flex; align-items: center; gap: 8px; margin: 8px 0 2px; }
+    .analyst-divider-line { flex: 1; height: 1px; background: #e5e7eb; }
+    .analyst-divider-label { font-size: 0.68rem; font-weight: 700; color: #6b7280; text-transform: uppercase; letter-spacing: 0.06em; white-space: nowrap; }
+    .analyst-divider-count { font-size: 0.68rem; font-weight: 600; color: #fff; background: #002147; border-radius: 10px; padding: 2px 7px; white-space: nowrap; }
+    .analyst-divider-count.unassigned { background: #dc2626; }
+    .linda-footer { padding: 12px 14px; border-top: 1px solid #e5e7eb; flex-shrink: 0; }
+    .linda-input-row { display: flex; gap: 8px; }
+    .linda-input { flex: 1; padding: 8px 12px; border: 1px solid #d1d5db; border-radius: 6px; font-size: 0.8rem; color: #1f2937; background: #fff; outline: none; font-family: inherit; }
+    .linda-input:focus { border-color: #002147; }
+    .linda-input:disabled { background: #f9fafb; color: #9ca3af; cursor: not-allowed; }
+    .linda-send-btn { padding: 8px 14px; background: #002147; border: none; border-radius: 6px; color: #fff; font-size: 0.8rem; font-weight: 600; cursor: pointer; transition: background 0.15s; white-space: nowrap; }
+    .linda-send-btn:hover:not(:disabled) { background: #003070; }
+    .linda-send-btn:disabled { background: #e5e7eb; color: #9ca3af; cursor: not-allowed; }
+    .linda-waiting { flex: 1; display: flex; flex-direction: column; align-items: center; justify-content: center; gap: 12px; padding: 24px; }
+    .linda-waiting-icon { font-size: 2rem; opacity: 0.2; }
+    .linda-waiting-text { font-size: 0.8rem; color: #9ca3af; text-align: center; line-height: 1.6; }
+
+    /* ===== PRINT ===== */
+    @media print {
+      .sidebar, .linda-panel { display: none !important; }
+      .main-content { overflow: visible; padding: 0; }
+      html, body { overflow: auto; height: auto; }
+      .layout { display: block; }
+    }
+  </style>
+</head>
+<body>
+<div class="layout">
+
+  <aside class="sidebar">
+    <div class="sb-logo">
+      <div class="sb-crest">🎓</div>
+      <div class="sb-brand">
+        <span class="sb-univ">University of</span>
+        <span class="sb-oxford">Oxford</span>
+        <span class="sb-app">HRIS Dashboard</span>
+      </div>
+    </div>
+
+    <div class="sb-date-block">
+      <div class="sb-clock" id="clock-time">--:--:--</div>
+      <div class="sb-date-val" id="clock-date"></div>
+    </div>
+
+    <div class="sb-ticker">
+      <div class="sb-ticker-label">Queue Summary</div>
+      <div class="sb-ticker-stats">
+        <div class="sb-ticker-stat"><span class="sb-ticker-num" id="q-total">&mdash;</span><span class="sb-ticker-sub">Total</span></div>
+        <div class="sb-ticker-stat"><span class="sb-ticker-num" id="q-assigned">&mdash;</span><span class="sb-ticker-sub">Assigned</span></div>
+        <div class="sb-ticker-stat"><span class="sb-ticker-num red" id="q-unassigned">&mdash;</span><span class="sb-ticker-sub">Unassigned</span></div>
+      </div>
+      <div class="sb-ticker-divider"></div>
+      <div class="sb-ticker-row"><span class="sb-ticker-row-label">Stale (&gt;30 days)</span><span class="sb-ticker-row-val amber" id="q-stale">&mdash;</span></div>
+      <div class="sb-ticker-row"><span class="sb-ticker-row-label">Oldest ticket</span><span class="sb-ticker-row-val amber" id="q-oldest">&mdash;</span></div>
+      <div class="sb-ticker-row"><span class="sb-ticker-row-label">Unassigned</span><span class="sb-ticker-row-val red" id="q-unassigned2">&mdash;</span></div>
+    </div>
+
+    <button class="sb-print-btn" onclick="window.print()">&#9113; Print Report</button>
+
+    <div class="sb-section">Links</div>
+    <div class="sb-links">
+      <a href="#osm" class="sb-link">OSM &mdash; Oxford Service Manager</a>
+      <a href="https://begb0037admin.github.io/command-centre/" target="_blank" class="sb-link">Command Centre</a>
+      <a href="https://begb0037admin.github.io/hris-launcher/" target="_blank" class="sb-link">HRIS Launcher</a>
+      <a href="https://begb0037admin.github.io/hr-fa-knowledge-base/" target="_blank" class="sb-link">FA Knowledge Base</a>
+      <a href="https://accessgroup.my.site.com/Support/s/our-services" target="_blank" class="sb-link">Access Group Support</a>
+    </div>
+  </aside>
+
+  <main class="main-content">
+    <div class="main-header">
+      <h1>Team Open Tickets</h1>
+      <div class="main-header-sub" id="main-sub">Loading&hellip;</div>
+    </div>
+    <div id="cards-container"></div>
+  </main>
+
+  <aside class="linda-panel">
+    <div class="linda-header">
+      <span class="linda-sparkle">✨</span>
+      <span class="linda-title">Linda AI</span>
+      <span class="linda-live-chip">Live</span>
+    </div>
+    <div id="linda-messages" class="linda-messages">
+      <div class="linda-waiting" id="linda-waiting">
+        <div class="linda-waiting-icon">🧠</div>
+        <div class="linda-waiting-text">Waiting for ticket data&hellip;<br>Run the bat script then refresh.</div>
+      </div>
+    </div>
+    <div class="linda-footer">
+      <div class="linda-input-row">
+        <input class="linda-input" id="linda-input" type="text" placeholder="Ask Linda&hellip;" disabled>
+        <button class="linda-send-btn" id="linda-send" onclick="sendLindaMessage()" disabled>Send</button>
+      </div>
+    </div>
+  </aside>
+
+</div>
+<script>
+(function tickClock() {
+  var days=['Sunday','Monday','Tuesday','Wednesday','Thursday','Friday','Saturday'];
+  var months=['January','February','March','April','May','June','July','August','September','October','November','December'];
+  function pad(n){return n<10?'0'+n:''+n;}
+  function update(){
+    var d=new Date();
+    document.getElementById('clock-time').textContent=pad(d.getHours())+':'+pad(d.getMinutes())+':'+pad(d.getSeconds());
+    document.getElementById('clock-date').textContent=days[d.getDay()]+' '+d.getDate()+' '+months[d.getMonth()]+' '+d.getFullYear();
+  }
+  update();setInterval(update,1000);
+})();
+
+var WORKER_URL='https://hr-kb-ai.kevinlelitte.workers.dev/';
+var LINDA_SYSTEM='You are Linda, an AI assistant for the HRIS Functional Analysis team at the University of Oxford. You analyse the open ticket queue from Oxford Service Manager (OSM). Be concise, direct, and actionable. Use bullet points. Focus on priorities, stale tickets needing attention, workload balance across the team, and recommended next actions. Today is '+new Date().toDateString()+'.';
+var ANALYST_ROLES={'Kevin Lelitte':'FA Team Lead','James Salas Guillen':'FA Analyst','Asta Palmer':'FA Analyst',"Michael O'Sullivan":'FA Analyst','Simon Burford':'Senior Manager'};
+var lindaMessages=[];
+var lindaBusy=false;
+
+function daysClass(d){return d>=30?'days-red':d>=7?'days-amber':'days-fresh';}
+function statusClass(s){var sl=(s||'').toLowerCase();if(sl==='accepted')return 's-accepted';if(sl==='waiting')return 's-waiting';if(sl==='assigned')return 's-assigned';if(sl==='logged')return 's-logged';return 's-default';}
+function esc(str){return(str||'').replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;').replace(/"/g,'&quot;');}
+
+function renderTable(tickets){
+  if(!tickets||tickets.length===0)return '<p style="padding:16px 18px;color:#9ca3af;font-style:italic">No open tickets.</p>';
+  var rows=tickets.map(function(t){
+    var dc=daysClass(t.days);var daysStr=t.days===0?'<1':t.days;
+    return '<tr><td class="col-ticket"><span class="ticket-id">'+esc(t.id)+'</span></td><td class="col-summary">'+esc(t.summary)+'</td><td class="col-status"><span class="status-pill '+statusClass(t.status)+'">'+esc(t.status)+'</span></td><td class="col-pri" style="text-align:center">'+esc(String(t.priority||''))+'</td><td class="col-days '+dc+'">'+daysStr+'d</td></tr>';
+  }).join('');
+  return '<div class="ticket-table-wrap"><table><thead><tr><th class="col-ticket">Ticket</th><th class="col-summary">Summary</th><th class="col-status">Status</th><th class="col-pri">Pri</th><th class="col-days">Days</th></tr></thead><tbody>'+rows+'</tbody></table></div>';
+}
+
+function renderCard(analyst,isUnassigned){
+  var extraClass=isUnassigned?' unassigned':'';
+  var role=isUnassigned?'Unassigned tickets':(ANALYST_ROLES[analyst.name]||'Team Member');
+  var label=isUnassigned?'&#9888; Unassigned':esc(analyst.name);
+  return '<div class="analyst-card'+extraClass+'"><div class="card-header"><div><div class="card-name">'+label+'</div><div class="card-role">'+esc(role)+'</div></div><span class="card-badge">'+analyst.ticket_count+' open</span></div>'+renderTable(analyst.tickets)+'</div>';
+}
+
+function appendMsg(role,text,isLoading){
+  var container=document.getElementById('linda-messages');
+  var waiting=document.getElementById('linda-waiting');
+  if(waiting)waiting.remove();
+  var div=document.createElement('div');
+  div.className='msg '+role;
+  if(isLoading){
+    div.id='linda-loading';
+    div.innerHTML='<div class="msg-label">Linda</div><div class="msg-bubble"><div class="loading-dots"><span></span><span></span><span></span></div></div>';
+  }else if(role==='linda'){
+    div.innerHTML='<div class="msg-label">Linda</div><div class="msg-bubble">'+esc(text)+'</div>';
+  }else{
+    div.innerHTML='<div class="msg-label">You</div><div class="msg-bubble">'+esc(text)+'</div>';
+  }
+  container.appendChild(div);
+  container.scrollTop=container.scrollHeight;
+}
+
+function resolveLoading(text){
+  var loading=document.getElementById('linda-loading');
+  if(loading){
+    loading.removeAttribute('id');
+    loading.querySelector('.msg-bubble').textContent=text;
+    document.getElementById('linda-messages').scrollTop=document.getElementById('linda-messages').scrollHeight;
+  }
+}
+
+function callWorker(messages,onDone){
+  fetch(WORKER_URL,{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({system:LINDA_SYSTEM,messages:messages})})
+  .then(function(r){return r.json();})
+  .then(function(data){
+    var text=(data.content&&data.content[0]&&data.content[0].text)?data.content[0].text:(data.error?'Error: '+data.error:'No response received.');
+    onDone(text);
+  })
+  .catch(function(err){onDone('Connection error: '+err.message);});
+}
+
+function buildContext(data){
+  var s=data.summary||{};
+  var lines=['Open ticket queue — '+(data.updated_display||'latest'),'Total: '+s.total+'  Assigned: '+s.assigned+'  Unassigned: '+s.unassigned+'  Stale (≥30d): '+s.stale+'  Oldest: '+s.oldest_days+'d',''];
+  (data.analysts||[]).forEach(function(a){
+    lines.push(a.name+' — '+a.ticket_count+' ticket(s):');
+    (a.tickets||[]).forEach(function(t){lines.push('  #'+t.id+' ['+t.status+', '+t.days+'d] '+t.summary);});
+    lines.push('');
+  });
+  if((data.unassigned||[]).length>0){
+    lines.push('UNASSIGNED — '+data.unassigned.length+' ticket(s):');
+    data.unassigned.forEach(function(t){lines.push('  #'+t.id+' ['+t.status+', '+t.days+'d] '+t.summary);});
+  }
+  return lines.join('\n');
+}
+
+function appendDivider(name,count,isUnassigned){
+  var container=document.getElementById('linda-messages');
+  var div=document.createElement('div');
+  div.className='analyst-divider';
+  var labelStyle=isUnassigned?' style="color:#dc2626"':'';
+  var countClass=isUnassigned?' unassigned':'';
+  div.innerHTML='<div class="analyst-divider-line"></div><span class="analyst-divider-label"'+labelStyle+'>'+esc(name)+'</span><span class="analyst-divider-count'+countClass+'">'+count+' open</span><div class="analyst-divider-line"></div>';
+  container.appendChild(div);
+  container.scrollTop=container.scrollHeight;
+}
+
+function lindaAnalyseQueue(analysts,unassigned,index){
+  var all=(analysts||[]).slice();
+  if((unassigned||[]).length>0){all.push({name:'Unassigned',ticket_count:unassigned.length,tickets:unassigned,isUnassigned:true});}
+  if(index>=all.length){enableInput();return;}
+  var analyst=all[index];
+  var isUnassigned=!!analyst.isUnassigned;
+  appendDivider(analyst.name,analyst.ticket_count,isUnassigned);
+  var lines=[];
+  (analyst.tickets||[]).forEach(function(t){lines.push('#'+t.id+' ['+t.status+', '+t.days+'d] '+t.summary);});
+  var intro=isUnassigned?'UNASSIGNED tickets ('+analyst.ticket_count+'):':analyst.name+' — '+analyst.ticket_count+' open ticket(s):';
+  var prompt=intro+'\n'+lines.join('\n')+'\n\nBrief analysis: any stale tickets needing attention, recommended next action. Concise, bullet points.';
+  lindaMessages.push({role:'user',content:prompt});
+  appendMsg('linda',null,true);
+  callWorker(lindaMessages,function(reply){
+    lindaMessages.push({role:'assistant',content:reply});
+    resolveLoading(reply);
+    lindaAnalyseQueue(analysts,unassigned,index+1);
+  });
+}
+
+function lindaAnalyse(data){
+  var context=buildContext(data);
+  var prompt=context+'\n\nBrief overall queue summary: total tickets, key stats, overall workload health. 2-3 sentences only — per-analyst analysis follows.';
+  lindaMessages=[{role:'user',content:prompt}];
+  appendMsg('linda',null,true);
+  lindaBusy=true;
+  callWorker(lindaMessages,function(reply){
+    lindaMessages.push({role:'assistant',content:reply});
+    resolveLoading(reply);
+    lindaBusy=false;
+    lindaAnalyseQueue(data.analysts,data.unassigned,0);
+  });
+}
+
+function enableInput(){
+  var inp=document.getElementById('linda-input');
+  var btn=document.getElementById('linda-send');
+  inp.disabled=false;btn.disabled=false;
+  inp.placeholder='Ask Linda…';
+  inp.focus();
+  inp.addEventListener('keydown',function(e){if(e.key==='Enter'&&!e.shiftKey){e.preventDefault();sendLindaMessage();}});
+}
+
+function sendLindaMessage(){
+  if(lindaBusy)return;
+  var inp=document.getElementById('linda-input');
+  var msg=inp.value.trim();
+  if(!msg)return;
+  inp.value='';inp.disabled=true;document.getElementById('linda-send').disabled=true;
+  appendMsg('user',msg);
+  lindaMessages.push({role:'user',content:msg});
+  appendMsg('linda',null,true);
+  lindaBusy=true;
+  callWorker(lindaMessages,function(reply){
+    lindaMessages.push({role:'assistant',content:reply});
+    resolveLoading(reply);
+    lindaBusy=false;
+    inp.disabled=false;document.getElementById('linda-send').disabled=false;inp.focus();
+  });
+}
+
+function loadData(){
+  fetch('data/tickets.json?t='+Date.now())
+  .then(function(r){if(!r.ok)throw new Error('HTTP '+r.status);return r.json();})
+  .then(function(data){renderDashboard(data);lindaAnalyse(data);})
+  .catch(function(err){
+    document.getElementById('main-sub').textContent='Data unavailable';
+    document.getElementById('cards-container').innerHTML='<div class="error-state"><h3>No ticket data found</h3><p>Run <strong>Update HRIS Dashboard.bat</strong> on your Windows machine to generate the latest data, then refresh this page.</p><p style="margin-top:8px;font-size:0.78rem;color:#b45309">Error: '+esc(err.message)+'</p></div>';
+  });
+}
+
+function renderDashboard(data){
+  var s=data.summary||{};
+  document.getElementById('q-total').textContent=s.total!=null?s.total:'—';
+  document.getElementById('q-assigned').textContent=s.assigned!=null?s.assigned:'—';
+  document.getElementById('q-unassigned').textContent=s.unassigned!=null?s.unassigned:'—';
+  document.getElementById('q-stale').textContent=s.stale!=null?s.stale:'—';
+  document.getElementById('q-oldest').textContent=s.oldest_days!=null?s.oldest_days+'d':'—';
+  document.getElementById('q-unassigned2').textContent=s.unassigned!=null?s.unassigned:'—';
+  document.getElementById('main-sub').textContent='Source: '+(data.report_file||'OSM report')+(data.updated_display?'  ·  '+data.updated_display:'');
+  var html='';
+  (data.analysts||[]).forEach(function(a){html+=renderCard(a,false);});
+  if((data.unassigned||[]).length>0){html+=renderCard({name:'Unassigned',ticket_count:data.unassigned.length,tickets:data.unassigned},true);}
+  if(!html)html='<div class="error-state"><h3>No data</h3><p>Run Update HRIS Dashboard.bat to populate ticket data.</p></div>';
+  document.getElementById('cards-container').innerHTML=html;
+}
+
+loadData();
+</script>
+</body>
+</html>
