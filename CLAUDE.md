@@ -1,7 +1,7 @@
 # HANDOVER POINT
 
-Last updated: 11 June 2026
-Status: GitHub Actions migration COMPLETE; token + schedule + session-expiry fixes applied
+Last updated: 2026-07-03
+Status: GitHub Actions migration COMPLETE; token + schedule + session-expiry fixes applied; sidebar + Oxford crest branding updated
 
 ---
 
@@ -14,6 +14,10 @@ June 2026 fixes:
 - The Refresh button no longer embeds a GitHub PAT in index.html — GitHub auto-revokes any PAT found in a public repo, which is why the button kept dying with 401. It now POSTs to a Cloudflare Worker (source in cloudflare-worker/) that holds the PAT as a server-side secret, so the button works from any browser/machine with no setup. PAT renewal = update the HRIS_GITHUB_PAT secret on the Worker.
 - generate_dashboard.py now FAILS the workflow run when the SAASIT session has expired, instead of silently publishing an all-zero dashboard. A red run in the Actions tab = session needs refreshing.
 - login.py / generate_dashboard.py read the PAT from the HRIS_GITHUB_PAT env var or a git-ignored github_pat.txt file — never hardcode it in source.
+
+July 2026 fixes:
+- Sidebar width updated from 310px to 340px to match standard branding.
+- Oxford crest added as base64 JPEG `<img class="sb-crest">` replacing the 🎓 emoji placeholder. Source: same crest used across all other dashboards (command-centre, hris-launcher, hr-fa-knowledge-base).
 
 ## Current Architecture
 
@@ -49,7 +53,11 @@ Before any task where higher effort is warranted, signal to Kevin: what the task
 
 ## Hard Rules
 - Never hardcode credentials, PATs, or API keys in any source file
+- **NEVER strip, replace, or truncate the base64 Oxford crest in the `<img class="sb-crest">` tag in index.html** — the crest is embedded as a base64 JPEG; do not swap it for an emoji, delete it, or link it externally.
 - All mockups and visual designs are produced as Claude Artifacts — never committed to the repository (see CONSTITUTION.md Section 11)
+
+## Global Roadmap
+Cross-repo backlog: `begb0037admin/command-centre/ROADMAP.md`. When told to "update the Global Roadmap", write to that file — not any per-repo roadmap.
 
 ## Branch and Merge Protocol
 Always push directly to main. If a branch must be used, merge it to main immediately upon completion — never leave files on a branch.
