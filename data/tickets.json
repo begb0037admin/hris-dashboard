@@ -1,13 +1,13 @@
 {
-  "updated": "2026-07-03T05:57:52",
-  "updated_display": "Friday 03 July 2026 at 05:57",
+  "updated": "2026-07-03T09:17:40",
+  "updated_display": "Friday 03 July 2026 at 09:17",
   "report_file": "All Open Tasks by Team.xlsx",
   "summary": {
-    "total": 41,
-    "assigned": 38,
+    "total": 29,
+    "assigned": 26,
     "unassigned": 3,
-    "stale": 7,
-    "oldest_days": 268
+    "stale": 8,
+    "oldest_days": 269
   },
   "analysts": [
     {
@@ -22,7 +22,7 @@
           "analyst": "James Salas Guillen",
           "category": "Cority - Occupational Health Management Service",
           "created": "06 Oct 2025",
-          "days": 268,
+          "days": 269,
           "team": "Health and Safety 2nd Line"
         },
         {
@@ -33,7 +33,7 @@
           "analyst": "James Salas Guillen",
           "category": "Odyssey",
           "created": "18 Feb 2026",
-          "days": 133,
+          "days": 134,
           "team": "Health and Safety 2nd Line"
         },
         {
@@ -44,7 +44,7 @@
           "analyst": "James Salas Guillen",
           "category": "Display Screen Equipment Assessment System",
           "created": "15 May 2026",
-          "days": 47,
+          "days": 48,
           "team": "Health and Safety 2nd Line"
         },
         {
@@ -55,7 +55,7 @@
           "analyst": "James Salas Guillen",
           "category": "Odyssey",
           "created": "18 May 2026",
-          "days": 44,
+          "days": 45,
           "team": "Health and Safety 2nd Line"
         },
         {
@@ -66,7 +66,7 @@
           "analyst": "James Salas Guillen",
           "category": "Cority - Occupational Health Management Service",
           "created": "09 Jun 2026",
-          "days": 22,
+          "days": 23,
           "team": "Health and Safety 2nd Line"
         },
         {
@@ -77,7 +77,7 @@
           "analyst": "James Salas Guillen",
           "category": "Applications/Software",
           "created": "10 Jun 2026",
-          "days": 21,
+          "days": 22,
           "team": "Health and Safety 2nd Line"
         },
         {
@@ -88,7 +88,7 @@
           "analyst": "James Salas Guillen",
           "category": "Display Screen Equipment Assessment System",
           "created": "17 Jun 2026",
-          "days": 14,
+          "days": 15,
           "team": "Health and Safety 2nd Line"
         },
         {
@@ -99,7 +99,7 @@
           "analyst": "James Salas Guillen",
           "category": "",
           "created": "23 Jun 2026",
-          "days": 8,
+          "days": 9,
           "team": "Health and Safety 2nd Line"
         },
         {
@@ -110,18 +110,18 @@
           "analyst": "James Salas Guillen",
           "category": "Cority - Occupational Health Management Service",
           "created": "24 Jun 2026",
-          "days": 7,
+          "days": 8,
           "team": "Health and Safety 2nd Line"
         },
         {
           "task_num": "50963133",
           "summary": "Cority Issue",
-          "status": "Accepted",
+          "status": "Waiting",
           "priority": "5",
           "analyst": "James Salas Guillen",
           "category": "Cority - Occupational Health Management Service",
           "created": "24 Jun 2026",
-          "days": 7,
+          "days": 8,
           "team": "Health and Safety 2nd Line"
         },
         {
@@ -132,7 +132,7 @@
           "analyst": "James Salas Guillen",
           "category": "Cority - Occupational Health Management Service",
           "created": "29 Jun 2026",
-          "days": 2,
+          "days": 3,
           "team": "Health and Safety 2nd Line"
         },
         {
@@ -154,7 +154,7 @@
           "analyst": "James Salas Guillen",
           "category": "Cority - Occupational Health Management Service",
           "created": "30 Jun 2026",
-          "days": 1,
+          "days": 2,
           "team": "Health and Safety 2nd Line"
         },
         {
@@ -165,47 +165,25 @@
           "analyst": "James Salas Guillen",
           "category": "Odyssey",
           "created": "09 Oct 2025",
-          "days": 265,
+          "days": 266,
           "team": "HRIS Analysis"
         }
       ]
     },
     {
       "name": "Asta Palmer",
-      "ticket_count": 14,
+      "ticket_count": 2,
       "tickets": [
         {
-          "task_num": "50965042",
-          "summary": "Add Shift Type - Hyeseong Lee",
+          "task_num": "50965593",
+          "summary": "Rostering issue - GLAM",
           "status": "Accepted",
-          "priority": "3",
+          "priority": "5",
           "analyst": "Asta Palmer",
-          "category": "",
-          "created": "01 Jul 2026",
+          "category": "Roster (WFM)",
+          "created": "02 Jul 2026",
           "days": 0,
-          "team": "HRIS Sys Admin"
-        },
-        {
-          "task_num": "50965154",
-          "summary": "Manager Self Service Add - Petros Ligoxygakis",
-          "status": "Accepted",
-          "priority": "3",
-          "analyst": "Asta Palmer",
-          "category": "",
-          "created": "01 Jul 2026",
-          "days": 0,
-          "team": "HRIS Sys Admin"
-        },
-        {
-          "task_num": "50965184",
-          "summary": "Create Work Group - Abi Eccles",
-          "status": "Accepted",
-          "priority": "3",
-          "analyst": "Asta Palmer",
-          "category": "",
-          "created": "01 Jul 2026",
-          "days": 0,
-          "team": "HRIS Sys Admin"
+          "team": "HRIS Analysis"
         },
         {
           "task_num": "50965354",
@@ -215,117 +193,7 @@
           "analyst": "Asta Palmer",
           "category": "",
           "created": "01 Jul 2026",
-          "days": 0,
-          "team": "HRIS Sys Admin"
-        },
-        {
-          "task_num": "50965379",
-          "summary": "Manager Self Service Remove - Farai Zhou",
-          "status": "Accepted",
-          "priority": "3",
-          "analyst": "Asta Palmer",
-          "category": "",
-          "created": "01 Jul 2026",
-          "days": 0,
-          "team": "HRIS Sys Admin"
-        },
-        {
-          "task_num": "50965383",
-          "summary": "Manager Self Service Change - Sarah Moore",
-          "status": "Accepted",
-          "priority": "3",
-          "analyst": "Asta Palmer",
-          "category": "",
-          "created": "01 Jul 2026",
-          "days": 0,
-          "team": "HRIS Sys Admin"
-        },
-        {
-          "task_num": "50965385",
-          "summary": "Manager Self Service Add - Daniela Toale",
-          "status": "Accepted",
-          "priority": "3",
-          "analyst": "Asta Palmer",
-          "category": "",
-          "created": "01 Jul 2026",
-          "days": 0,
-          "team": "HRIS Sys Admin"
-        },
-        {
-          "task_num": "50965387",
-          "summary": "Manager Self Service Add - Holly Sadler",
-          "status": "Accepted",
-          "priority": "3",
-          "analyst": "Asta Palmer",
-          "category": "",
-          "created": "01 Jul 2026",
-          "days": 0,
-          "team": "HRIS Sys Admin"
-        },
-        {
-          "task_num": "50965388",
-          "summary": "Manager Self Service Add - Cornelius Vermaak",
-          "status": "Accepted",
-          "priority": "3",
-          "analyst": "Asta Palmer",
-          "category": "",
-          "created": "01 Jul 2026",
-          "days": 0,
-          "team": "HRIS Sys Admin"
-        },
-        {
-          "task_num": "50965393",
-          "summary": "My Development: Add Manager Dashboards for CDR reviewers (new request)",
-          "status": "Accepted",
-          "priority": "5",
-          "analyst": "Asta Palmer",
-          "category": "My Development",
-          "created": "01 Jul 2026",
-          "days": 0,
-          "team": "HRIS Sys Admin"
-        },
-        {
-          "task_num": "50965404",
-          "summary": "Manager Self Service Add - Ania Brzozowski",
-          "status": "Accepted",
-          "priority": "3",
-          "analyst": "Asta Palmer",
-          "category": "",
-          "created": "02 Jul 2026",
-          "days": 0,
-          "team": "HRIS Sys Admin"
-        },
-        {
-          "task_num": "50965448",
-          "summary": "HR User Change Access - Emma Smith",
-          "status": "Accepted",
-          "priority": "5",
-          "analyst": "Asta Palmer",
-          "category": "",
-          "created": "02 Jul 2026",
-          "days": 0,
-          "team": "HRIS Sys Admin"
-        },
-        {
-          "task_num": "50965459",
-          "summary": "ESS Katie Hutchinson 2395704  scro4336",
-          "status": "Accepted",
-          "priority": "5",
-          "analyst": "Asta Palmer",
-          "category": "HR Self-Service",
-          "created": "02 Jul 2026",
-          "days": 0,
-          "team": "HRIS Sys Admin"
-        },
-        {
-          "task_num": "50965464",
-          "summary": "Create Work Group - Lewis Cousins",
-          "status": "Accepted",
-          "priority": "3",
-          "analyst": "Asta Palmer",
-          "category": "",
-          "created": "02 Jul 2026",
-          "days": 0,
+          "days": 1,
           "team": "HRIS Sys Admin"
         }
       ]
@@ -375,7 +243,7 @@
           "analyst": "Michael O'Sullivan",
           "category": "Time and Attendance",
           "created": "27 Jun 2026",
-          "days": 4,
+          "days": 5,
           "team": "HRIS Analysis"
         },
         {
@@ -386,7 +254,7 @@
           "analyst": "Michael O'Sullivan",
           "category": "Pensions",
           "created": "29 Jun 2026",
-          "days": 2,
+          "days": 3,
           "team": "HRIS Analysis"
         },
         {
@@ -397,7 +265,7 @@
           "analyst": "Michael O'Sullivan",
           "category": "",
           "created": "30 Jun 2026",
-          "days": 1,
+          "days": 2,
           "team": "HRIS Analysis"
         }
       ]
@@ -431,7 +299,7 @@
           "analyst": "Kevin Lelitte",
           "category": "Payroll",
           "created": "28 May 2026",
-          "days": 34,
+          "days": 35,
           "team": "HRIS Analysis"
         },
         {
@@ -442,7 +310,7 @@
           "analyst": "Kevin Lelitte",
           "category": "Payroll",
           "created": "02 Jun 2026",
-          "days": 29,
+          "days": 30,
           "team": "HRIS Analysis"
         },
         {
@@ -453,7 +321,7 @@
           "analyst": "Kevin Lelitte",
           "category": "Roster (WFM)",
           "created": "29 Jun 2026",
-          "days": 2,
+          "days": 3,
           "team": "HRIS Analysis"
         }
       ]
@@ -483,15 +351,15 @@
       "team": "Health and Safety 2nd Line"
     },
     {
-      "task_num": "50964251",
-      "summary": "HR Reporting Email - Hema Akter",
+      "task_num": "50965767",
+      "summary": "Add Shift Type - Keely Fathers",
       "status": "Logged",
-      "priority": "5",
+      "priority": "3",
       "analyst": "",
       "category": "",
-      "created": "29 Jun 2026",
-      "days": 2,
-      "team": "HRIS Service Desk"
+      "created": "02 Jul 2026",
+      "days": 0,
+      "team": "HRIS Sys Admin"
     }
   ]
 }
