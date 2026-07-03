@@ -207,7 +207,6 @@
     .linda-waiting-icon { font-size: 2rem; opacity: 0.2; }
     .linda-waiting-text { font-size: 0.8rem; color: #9ca3af; text-align: center; line-height: 1.6; }
 
-    /* ===== PRINT ===== */
     @media print {
       .sidebar, .linda-panel { display: none !important; }
       .main-content { overflow: visible; padding: 0; }
@@ -228,12 +227,10 @@
         <span class="sb-app">HRIS Dashboard</span>
       </div>
     </div>
-
     <div class="sb-date-block">
       <div class="sb-clock" id="clock-time">--:--:--</div>
       <div class="sb-date-val" id="clock-date"></div>
     </div>
-
     <div class="sb-ticker">
       <div class="sb-ticker-label">Queue Summary</div>
       <div class="sb-ticker-stats">
@@ -246,9 +243,7 @@
       <div class="sb-ticker-row"><span class="sb-ticker-row-label">Oldest ticket</span><span class="sb-ticker-row-val amber" id="q-oldest">&mdash;</span></div>
       <div class="sb-ticker-row"><span class="sb-ticker-row-label">Unassigned</span><span class="sb-ticker-row-val red" id="q-unassigned2">&mdash;</span></div>
     </div>
-
     <button class="sb-print-btn" onclick="window.print()">&#9113; Print Report</button>
-
     <div class="sb-section">Links</div>
     <div class="sb-links">
       <a href="#osm" class="sb-link">OSM &mdash; Oxford Service Manager</a>
@@ -303,7 +298,8 @@
 
 var WORKER_URL='https://hr-kb-ai.kevinlelitte.workers.dev/';
 var LINDA_SYSTEM='You are Linda, an AI assistant for the HRIS Functional Analysis team at the University of Oxford. You analyse the open ticket queue from Oxford Service Manager (OSM). Be concise, direct, and actionable. Structure your responses as follows: start with one or two summary sentences as plain text, then use bullet points (•) for individual insights. Prefix each bullet with one of these icons: ⚠ for warnings, stale tickets, or items needing action; ✓ for healthy or no-action items; ℹ for informational or neutral observations. Today is '+new Date().toDateString()+'.';
-var ANALYST_ROLES={'Kevin Lelitte':'FA Team Lead','James Salas Guillen':'Health & Safety Systems FA Senior Analyst','Asta Palmer':'FA Analyst',"Michael O'Sullivan":'FA Analyst','Simon Burford':'Senior Manager'};
+var ANALYST_ROLES={'Kevin Lelitte':'FA Team Lead','James Salas Guillen':'Health & Safety Systems FA Senior Analyst','Asta Palmer':'FA Analyst',"Michael O'Sullivan":'FA Analyst'};
+var EXCLUDED_ANALYSTS=['Simon Burford'];
 var lindaMessages=[];
 var lindaBusy=false;
 
@@ -343,7 +339,7 @@ function renderTable(tickets){
   if(!tickets||tickets.length===0)return '<p style="padding:16px 18px;color:#9ca3af;font-style:italic">No open tickets.</p>';
   var rows=tickets.map(function(t){
     var dc=daysClass(t.days);var daysStr=t.days===0?'<1':t.days;
-    var ticketNum=t.ticket_id||t.number||t.id||'';
+    var ticketNum=t.task_num||t.ticket_id||t.number||t.id||'';
     return '<tr><td class="col-ticket"><span class="ticket-id">'+esc(String(ticketNum))+'</span></td><td class="col-summary">'+esc(t.summary)+'</td><td class="col-status"><span class="status-pill '+statusClass(t.status)+'">'+esc(t.status)+'</span></td><td class="col-pri" style="text-align:center">'+esc(String(t.priority||''))+'</td><td class="col-days '+dc+'">'+daysStr+'d</td></tr>';
   }).join('');
   return '<div class="ticket-table-wrap"><table><thead><tr><th class="col-ticket">Ticket No.</th><th class="col-summary">Summary</th><th class="col-status">Status</th><th class="col-pri">Pri</th><th class="col-days">Days</th></tr></thead><tbody>'+rows+'</tbody></table></div>';
@@ -395,17 +391,17 @@ function callWorker(messages,onDone){
   .catch(function(err){onDone('Connection error: '+err.message);});
 }
 
-function buildContext(data){
+function buildContext(data,filteredAnalysts){
   var s=data.summary||{};
   var lines=['Open ticket queue — '+(data.updated_display||'latest'),'Total: '+s.total+'  Assigned: '+s.assigned+'  Unassigned: '+s.unassigned+'  Stale (≥30d): '+s.stale+'  Oldest: '+s.oldest_days+'d',''];
-  (data.analysts||[]).forEach(function(a){
+  (filteredAnalysts||[]).forEach(function(a){
     lines.push(a.name+' — '+a.ticket_count+' ticket(s):');
-    (a.tickets||[]).forEach(function(t){var tid=t.ticket_id||t.number||t.id||'';lines.push('  #'+tid+' ['+t.status+', '+t.days+'d] '+t.summary);});
+    (a.tickets||[]).forEach(function(t){var tid=t.task_num||t.ticket_id||t.number||t.id||'';lines.push('  #'+tid+' ['+t.status+', '+t.days+'d] '+t.summary);});
     lines.push('');
   });
   if((data.unassigned||[]).length>0){
     lines.push('UNASSIGNED — '+data.unassigned.length+' ticket(s):');
-    data.unassigned.forEach(function(t){var tid=t.ticket_id||t.number||t.id||'';lines.push('  #'+tid+' ['+t.status+', '+t.days+'d] '+t.summary);});
+    data.unassigned.forEach(function(t){var tid=t.task_num||t.ticket_id||t.number||t.id||'';lines.push('  #'+tid+' ['+t.status+', '+t.days+'d] '+t.summary);});
   }
   return lines.join('\n');
 }
@@ -431,7 +427,7 @@ function lindaAnalyseQueue(analysts,unassigned,index){
   var role=isUnassigned?'':(ANALYST_ROLES[analyst.name]||'Team Member');
   appendDivider(analyst.name,analyst.ticket_count,isUnassigned,role);
   var lines=[];
-  (analyst.tickets||[]).forEach(function(t){var tid=t.ticket_id||t.number||t.id||'';lines.push('#'+tid+' ['+t.status+', '+t.days+'d] '+t.summary);});
+  (analyst.tickets||[]).forEach(function(t){var tid=t.task_num||t.ticket_id||t.number||t.id||'';lines.push('#'+tid+' ['+t.status+', '+t.days+'d] '+t.summary);});
   var intro=isUnassigned?'UNASSIGNED tickets ('+analyst.ticket_count+'):':analyst.name+' — '+analyst.ticket_count+' open ticket(s):';
   var prompt=intro+'\n'+lines.join('\n')+'\n\nBrief analysis: any stale tickets needing attention, recommended next action. Concise, bullet points. Use ⚠ for warnings, ✓ for ok items, ℹ for info.';
   lindaMessages.push({role:'user',content:prompt});
@@ -443,8 +439,8 @@ function lindaAnalyseQueue(analysts,unassigned,index){
   });
 }
 
-function lindaAnalyse(data){
-  var context=buildContext(data);
+function lindaAnalyse(data,filteredAnalysts){
+  var context=buildContext(data,filteredAnalysts);
   var prompt=context+'\n\nBrief overall queue summary: total tickets, key stats, overall workload health. 2-3 sentences only — per-analyst analysis follows. Use ⚠ for warnings and ℹ for info.';
   lindaMessages=[{role:'user',content:prompt}];
   appendMsg('linda',null,true);
@@ -453,7 +449,7 @@ function lindaAnalyse(data){
     lindaMessages.push({role:'assistant',content:reply});
     resolveLoading(reply);
     lindaBusy=false;
-    lindaAnalyseQueue(data.analysts,data.unassigned,0);
+    lindaAnalyseQueue(filteredAnalysts,data.unassigned,0);
   });
 }
 
@@ -487,14 +483,18 @@ function sendLindaMessage(){
 function loadData(){
   fetch('data/tickets.json?t='+Date.now())
   .then(function(r){if(!r.ok)throw new Error('HTTP '+r.status);return r.json();})
-  .then(function(data){renderDashboard(data);lindaAnalyse(data);})
+  .then(function(data){
+    var filteredAnalysts=(data.analysts||[]).filter(function(a){return EXCLUDED_ANALYSTS.indexOf(a.name)===-1;});
+    renderDashboard(data,filteredAnalysts);
+    lindaAnalyse(data,filteredAnalysts);
+  })
   .catch(function(err){
     document.getElementById('main-sub').textContent='Data unavailable';
     document.getElementById('cards-container').innerHTML='<div class="error-state"><h3>No ticket data found</h3><p>Run <strong>Update HRIS Dashboard.bat</strong> on your Windows machine to generate the latest data, then refresh this page.</p><p style="margin-top:8px;font-size:0.78rem;color:#b45309">Error: '+esc(err.message)+'</p></div>';
   });
 }
 
-function renderDashboard(data){
+function renderDashboard(data,filteredAnalysts){
   var s=data.summary||{};
   document.getElementById('q-total').textContent=s.total!=null?s.total:'—';
   document.getElementById('q-assigned').textContent=s.assigned!=null?s.assigned:'—';
@@ -504,7 +504,7 @@ function renderDashboard(data){
   document.getElementById('q-unassigned2').textContent=s.unassigned!=null?s.unassigned:'—';
   document.getElementById('main-sub').textContent='Source: '+(data.report_file||'OSM report')+(data.updated_display?'  ·  '+data.updated_display:'');
   var html='';
-  (data.analysts||[]).forEach(function(a){html+=renderCard(a,false);});
+  filteredAnalysts.forEach(function(a){html+=renderCard(a,false);});
   if((data.unassigned||[]).length>0){html+=renderCard({name:'Unassigned',ticket_count:data.unassigned.length,tickets:data.unassigned},true);}
   if(!html)html='<div class="error-state"><h3>No data</h3><p>Run Update HRIS Dashboard.bat to populate ticket data.</p></div>';
   document.getElementById('cards-container').innerHTML=html;
