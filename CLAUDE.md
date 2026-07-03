@@ -51,5 +51,8 @@ Before any task where higher effort is warranted, signal to Kevin: what the task
 - Never hardcode credentials, PATs, or API keys in any source file
 - All mockups and visual designs are produced as Claude Artifacts — never committed to the repository (see CONSTITUTION.md Section 11)
 
+## Global Roadmap
+Cross-repo backlog: `begb0037admin/command-centre/ROADMAP.md`. When told to "update the Global Roadmap", write to that file — not any per-repo roadmap.
+
 ## Branch and Merge Protocol
 Always push directly to main. If a branch must be used, merge it to main immediately upon completion — never leave files on a branch.
