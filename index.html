@@ -21,7 +21,7 @@
 
     /* ── Sidebar ── */
     .sidebar {
-      width: 310px;
+      width: 340px;
       flex-shrink: 0;
       background: #002147;
       color: #fff;
@@ -34,34 +34,33 @@
     .sidebar::-webkit-scrollbar { width: 4px; }
     .sidebar::-webkit-scrollbar-thumb { background: rgba(255,255,255,0.15); border-radius: 4px; }
 
-    .sb-logo {
-      padding: 18px 18px 16px;
+    .sidebar-logo {
+      padding: 20px 20px 18px;
       border-bottom: 1px solid rgba(255,255,255,0.1);
       display: flex;
       align-items: center;
-      gap: 14px;
+      gap: 16px;
     }
-    .sb-crest {
-      width: 52px; height: 52px;
-      border-radius: 50%;
-      background: rgba(255,255,255,0.12);
-      display: flex; align-items: center; justify-content: center;
-      font-size: 22px; flex-shrink: 0;
+    .sidebar-crest {
+      width: 80px;
+      height: 80px;
+      object-fit: contain;
+      flex-shrink: 0;
     }
-    .sb-brand { display: flex; flex-direction: column; }
-    .sb-univ  { font-size: 9px; font-weight: 400; letter-spacing: 0.28em; text-transform: uppercase; color: rgba(255,255,255,0.6); }
-    .sb-oxford { font-size: 22px; font-weight: 800; letter-spacing: 0.03em; text-transform: uppercase; color: #fff; line-height: 1.1; }
-    .sb-app   { font-size: 10px; font-weight: 700; letter-spacing: 0.06em; text-transform: uppercase; color: rgba(255,255,255,0.75); margin-top: 3px; }
+    .sidebar-brand-text { display: inline-flex; flex-direction: column; }
+    .sb-univ-of  { font-size: 9.5px; font-weight: 400; letter-spacing: 0.30em; text-transform: uppercase; color: rgba(255,255,255,0.70); line-height: 1.5; white-space: nowrap; }
+    .sb-oxford { font-size: 26px; font-weight: 800; letter-spacing: 0.03em; text-transform: uppercase; color: #fff; line-height: 1.1; white-space: nowrap; }
+    .sb-app-name   { font-size: 11px; font-weight: 700; letter-spacing: 0.06em; text-transform: uppercase; color: #ffffff; margin-top: 4px; line-height: 1.4; }
 
-    .sb-date-block {
-      padding: 10px 20px 11px;
+    .date-block {
+      padding: 12px 22px;
       border-bottom: 1px solid rgba(255,255,255,0.08);
     }
     .sb-clock { font-size: 20px; font-weight: 700; color: #fff; letter-spacing: 0.04em; font-variant-numeric: tabular-nums; }
     .sb-date-val { font-size: 12px; color: rgba(255,255,255,0.62); margin-top: 2px; }
 
     .sb-ticker {
-      margin: 12px 16px;
+      margin: 12px 22px;
       background: rgba(255,255,255,0.07);
       border: 1px solid rgba(255,255,255,0.12);
       border-radius: 10px;
@@ -91,7 +90,7 @@
     .sb-ticker-row-val.red   { color: #f87171; }
 
     .sb-print-btn {
-      margin: 0 16px 12px;
+      margin: 0 22px 12px;
       background: rgba(255,255,255,0.1);
       border: 1px solid rgba(255,255,255,0.25);
       color: #fff;
@@ -101,13 +100,13 @@
       cursor: pointer; text-align: center;
       letter-spacing: 0.2px;
       transition: background 0.15s;
-      width: calc(100% - 32px);
+      width: calc(100% - 44px);
       font-family: inherit;
     }
     .sb-print-btn:hover { background: rgba(255,255,255,0.18); }
 
-    .sb-section { padding: 12px 20px 5px; font-size: 10.5px; font-weight: 700; color: rgba(255,255,255,0.32); text-transform: uppercase; letter-spacing: 0.09em; }
-    .sb-links { padding: 4px 20px 16px; }
+    .sb-section { padding: 14px 22px 6px; font-size: 11px; font-weight: 600; color: rgba(255,255,255,0.35); text-transform: uppercase; letter-spacing: 0.09em; }
+    .sb-links { padding: 4px 22px 16px; }
     .sb-link { display: block; font-size: 13px; color: rgba(255,255,255,0.7); text-decoration: none; padding: 7px 0; border-bottom: 1px solid rgba(255,255,255,0.07); transition: color 0.15s; }
     .sb-link:hover { color: #60a5fa; }
     .sb-link:last-child { border-bottom: none; }
@@ -220,15 +219,15 @@
 <div class="layout">
 
   <aside class="sidebar">
-    <div class="sb-logo">
-      <div class="sb-crest">🎓</div>
-      <div class="sb-brand">
-        <span class="sb-univ">University of</span>
+    <div class="sidebar-logo">
+      <img class="sidebar-crest" src="images/oxford-crest.jpg" alt="University of Oxford crest">
+      <div class="sidebar-brand-text">
+        <span class="sb-univ-of">University of</span>
         <span class="sb-oxford">Oxford</span>
-        <span class="sb-app">HRIS Dashboard</span>
+        <span class="sb-app-name">HRIS Dashboard</span>
       </div>
     </div>
-    <div class="sb-date-block">
+    <div class="date-block">
       <div class="sb-clock" id="clock-time">--:--:--</div>
       <div class="sb-date-val" id="clock-date"></div>
     </div>

@@ -49,6 +49,8 @@ Before any task where higher effort is warranted, signal to Kevin: what the task
 
 ## Hard Rules
 - Never hardcode credentials, PATs, or API keys in any source file
+- Before any visual change, read `BRANDING.md` from `begb0037admin/command-centre`
+- **NEVER embed the Oxford crest as base64.** The crest is `images/oxford-crest.jpg`; do not delete it, move it, rename it, or replace the `<img class="sidebar-crest">` source with a data URI.
 - All mockups and visual designs are produced as Claude Artifacts — never committed to the repository (see CONSTITUTION.md Section 11)
 
 ## Branch and Merge Protocol
