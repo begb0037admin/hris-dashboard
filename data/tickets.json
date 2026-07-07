@@ -1,30 +1,19 @@
 {
-  "updated": "2026-07-06T11:34:20",
-  "updated_display": "Monday 06 July 2026 at 11:34",
+  "updated": "2026-07-07T08:40:51",
+  "updated_display": "Tuesday 07 July 2026 at 08:40",
   "report_file": "All Open Tasks by Team.xlsx",
   "summary": {
-    "total": 33,
-    "assigned": 30,
-    "unassigned": 3,
-    "stale": 8,
-    "oldest_days": 272
+    "total": 31,
+    "assigned": 27,
+    "unassigned": 4,
+    "stale": 6,
+    "oldest_days": 138
   },
   "analysts": [
     {
       "name": "James Salas Guillen",
-      "ticket_count": 15,
+      "ticket_count": 13,
       "tickets": [
-        {
-          "task_num": "50889997",
-          "summary": "498 duplicate clients to be removed from Cority",
-          "status": "Waiting",
-          "priority": "5",
-          "analyst": "James Salas Guillen",
-          "category": "Cority - Occupational Health Management Service",
-          "created": "06 Oct 2025",
-          "days": 272,
-          "team": "Health and Safety 2nd Line"
-        },
         {
           "task_num": "50929404",
           "summary": "Odyssey",
@@ -33,7 +22,7 @@
           "analyst": "James Salas Guillen",
           "category": "Odyssey",
           "created": "18 Feb 2026",
-          "days": 137,
+          "days": 138,
           "team": "Health and Safety 2nd Line"
         },
         {
@@ -44,7 +33,7 @@
           "analyst": "James Salas Guillen",
           "category": "Display Screen Equipment Assessment System",
           "created": "15 May 2026",
-          "days": 51,
+          "days": 52,
           "team": "Health and Safety 2nd Line"
         },
         {
@@ -66,7 +55,7 @@
           "analyst": "James Salas Guillen",
           "category": "Cority - Occupational Health Management Service",
           "created": "09 Jun 2026",
-          "days": 26,
+          "days": 27,
           "team": "Health and Safety 2nd Line"
         },
         {
@@ -77,7 +66,7 @@
           "analyst": "James Salas Guillen",
           "category": "Applications/Software",
           "created": "10 Jun 2026",
-          "days": 25,
+          "days": 26,
           "team": "Health and Safety 2nd Line"
         },
         {
@@ -88,7 +77,7 @@
           "analyst": "James Salas Guillen",
           "category": "Display Screen Equipment Assessment System",
           "created": "17 Jun 2026",
-          "days": 18,
+          "days": 19,
           "team": "Health and Safety 2nd Line"
         },
         {
@@ -99,7 +88,7 @@
           "analyst": "James Salas Guillen",
           "category": "",
           "created": "23 Jun 2026",
-          "days": 12,
+          "days": 13,
           "team": "Health and Safety 2nd Line"
         },
         {
@@ -110,7 +99,7 @@
           "analyst": "James Salas Guillen",
           "category": "Cority - Occupational Health Management Service",
           "created": "24 Jun 2026",
-          "days": 11,
+          "days": 12,
           "team": "Health and Safety 2nd Line"
         },
         {
@@ -121,7 +110,7 @@
           "analyst": "James Salas Guillen",
           "category": "Cority - Occupational Health Management Service",
           "created": "24 Jun 2026",
-          "days": 11,
+          "days": 12,
           "team": "Health and Safety 2nd Line"
         },
         {
@@ -132,7 +121,7 @@
           "analyst": "James Salas Guillen",
           "category": "Cority - Occupational Health Management Service",
           "created": "29 Jun 2026",
-          "days": 6,
+          "days": 7,
           "team": "Health and Safety 2nd Line"
         },
         {
@@ -154,7 +143,7 @@
           "analyst": "James Salas Guillen",
           "category": "Cority - Occupational Health Management Service",
           "created": "30 Jun 2026",
-          "days": 5,
+          "days": 6,
           "team": "Health and Safety 2nd Line"
         },
         {
@@ -167,23 +156,12 @@
           "created": "02 Jul 2026",
           "days": 4,
           "team": "Health and Safety 2nd Line"
-        },
-        {
-          "task_num": "50891537",
-          "summary": "Incident Summary: FW: Resolved - Support Call# 11592618 - Mixed sources: Unsealed  Incident Details:",
-          "status": "Waiting",
-          "priority": "5",
-          "analyst": "James Salas Guillen",
-          "category": "Odyssey",
-          "created": "09 Oct 2025",
-          "days": 270,
-          "team": "HRIS Analysis"
         }
       ]
     },
     {
       "name": "Asta Palmer",
-      "ticket_count": 5,
+      "ticket_count": 4,
       "tickets": [
         {
           "task_num": "50965593",
@@ -193,47 +171,36 @@
           "analyst": "Asta Palmer",
           "category": "Roster (WFM)",
           "created": "02 Jul 2026",
-          "days": 3,
+          "days": 4,
           "team": "HRIS Analysis"
         },
         {
-          "task_num": "50966215",
-          "summary": "Manager Self Service Add - Anbara Khalidi",
-          "status": "Accepted",
-          "priority": "3",
-          "analyst": "Asta Palmer",
-          "category": "",
-          "created": "06 Jul 2026",
-          "days": 0,
-          "team": "HRIS Sys Admin"
-        },
-        {
-          "task_num": "50966256",
-          "summary": "Manager Self Service Add - Adina Henson",
-          "status": "Accepted",
-          "priority": "3",
-          "analyst": "Asta Palmer",
-          "category": "",
-          "created": "06 Jul 2026",
-          "days": 0,
-          "team": "HRIS Sys Admin"
-        },
-        {
-          "task_num": "50966263",
-          "summary": "HR User Remove Access - Laura Giglio",
+          "task_num": "50966351",
+          "summary": "PERDEP01 literal does not match format string error",
           "status": "Accepted",
           "priority": "5",
           "analyst": "Asta Palmer",
-          "category": "",
+          "category": "HR Reporting",
           "created": "06 Jul 2026",
           "days": 0,
-          "team": "HRIS Sys Admin"
+          "team": "HRIS Analysis"
         },
         {
-          "task_num": "50966283",
-          "summary": "Manager Self Service Add - Phil Bolton",
+          "task_num": "50966425",
+          "summary": "Staff request details",
           "status": "Accepted",
-          "priority": "3",
+          "priority": "5",
+          "analyst": "Asta Palmer",
+          "category": "Staff Requests",
+          "created": "06 Jul 2026",
+          "days": 0,
+          "team": "HRIS Analysis"
+        },
+        {
+          "task_num": "50966415",
+          "summary": "HR User Access New - Kirsty Rooney",
+          "status": "Accepted",
+          "priority": "5",
           "analyst": "Asta Palmer",
           "category": "",
           "created": "06 Jul 2026",
@@ -287,7 +254,7 @@
           "analyst": "Michael O'Sullivan",
           "category": "Time and Attendance",
           "created": "27 Jun 2026",
-          "days": 8,
+          "days": 9,
           "team": "HRIS Analysis"
         },
         {
@@ -298,7 +265,7 @@
           "analyst": "Michael O'Sullivan",
           "category": "Pensions",
           "created": "29 Jun 2026",
-          "days": 6,
+          "days": 7,
           "team": "HRIS Analysis"
         },
         {
@@ -309,7 +276,7 @@
           "analyst": "Michael O'Sullivan",
           "category": "",
           "created": "30 Jun 2026",
-          "days": 5,
+          "days": 6,
           "team": "HRIS Analysis"
         }
       ]
@@ -360,12 +327,12 @@
         {
           "task_num": "50964224",
           "summary": "Visitor Experience team are having difficulties with rostering and the Leave and Absence module",
-          "status": "Assigned",
+          "status": "Waiting",
           "priority": "5",
           "analyst": "Kevin Lelitte",
           "category": "Roster (WFM)",
           "created": "29 Jun 2026",
-          "days": 6,
+          "days": 7,
           "team": "HRIS Analysis"
         }
       ]
@@ -380,7 +347,7 @@
       "analyst": "",
       "category": "Cority - Occupational Health Management Service",
       "created": "03 Jul 2026",
-      "days": 2,
+      "days": 3,
       "team": "Health and Safety 2nd Line"
     },
     {
@@ -391,17 +358,28 @@
       "analyst": "",
       "category": "Time and Attendance",
       "created": "03 Jul 2026",
-      "days": 2,
+      "days": 3,
       "team": "HRIS Analysis"
     },
     {
-      "task_num": "50966325",
-      "summary": "Create Work Group - Victoria Skipper",
+      "task_num": "50966555",
+      "summary": "Unrostered bookings - A mix of unrostered bookings and normal bookings",
+      "status": "Logged",
+      "priority": "5",
+      "analyst": "",
+      "category": "Time and Attendance",
+      "created": "06 Jul 2026",
+      "days": 0,
+      "team": "HRIS Analysis"
+    },
+    {
+      "task_num": "50966584",
+      "summary": "Manager Self Service Add - Jack Dougan",
       "status": "Logged",
       "priority": "3",
       "analyst": "",
       "category": "",
-      "created": "06 Jul 2026",
+      "created": "07 Jul 2026",
       "days": 0,
       "team": "HRIS Sys Admin"
     }
