@@ -1,18 +1,18 @@
 {
-  "updated": "2026-07-07T12:26:45",
-  "updated_display": "Tuesday 07 July 2026 at 12:26",
+  "updated": "2026-08-11T09:24:27",
+  "updated_display": "Tuesday 11 August 2026 at 09:24",
   "report_file": "All Open Tasks by Team.xlsx",
   "summary": {
-    "total": 28,
-    "assigned": 25,
-    "unassigned": 3,
-    "stale": 4,
-    "oldest_days": 139
+    "total": 39,
+    "assigned": 39,
+    "unassigned": 0,
+    "stale": 6,
+    "oldest_days": 173
   },
   "analysts": [
     {
       "name": "James Salas Guillen",
-      "ticket_count": 13,
+      "ticket_count": 9,
       "tickets": [
         {
           "task_num": "50929404",
@@ -22,177 +22,287 @@
           "analyst": "James Salas Guillen",
           "category": "Odyssey",
           "created": "18 Feb 2026",
-          "days": 139,
+          "days": 173,
           "team": "Health and Safety 2nd Line"
         },
         {
-          "task_num": "50954587",
-          "summary": "Cardinus - Request",
+          "task_num": "50968840",
+          "summary": "Cority Request",
+          "status": "Waiting",
+          "priority": "5",
+          "analyst": "James Salas Guillen",
+          "category": "Cority - Occupational Health Management Service",
+          "created": "14 Jul 2026",
+          "days": 27,
+          "team": "Health and Safety 2nd Line"
+        },
+        {
+          "task_num": "50970608",
+          "summary": "Cardinus Issue",
           "status": "Waiting",
           "priority": "5",
           "analyst": "James Salas Guillen",
           "category": "Display Screen Equipment Assessment System",
-          "created": "15 May 2026",
-          "days": 52,
+          "created": "20 Jul 2026",
+          "days": 21,
           "team": "Health and Safety 2nd Line"
         },
         {
-          "task_num": "50954906",
+          "task_num": "50973604",
           "summary": "Odyssey",
           "status": "Waiting",
           "priority": "5",
           "analyst": "James Salas Guillen",
           "category": "Odyssey",
-          "created": "18 May 2026",
-          "days": 50,
+          "created": "31 Jul 2026",
+          "days": 11,
           "team": "Health and Safety 2nd Line"
         },
         {
-          "task_num": "50959348",
-          "summary": "Respiratory reminders - another issue",
-          "status": "Accepted",
-          "priority": "5",
-          "analyst": "James Salas Guillen",
-          "category": "Cority - Occupational Health Management Service",
-          "created": "09 Jun 2026",
-          "days": 27,
-          "team": "Health and Safety 2nd Line"
-        },
-        {
-          "task_num": "50959634",
-          "summary": "Dynanic authorisation question",
-          "status": "Accepted",
-          "priority": "5",
-          "analyst": "James Salas Guillen",
-          "category": "Applications/Software",
-          "created": "10 Jun 2026",
-          "days": 26,
-          "team": "Health and Safety 2nd Line"
-        },
-        {
-          "task_num": "50960710",
-          "summary": "JF struggling to log in -Checked and her profile keeps getting archived. Please can u assist. Thanks",
-          "status": "Waiting",
-          "priority": "5",
-          "analyst": "James Salas Guillen",
-          "category": "Display Screen Equipment Assessment System",
-          "created": "17 Jun 2026",
-          "days": 19,
-          "team": "Health and Safety 2nd Line"
-        },
-        {
-          "task_num": "50962658",
-          "summary": "Cardinus Access - Ralph said to flag ones like this to Systems Support to investigate. Thanks",
-          "status": "Waiting",
-          "priority": "5",
-          "analyst": "James Salas Guillen",
-          "category": "",
-          "created": "23 Jun 2026",
-          "days": 13,
-          "team": "Health and Safety 2nd Line"
-        },
-        {
-          "task_num": "50963131",
-          "summary": "Cority Issue",
-          "status": "Waiting",
-          "priority": "5",
-          "analyst": "James Salas Guillen",
-          "category": "Cority - Occupational Health Management Service",
-          "created": "24 Jun 2026",
-          "days": 12,
-          "team": "Health and Safety 2nd Line"
-        },
-        {
-          "task_num": "50963133",
-          "summary": "Cority Issue",
-          "status": "Waiting",
-          "priority": "5",
-          "analyst": "James Salas Guillen",
-          "category": "Cority - Occupational Health Management Service",
-          "created": "24 Jun 2026",
-          "days": 12,
-          "team": "Health and Safety 2nd Line"
-        },
-        {
-          "task_num": "50964323",
-          "summary": "Cority Issue",
-          "status": "Waiting",
-          "priority": "5",
-          "analyst": "James Salas Guillen",
-          "category": "Cority - Occupational Health Management Service",
-          "created": "29 Jun 2026",
-          "days": 7,
-          "team": "Health and Safety 2nd Line"
-        },
-        {
-          "task_num": "50964516",
-          "summary": "Cority",
-          "status": "Accepted",
-          "priority": "5",
-          "analyst": "James Salas Guillen",
-          "category": "Cority - Occupational Health Management Service",
-          "created": "30 Jun 2026",
-          "days": 7,
-          "team": "Health and Safety 2nd Line"
-        },
-        {
-          "task_num": "50964745",
-          "summary": "Cority",
-          "status": "Waiting",
-          "priority": "5",
-          "analyst": "James Salas Guillen",
-          "category": "Cority - Occupational Health Management Service",
-          "created": "30 Jun 2026",
-          "days": 6,
-          "team": "Health and Safety 2nd Line"
-        },
-        {
-          "task_num": "50965471",
-          "summary": "Odyssey Building Request",
+          "task_num": "50974866",
+          "summary": "Odyssey issue",
           "status": "Accepted",
           "priority": "5",
           "analyst": "James Salas Guillen",
           "category": "Odyssey",
-          "created": "02 Jul 2026",
+          "created": "05 Aug 2026",
+          "days": 6,
+          "team": "Health and Safety 2nd Line"
+        },
+        {
+          "task_num": "50975265",
+          "summary": "Cority Issue",
+          "status": "Accepted",
+          "priority": "5",
+          "analyst": "James Salas Guillen",
+          "category": "Cority - Occupational Health Management Service",
+          "created": "06 Aug 2026",
           "days": 5,
+          "team": "Health and Safety 2nd Line"
+        },
+        {
+          "task_num": "50975267",
+          "summary": "Cority Request",
+          "status": "Accepted",
+          "priority": "5",
+          "analyst": "James Salas Guillen",
+          "category": "Cority - Occupational Health Management Service",
+          "created": "06 Aug 2026",
+          "days": 5,
+          "team": "Health and Safety 2nd Line"
+        },
+        {
+          "task_num": "50975537",
+          "summary": "Odyssey",
+          "status": "Accepted",
+          "priority": "5",
+          "analyst": "James Salas Guillen",
+          "category": "Odyssey",
+          "created": "06 Aug 2026",
+          "days": 4,
+          "team": "Health and Safety 2nd Line"
+        },
+        {
+          "task_num": "50975638",
+          "summary": "Cority Issue",
+          "status": "Accepted",
+          "priority": "5",
+          "analyst": "James Salas Guillen",
+          "category": "Cority - Occupational Health Management Service",
+          "created": "07 Aug 2026",
+          "days": 4,
           "team": "Health and Safety 2nd Line"
         }
       ]
     },
     {
       "name": "Asta Palmer",
-      "ticket_count": 3,
+      "ticket_count": 17,
       "tickets": [
         {
-          "task_num": "50965593",
-          "summary": "Rostering issue - GLAM",
-          "status": "Accepted",
+          "task_num": "50976143",
+          "summary": "[AG case 69138348] Leonardo Carella (2379552) post 291888, vacancy 185209",
+          "status": "Waiting",
           "priority": "5",
           "analyst": "Asta Palmer",
-          "category": "Roster (WFM)",
-          "created": "02 Jul 2026",
-          "days": 5,
-          "team": "HRIS Analysis"
-        },
-        {
-          "task_num": "50966641",
-          "summary": "Add Manager Dashboards for My Development Reviewers",
-          "status": "Accepted",
-          "priority": "5",
-          "analyst": "Asta Palmer",
-          "category": "",
-          "created": "07 Jul 2026",
+          "category": "People Management",
+          "created": "10 Aug 2026",
           "days": 0,
           "team": "HRIS Analysis"
         },
         {
-          "task_num": "50966758",
-          "summary": "HR User Remove Access - Laura Giglio",
+          "task_num": "50972525",
+          "summary": "HR User Change Access - Anne Mortimer",
           "status": "Accepted",
           "priority": "5",
           "analyst": "Asta Palmer",
           "category": "",
-          "created": "07 Jul 2026",
+          "created": "28 Jul 2026",
+          "days": 13,
+          "team": "HRIS Sys Admin"
+        },
+        {
+          "task_num": "50972694",
+          "summary": "01-SEP-2026 - Manager Self Service Change - Damian Robinson",
+          "status": "Accepted",
+          "priority": "3",
+          "analyst": "Asta Palmer",
+          "category": "",
+          "created": "28 Jul 2026",
+          "days": 13,
+          "team": "HRIS Sys Admin"
+        },
+        {
+          "task_num": "50973388",
+          "summary": "17-Aug-2026 - Manager Self Service Add - Alex Treadwell",
+          "status": "Accepted",
+          "priority": "3",
+          "analyst": "Asta Palmer",
+          "category": "",
+          "created": "30 Jul 2026",
+          "days": 11,
+          "team": "HRIS Sys Admin"
+        },
+        {
+          "task_num": "50973389",
+          "summary": "16-Aug-2026 - Manager Self Service Remove - Bridget Midwinter",
+          "status": "Accepted",
+          "priority": "3",
+          "analyst": "Asta Palmer",
+          "category": "",
+          "created": "30 Jul 2026",
+          "days": 11,
+          "team": "HRIS Sys Admin"
+        },
+        {
+          "task_num": "50975269",
+          "summary": "17-Aug-26 HR User Access New - Neesha Devi",
+          "status": "Accepted",
+          "priority": "5",
+          "analyst": "Asta Palmer",
+          "category": "",
+          "created": "06 Aug 2026",
+          "days": 4,
+          "team": "HRIS Sys Admin"
+        },
+        {
+          "task_num": "50976285",
+          "summary": "Create Work Group - Lucas Martins Ferreira",
+          "status": "Accepted",
+          "priority": "3",
+          "analyst": "Asta Palmer",
+          "category": "",
+          "created": "10 Aug 2026",
+          "days": 0,
+          "team": "HRIS Sys Admin"
+        },
+        {
+          "task_num": "50976286",
+          "summary": "Add Shift Type - Ellen Monray",
+          "status": "Accepted",
+          "priority": "3",
+          "analyst": "Asta Palmer",
+          "category": "",
+          "created": "10 Aug 2026",
+          "days": 0,
+          "team": "HRIS Sys Admin"
+        },
+        {
+          "task_num": "50976301",
+          "summary": "Rename Work Group - Oluwatobi Odubayo",
+          "status": "Accepted",
+          "priority": "3",
+          "analyst": "Asta Palmer",
+          "category": "",
+          "created": "10 Aug 2026",
+          "days": 0,
+          "team": "HRIS Sys Admin"
+        },
+        {
+          "task_num": "50976308",
+          "summary": "Manager Self Service Add - Calvin Phang",
+          "status": "Accepted",
+          "priority": "3",
+          "analyst": "Asta Palmer",
+          "category": "",
+          "created": "10 Aug 2026",
+          "days": 0,
+          "team": "HRIS Sys Admin"
+        },
+        {
+          "task_num": "50976362",
+          "summary": "Manager Self Service Add - John Mead",
+          "status": "Accepted",
+          "priority": "3",
+          "analyst": "Asta Palmer",
+          "category": "",
+          "created": "10 Aug 2026",
+          "days": 0,
+          "team": "HRIS Sys Admin"
+        },
+        {
+          "task_num": "50976363",
+          "summary": "HR User Change Access - Hayley Morris",
+          "status": "Accepted",
+          "priority": "5",
+          "analyst": "Asta Palmer",
+          "category": "",
+          "created": "10 Aug 2026",
+          "days": 0,
+          "team": "HRIS Sys Admin"
+        },
+        {
+          "task_num": "50976374",
+          "summary": "HR User Remove Access - Georgia Moon",
+          "status": "Accepted",
+          "priority": "5",
+          "analyst": "Asta Palmer",
+          "category": "",
+          "created": "11 Aug 2026",
+          "days": 0,
+          "team": "HRIS Sys Admin"
+        },
+        {
+          "task_num": "50976395",
+          "summary": "HR User Change Access - Nicola Sweetnam",
+          "status": "Accepted",
+          "priority": "5",
+          "analyst": "Asta Palmer",
+          "category": "",
+          "created": "11 Aug 2026",
+          "days": 0,
+          "team": "HRIS Sys Admin"
+        },
+        {
+          "task_num": "50976398",
+          "summary": "HR People Data Dashboards AD Group - Kit Finn",
+          "status": "Accepted",
+          "priority": "3",
+          "analyst": "Asta Palmer",
+          "category": "",
+          "created": "11 Aug 2026",
+          "days": 0,
+          "team": "HRIS Sys Admin"
+        },
+        {
+          "task_num": "50976400",
+          "summary": "HR User Access New - Madhvi Saini",
+          "status": "Accepted",
+          "priority": "5",
+          "analyst": "Asta Palmer",
+          "category": "",
+          "created": "11 Aug 2026",
+          "days": 0,
+          "team": "HRIS Sys Admin"
+        },
+        {
+          "task_num": "50976401",
+          "summary": "Create Work Group - Evelyn Irungu",
+          "status": "Accepted",
+          "priority": "3",
+          "analyst": "Asta Palmer",
+          "category": "",
+          "created": "11 Aug 2026",
           "days": 0,
           "team": "HRIS Sys Admin"
         }
@@ -200,72 +310,116 @@
     },
     {
       "name": "Michael O'Sullivan",
-      "ticket_count": 6,
+      "ticket_count": 10,
       "tickets": [
         {
           "task_num": "50959921",
-          "summary": "CR 20020453 -  UOXU - Update OSPS DB and DC Employer Rate Contributions",
+          "summary": "CR 20020453 OCT26-  UOXU - Update OSPS DB and DC Employer Rate Contributions",
           "status": "Assigned",
           "priority": "3",
           "analyst": "Michael O'Sullivan",
           "category": "",
           "created": "12 Jun 2026",
-          "days": 25,
+          "days": 60,
           "team": "HRIS Analysis"
         },
         {
           "task_num": "50959922",
-          "summary": "CR 20020453 -  UOXU - Test OSPS DB and DC Employer Rate Contributions",
+          "summary": "CR 20020453 OCT 26 -  UOXU - Test OSPS DB and DC Employer Rate Contributions",
           "status": "Assigned",
           "priority": "3",
           "analyst": "Michael O'Sullivan",
           "category": "",
           "created": "12 Jun 2026",
-          "days": 25,
+          "days": 60,
           "team": "HRIS Analysis"
         },
         {
-          "task_num": "50961819",
-          "summary": "Request for new Academic holiday balance",
+          "task_num": "50968899",
+          "summary": "AG Case # 9080309 - Long service additional leave error",
           "status": "Accepted",
           "priority": "5",
           "analyst": "Michael O'Sullivan",
           "category": "Time and Attendance",
-          "created": "22 Jun 2026",
-          "days": 15,
+          "created": "14 Jul 2026",
+          "days": 27,
           "team": "HRIS Analysis"
         },
         {
-          "task_num": "50964022",
-          "summary": "AG Case # 69040395 - Error messages when trying to use co-workers calendar from Employee Dashboard",
+          "task_num": "50969185",
+          "summary": "AG Case - Long service not calculating properly from manual override",
           "status": "Accepted",
           "priority": "5",
           "analyst": "Michael O'Sullivan",
           "category": "Time and Attendance",
-          "created": "27 Jun 2026",
-          "days": 9,
+          "created": "15 Jul 2026",
+          "days": 26,
           "team": "HRIS Analysis"
         },
         {
-          "task_num": "50964407",
-          "summary": "CR 20020517 - New pension scheme and related pay codes for NHS needed",
+          "task_num": "50972944",
+          "summary": "CR 20020642 - Update PERDEP02 to include Reason for FTC UDF Data Columns",
           "status": "Accepted",
-          "priority": "5",
+          "priority": "3",
           "analyst": "Michael O'Sullivan",
-          "category": "Pensions",
-          "created": "29 Jun 2026",
-          "days": 7,
+          "category": "",
+          "created": "29 Jul 2026",
+          "days": 12,
           "team": "HRIS Analysis"
         },
         {
-          "task_num": "50964825",
-          "summary": "CR 20020517 - UOXU - PeopleXD - Create New NHS AVC Pension Scheme and Associated Deduction Pay Code",
+          "task_num": "50975098",
+          "summary": "CR 20020687 - UOXU - PeopleXD - Update to letter templates following migration to Oxintranet and OxW",
           "status": "Assigned",
           "priority": "5",
           "analyst": "Michael O'Sullivan",
           "category": "",
-          "created": "30 Jun 2026",
-          "days": 6,
+          "created": "05 Aug 2026",
+          "days": 5,
+          "team": "HRIS Analysis"
+        },
+        {
+          "task_num": "50975099",
+          "summary": "CR 20020687 - UOXP - Update to letter templates following migration to Oxintranet and OxWeb",
+          "status": "Assigned",
+          "priority": "5",
+          "analyst": "Michael O'Sullivan",
+          "category": "",
+          "created": "05 Aug 2026",
+          "days": 5,
+          "team": "HRIS Analysis"
+        },
+        {
+          "task_num": "50975473",
+          "summary": "CR 20020694 - UOXU testing - sw patch 28.0.157",
+          "status": "Assigned",
+          "priority": "3",
+          "analyst": "Michael O'Sullivan",
+          "category": "",
+          "created": "06 Aug 2026",
+          "days": 4,
+          "team": "HRIS Analysis"
+        },
+        {
+          "task_num": "50976197",
+          "summary": "NHS Pension tiers new pay ranges",
+          "status": "Accepted",
+          "priority": "5",
+          "analyst": "Michael O'Sullivan",
+          "category": "Payroll",
+          "created": "10 Aug 2026",
+          "days": 0,
+          "team": "HRIS Analysis"
+        },
+        {
+          "task_num": "50976391",
+          "summary": "Leaver/Rehire 2349387",
+          "status": "Accepted",
+          "priority": "5",
+          "analyst": "Michael O'Sullivan",
+          "category": "People Management",
+          "created": "11 Aug 2026",
+          "days": 0,
           "team": "HRIS Analysis"
         }
       ]
@@ -282,7 +436,7 @@
           "analyst": "Simon Burford",
           "category": "Recruitment",
           "created": "23 Apr 2026",
-          "days": 75,
+          "days": 110,
           "team": "HRIS Analysis"
         }
       ]
@@ -299,7 +453,7 @@
           "analyst": "Kevin Lelitte",
           "category": "Roster (WFM)",
           "created": "29 Jun 2026",
-          "days": 8,
+          "days": 42,
           "team": "HRIS Analysis"
         },
         {
@@ -310,45 +464,11 @@
           "analyst": "Kevin Lelitte",
           "category": "",
           "created": "07 Jul 2026",
-          "days": 0,
+          "days": 34,
           "team": "HRIS Analysis"
         }
       ]
     }
   ],
-  "unassigned": [
-    {
-      "task_num": "50966011",
-      "summary": "Cority Deletion Request",
-      "status": "Logged",
-      "priority": "5",
-      "analyst": "",
-      "category": "Cority - Occupational Health Management Service",
-      "created": "03 Jul 2026",
-      "days": 4,
-      "team": "Health and Safety 2nd Line"
-    },
-    {
-      "task_num": "50966806",
-      "summary": "Cority Issue",
-      "status": "Logged",
-      "priority": "5",
-      "analyst": "",
-      "category": "Cority - Occupational Health Management Service",
-      "created": "07 Jul 2026",
-      "days": 0,
-      "team": "Health and Safety 2nd Line"
-    },
-    {
-      "task_num": "50966190",
-      "summary": "Leave request email possible to pull Known as name",
-      "status": "Logged",
-      "priority": "5",
-      "analyst": "",
-      "category": "Time and Attendance",
-      "created": "03 Jul 2026",
-      "days": 3,
-      "team": "HRIS Analysis"
-    }
-  ]
+  "unassigned": []
 }
