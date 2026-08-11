@@ -113,3 +113,18 @@ Changes made this session (all pushed to main, approved by Kevin):
 - [ ] Update `ALLOWED_ORIGIN` when domain is live
 - [ ] Consider adding ticket detail expand / click-through to OSM when on domain
 - [ ] HANDOVER.md does not yet exist — created this session
+
+
+---
+
+## Session 2026-08-11 -- Missing schedule trigger fixed; SAASIT session still needs Kevin's login (Drew, not this repo's usual agent)
+
+**Scope:** Kevin asked Drew to investigate why this dashboard wasn't updating (separate from Drew's usual three repos), then approved fixing what was found.
+
+**Root cause confirmed by reading the live workflow file directly, not the docs:** `.github/workflows/update-dashboard.yml`'s `on:` block had regressed to `workflow_dispatch:` only -- no `schedule:` trigger at all, despite `CLAUDE.md`/`README.md`/`HANDOVER.md` all documenting "hourly Mon-Fri 7-16 UTC." Checked the workflow's real run history via the GitHub API: last attempt of any kind (success or failure) was 2 July 2026, over 5 weeks stale.
+
+**Fixed:** re-added `schedule: - cron: '0 7-16 * * 1-5'` alongside the existing `workflow_dispatch:` trigger, matching what the docs always claimed.
+
+**Verified with a real run, not just that the YAML looks right:** manually dispatched the workflow after pushing the fix. Result: **run #57 completed (not stuck queued, not failing to trigger) but concluded `failure`** -- confirms the schedule/trigger bug itself is genuinely fixed (the workflow now runs end-to-end on the self-hosted runner and reaches the real failure point), but the underlying SAASIT session is still expired. `last_run_status.txt` shows the exact same `OData auth error 401 (ISM_4001)` as the 2 July failure, against the same stale `session.json` (still last modified 11 June 2026 -- unchanged).
+
+**Not fixed, and not something Drew can fix:** `login.py`'s own docstring is explicit -- refreshing the SAASIT session requires opening a browser and logging in via **Oxford SSO with Microsoft MFA**, interactively, as Kevin. This is outside what any agent should do on Kevin's behalf (credential/MFA entry). **Kevin needs to run `Refresh Session.bat` (or `python login.py`) himself** -- once that's done, the now-restored hourly schedule will pick the fresh session up automatically on its next run; no further engineering step needed after that.
