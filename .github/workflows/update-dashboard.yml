@@ -1,6 +1,12 @@
 name: Update HRIS Dashboard
-# Triggered manually: click Refresh on the dashboard, or use the Actions tab.
+# Hourly Mon-Fri 7am-4pm UTC (matches CLAUDE.md/README.md/HANDOVER.md's documented
+# schedule -- re-added 11 Aug 2026 after being found missing entirely; the workflow
+# had silently regressed to workflow_dispatch-only at some point, so the docs'
+# "hourly cron" claim was false until this fix. Also still triggerable manually
+# via the dashboard's Refresh button or the Actions tab.
 on:
+  schedule:
+    - cron: '0 7-16 * * 1-5'
   workflow_dispatch:
 permissions:
   contents: write
