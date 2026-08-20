@@ -61,7 +61,8 @@ to change their export format.
 
 **Commits (main):**
 - `import_osm_report.py`: commit `f418802dac35445cbeaa0585d1276d3d963af015`
-- `Update HRIS Dashboard.bat`: commit `a23f1dd0cef25bb9739397636687bc2096fea0e9`
+- `Update HRIS Dashboard.bat` (.xls + xlrd install): commit `a23f1dd0cef25bb9739397636687bc2096fea0e9`
+- `Update HRIS Dashboard.bat` (SHA-pin the download, supply-chain fix): commit `7b3014beb9d696c4d2d40da2d1069bc87996ed4b`
   (current tip of main as of this session)
 
 ---
@@ -118,23 +119,41 @@ https://begb0037admin.github.io/hris-dashboard/ reflects it.
 
 ---
 
-## Flagged, not fixed this pass (both explicitly out of scope per the brief)
+## Supply-chain gap — FIXED same day, 20 Aug 2026 (Kevin approved)
 
-1. **Supply-chain gap:** `Update HRIS Dashboard.bat` pulls
-   `import_osm_report.py` fresh from
-   `raw.githubusercontent.com/begb0037admin/hris-dashboard/main/...`
-   on every run with zero integrity check — no commit pin, no hash
-   verification. Anyone who could write to `main` (or compromise the
-   `begb0037admin` account) could silently alter the script executed
-   locally with `GITHUB_PAT` access. Given the repo model elsewhere
-   (GitHub is sole source of truth, Contents-API writes need Kevin's
-   approval per project rules) this is a real but pre-existing gap, not
-   something introduced this session. Worth a future pass: pin to a
-   commit SHA in the `.bat`'s `curl` URL, or add a checksum check.
-   Not fixed now — flagged per the brief's explicit instruction not to
-   let it block the `.xls` fix.
+Originally flagged below as "not fixed this pass"; Kevin approved fixing
+it the same session. `Update HRIS Dashboard.bat` no longer pulls
+`import_osm_report.py` from the floating `main` branch — it now pulls
+from a commit-pinned raw URL:
 
-2. **Sender domain note:** today's report came from
+`https://raw.githubusercontent.com/begb0037admin/hris-dashboard/<SCRIPT_SHA>/import_osm_report.py`
+
+`SCRIPT_SHA` is set near the top of the `.bat` (currently
+`e503509d2785cc30d4102365aa72e353983f864d`, `main`'s tip at the time of
+the `.xls` fix, verified live before use — not trusted from a stale
+string). The `.bat` itself has an inline comment explaining this is
+intentional pinning, not staleness, and exactly what to update when a
+future script change needs to ship. Commit:
+`7b3014beb9d696c4d2d40da2d1069bc87996ed4b`.
+
+**Important behaviour change — this is not a bug, but do not let it
+surprise anyone later:** before this fix, the `.bat` always fetched
+whatever `import_osm_report.py` looked like on `main` at run time —
+`main` was the deployment. **That is no longer true.** From now on, a
+future edit to `import_osm_report.py` pushed to `main` will have
+**zero effect** on what the `.bat` actually runs until someone
+*deliberately* updates `SCRIPT_SHA` in the `.bat` to the new commit and
+pushes that. If a future session fixes a bug in `import_osm_report.py`
+and stops there, Kevin will keep silently getting the old pinned
+behaviour forever, with no error, no warning — the pin will look
+"fixed" in the repo but not actually be live. **Any session that
+changes `import_osm_report.py` must also bump `SCRIPT_SHA` in the
+`.bat` as part of that same change**, or explicitly flag that it
+deliberately left the pin as-is (e.g. an unrelated doc-only commit).
+
+## Flagged, not fixed this pass
+
+1. **Sender domain note:** today's report came from
    `reports-prd-ldz@saasiteu.com` (cc Louise Piper) — not an
    `ox.ac.uk`/`oxford`-branded domain at first glance. Checked against
    this repo's own live evidence (see Verified section above):
@@ -168,7 +187,11 @@ why it's the path in active use right now.
 
 - None to unblock the `.xls` fix itself — it's pushed to `main` and
   ready to use.
-- Open decision (not blocking): whether/when to address the
-  supply-chain pinning gap above.
+- Supply-chain pinning gap: fixed same day (see above) — no longer
+  open.
 - Separate, pre-existing: the SAASIT session refresh (interactive,
   Kevin-only step) for the automated path — unrelated to this task.
+- **New standing obligation:** any future change to
+  `import_osm_report.py` must also bump `SCRIPT_SHA` in
+  `Update HRIS Dashboard.bat` in the same change, or explicitly note
+  that the pin is deliberately being left as-is.
