@@ -40,7 +40,9 @@ set "PROJECT_DIR=C:\Users\admin\Documents\Claude\Projects\HRIS-Dashboard"
 set "FETCH_SCRIPT=fetch_osm_report.py"
 set "FETCH_RAW_URL=https://raw.githubusercontent.com/begb0037admin/hris-dashboard/main/fetch_osm_report.py"
 set "UPDATE_BAT_NAME=Update HRIS Dashboard.bat"
-set "UPDATE_RAW_URL=https://raw.githubusercontent.com/begb0037admin/hris-dashboard/main/Update HRIS Dashboard.bat"
+rem %%20 = URL-encoded space -- a literal space in the URL was tested and
+rem confirmed to fail (curl could not resolve it), so this must stay encoded.
+set "UPDATE_RAW_URL=https://raw.githubusercontent.com/begb0037admin/hris-dashboard/main/Update%%20HRIS%%20Dashboard.bat"
 set "LOG_FILE=%PROJECT_DIR%\osm_auto_refresh_last_run.log"
 
 if not exist "%PROJECT_DIR%\" mkdir "%PROJECT_DIR%"
