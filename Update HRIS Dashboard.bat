@@ -17,7 +17,7 @@ echo.
 
 :: Ensure dependencies are installed
 echo Checking dependencies...
-pip install openpyxl requests --quiet --disable-pip-version-check
+pip install openpyxl xlrd requests --quiet --disable-pip-version-check
 echo Done.
 echo.
 
