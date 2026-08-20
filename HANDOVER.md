@@ -152,3 +152,11 @@ Changes made this session (all pushed to main, approved by Kevin):
 **Unrelated, still open:** the automated GitHub Actions scrape path is still failing on the same expired-SAASIT-session issue found 11 Aug 2026 (confirmed still failing as of run #112, 20 Aug 08:37 UTC) — needs Kevin's interactive Oxford SSO+MFA login, unrelated to the fix above.
 
 `RESUME.md` created this session (previously absent) — see it for the full durable-state record, verification detail, and exact next action.
+
+---
+
+## Session 2026-08-20 (same-day follow-on) -- Supply-chain gap fixed: `.bat` download now pinned to a commit SHA (Drew, Kevin-approved)
+
+Kevin approved fixing the supply-chain gap flagged above. `Update HRIS Dashboard.bat` no longer downloads `import_osm_report.py` from the floating `main` branch URL — it now uses a commit-pinned raw URL (`raw.githubusercontent.com/begb0037admin/hris-dashboard/<SCRIPT_SHA>/import_osm_report.py`), with `SCRIPT_SHA` set near the top of the `.bat` and an inline comment explaining the pin and how to bump it. Verified `main`'s tip live before pinning (`gh api repos/begb0037admin/hris-dashboard/commits/main`, not trusted from memory) — `e503509d2785cc30d4102365aa72e353983f864d`, includes the `.xls` fix above. Sanity-checked the SHA-pinned raw URL actually resolves (HTTP 200, correct content) before pushing. Commit: `7b3014beb9d696c4d2d40da2d1069bc87996ed4b`.
+
+**Behaviour change worth flagging loudly:** before today, the `.bat` always ran whatever `import_osm_report.py` looked like on `main` — `main` was live. That's no longer true. **A future edit to `import_osm_report.py` has zero effect on the `.bat` until `SCRIPT_SHA` is deliberately bumped to the new commit and pushed** — otherwise Kevin silently keeps getting today's pinned version forever, with no error. Any session touching `import_osm_report.py` going forward must also bump `SCRIPT_SHA` in the same change (or explicitly note the pin is being left as-is on purpose). Full detail in `RESUME.md`.
