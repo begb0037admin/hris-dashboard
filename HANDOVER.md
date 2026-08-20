@@ -128,3 +128,27 @@ Changes made this session (all pushed to main, approved by Kevin):
 **Verified with a real run, not just that the YAML looks right:** manually dispatched the workflow after pushing the fix. Result: **run #57 completed (not stuck queued, not failing to trigger) but concluded `failure`** -- confirms the schedule/trigger bug itself is genuinely fixed (the workflow now runs end-to-end on the self-hosted runner and reaches the real failure point), but the underlying SAASIT session is still expired. `last_run_status.txt` shows the exact same `OData auth error 401 (ISM_4001)` as the 2 July failure, against the same stale `session.json` (still last modified 11 June 2026 -- unchanged).
 
 **Not fixed, and not something Drew can fix:** `login.py`'s own docstring is explicit -- refreshing the SAASIT session requires opening a browser and logging in via **Oxford SSO with Microsoft MFA**, interactively, as Kevin. This is outside what any agent should do on Kevin's behalf (credential/MFA entry). **Kevin needs to run `Refresh Session.bat` (or `python login.py`) himself** -- once that's done, the now-restored hourly schedule will pick the fresh session up automatically on its next run; no further engineering step needed after that.
+
+---
+
+## Session 2026-08-20 -- `.xls` support added to the manual OSM import pipeline (Drew; hris-dashboard now formally in Drew's scope)
+
+**Scope:** Kevin formally added `hris-dashboard` to Drew's accountable scope this session. Task: OSM Administration's "All Open Tasks by Team" report sometimes arrives as a genuine old-format `.xls` (OLE binary) rather than `.xlsx`; `import_osm_report.py` only ever matched/read `.xlsx`, so the drop-into-Downloads-and-run-the-`.bat` workflow would fail outright on an `.xls` attachment. Today's live example: `All Open Tasks by Team.xls` from `reports-prd-ldz@saasiteu.com` (cc Louise Piper), 20 Aug 2026.
+
+**Fixed:** `import_osm_report.py` now handles both formats natively, no manual conversion step:
+- `FILE_PATTERN` widened to `FILE_PATTERNS` (globs both `*.xlsx` and `*.xls`, most-recently-modified wins across both, same selection semantics as before).
+- Added an `xlrd`-based reader (`_read_rows_xls`) for `.xls`, normalised to the same row-tuple shape `openpyxl` already produced, so all downstream header-detection/column-mapping/grouping logic is untouched and format-agnostic.
+- `Update HRIS Dashboard.bat` now also `pip install`s `xlrd`.
+- Commits on `main`: `import_osm_report.py` → `f418802dac35445cbeaa0585d1276d3d963af015`; `Update HRIS Dashboard.bat` → `a23f1dd0cef25bb9739397636687bc2096fea0e9`.
+
+**Verified for real, not just read-through:** built a synthetic OLE-binary `.xls` (confirmed via `file` as `CDFV2 Microsoft Excel`, matching the brief's claim) reproducing the report's shape, and ran the new `parse_report()`/`find_report()` directly against it — 3 tickets parsed correctly including date conversion and the unassigned-analyst bucket. Also verified the pre-existing `.xlsx` path is unchanged, and that `find_report()` correctly picks whichever format is genuinely most recently modified when both are present. Full detail in `RESUME.md` (new this session).
+
+**NOT verified:** the actual `.bat` was not run end-to-end on Kevin's machine, and Kevin's real 20 Aug `.xls` attachment (as opposed to a synthetic stand-in) was never opened. Low risk (same proven header-detection-by-name logic as the existing `.xlsx` path) but not zero. **Kevin's next action:** drop today's `All Open Tasks by Team.xls` into `C:\Users\admin\Downloads`, run `Update HRIS Dashboard.bat`, confirm it completes and the live dashboard updates.
+
+**Flagged, not fixed (both explicitly out of scope for this pass):**
+1. Supply-chain gap: `Update HRIS Dashboard.bat` pulls `import_osm_report.py` from `raw.githubusercontent.com` on every run with no commit pin or hash check.
+2. Sender domain `saasiteu.com` on today's report: checked against this repo's own live `last_run_status.txt` evidence — `oxford.saasiteu.com` is the same domain the automated Playwright scrape has authenticated against all along, so this reads as SAASIT's genuine vendor domain, not a new/suspicious one. Not a definitive email-header check; Kevin's own call on the actual email stands.
+
+**Unrelated, still open:** the automated GitHub Actions scrape path is still failing on the same expired-SAASIT-session issue found 11 Aug 2026 (confirmed still failing as of run #112, 20 Aug 08:37 UTC) — needs Kevin's interactive Oxford SSO+MFA login, unrelated to the fix above.
+
+`RESUME.md` created this session (previously absent) — see it for the full durable-state record, verification detail, and exact next action.
