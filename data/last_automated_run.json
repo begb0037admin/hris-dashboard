@@ -1,0 +1,8 @@
+{
+  "timestamp": "2026-08-21T14:51:48",
+  "timestamp_display": "Friday 21 August 2026 at 14:51",
+  "status": "success",
+  "step": "dashboard_update_ok",
+  "detail": "Automated morning run completed successfully.",
+  "trigger": "automated"
+}
