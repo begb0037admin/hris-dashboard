@@ -1,11 +1,11 @@
 {
-  "updated": "2026-08-20T13:59:58",
-  "updated_display": "Thursday 20 August 2026 at 13:59",
-  "report_file": "All Open Tasks by Team.xlsx",
+  "updated": "2026-08-21T14:51:45",
+  "updated_display": "Friday 21 August 2026 at 14:51",
+  "report_file": "All Open Tasks by Team - auto.xls",
   "summary": {
     "total": 31,
-    "assigned": 31,
-    "unassigned": 0,
+    "assigned": 24,
+    "unassigned": 7,
     "stale": 6,
     "oldest_days": 183
   },
@@ -66,7 +66,7 @@
           "analyst": "James Salas Guillen",
           "category": "Cority - Occupational Health Management Service",
           "created": "17 Aug 2026",
-          "days": 2,
+          "days": 3,
           "team": "Health and Safety 2nd Line"
         },
         {
@@ -84,7 +84,7 @@
     },
     {
       "name": "Asta Palmer",
-      "ticket_count": 15,
+      "ticket_count": 8,
       "tickets": [
         {
           "task_num": "50977943",
@@ -94,7 +94,7 @@
           "analyst": "Asta Palmer",
           "category": "Recruitment",
           "created": "17 Aug 2026",
-          "days": 2,
+          "days": 3,
           "team": "HRIS Analysis"
         },
         {
@@ -105,7 +105,7 @@
           "analyst": "Asta Palmer",
           "category": "",
           "created": "28 Jul 2026",
-          "days": 22,
+          "days": 23,
           "team": "HRIS Sys Admin"
         },
         {
@@ -116,7 +116,7 @@
           "analyst": "Asta Palmer",
           "category": "",
           "created": "10 Aug 2026",
-          "days": 9,
+          "days": 10,
           "team": "HRIS Sys Admin"
         },
         {
@@ -131,74 +131,8 @@
           "team": "HRIS Sys Admin"
         },
         {
-          "task_num": "50978831",
-          "summary": "Manager Self Service Change - Grant Ritchie",
-          "status": "Accepted",
-          "priority": "3",
-          "analyst": "Asta Palmer",
-          "category": "",
-          "created": "19 Aug 2026",
-          "days": 0,
-          "team": "HRIS Sys Admin"
-        },
-        {
-          "task_num": "50978834",
-          "summary": "Manager Self Service Change - Natalia Szatynska",
-          "status": "Accepted",
-          "priority": "3",
-          "analyst": "Asta Palmer",
-          "category": "",
-          "created": "19 Aug 2026",
-          "days": 0,
-          "team": "HRIS Sys Admin"
-        },
-        {
-          "task_num": "50978840",
-          "summary": "Manager Self Service Remove - Wik Blaszczak",
-          "status": "Accepted",
-          "priority": "3",
-          "analyst": "Asta Palmer",
-          "category": "",
-          "created": "19 Aug 2026",
-          "days": 0,
-          "team": "HRIS Sys Admin"
-        },
-        {
-          "task_num": "50978966",
-          "summary": "Create Work Group - Katie Sillence",
-          "status": "Accepted",
-          "priority": "3",
-          "analyst": "Asta Palmer",
-          "category": "",
-          "created": "20 Aug 2026",
-          "days": 0,
-          "team": "HRIS Sys Admin"
-        },
-        {
-          "task_num": "50978969",
-          "summary": "Create Work Group - Mark Caple",
-          "status": "Accepted",
-          "priority": "3",
-          "analyst": "Asta Palmer",
-          "category": "",
-          "created": "20 Aug 2026",
-          "days": 0,
-          "team": "HRIS Sys Admin"
-        },
-        {
           "task_num": "50978991",
           "summary": "HR High Level non-PXD Dashboards AD Groups - Philip Taylor",
-          "status": "Accepted",
-          "priority": "3",
-          "analyst": "Asta Palmer",
-          "category": "",
-          "created": "20 Aug 2026",
-          "days": 0,
-          "team": "HRIS Sys Admin"
-        },
-        {
-          "task_num": "50978995",
-          "summary": "Delete Work Group - Jenna Boyce",
           "status": "Accepted",
           "priority": "3",
           "analyst": "Asta Palmer",
@@ -219,17 +153,6 @@
           "team": "HRIS Sys Admin"
         },
         {
-          "task_num": "50979014",
-          "summary": "Manager Self Service Add - Janice Young",
-          "status": "Accepted",
-          "priority": "3",
-          "analyst": "Asta Palmer",
-          "category": "",
-          "created": "20 Aug 2026",
-          "days": 0,
-          "team": "HRIS Sys Admin"
-        },
-        {
           "task_num": "50979042",
           "summary": "Add Shift Type - Keely Fathers",
           "status": "Accepted",
@@ -241,12 +164,12 @@
           "team": "HRIS Sys Admin"
         },
         {
-          "task_num": "50979130",
-          "summary": "Multiple ESS account set up - NDORMS",
+          "task_num": "50979184",
+          "summary": "Add Shift Type - Ruth Hilland",
           "status": "Accepted",
-          "priority": "5",
+          "priority": "3",
           "analyst": "Asta Palmer",
-          "category": "HR Self-Service",
+          "category": "",
           "created": "20 Aug 2026",
           "days": 0,
           "team": "HRIS Sys Admin"
@@ -320,7 +243,7 @@
           "analyst": "Michael O'Sullivan",
           "category": "Interfaces",
           "created": "11 Aug 2026",
-          "days": 8,
+          "days": 9,
           "team": "HRIS Analysis"
         },
         {
@@ -342,7 +265,7 @@
           "analyst": "Michael O'Sullivan",
           "category": "Time and Attendance",
           "created": "19 Aug 2026",
-          "days": 0,
+          "days": 1,
           "team": "HRIS Analysis"
         }
       ]
@@ -382,5 +305,83 @@
       ]
     }
   ],
-  "unassigned": []
+  "unassigned": [
+    {
+      "task_num": "50976936",
+      "summary": "HR Systems User Access Request Issues - Nicola Webb",
+      "status": "Logged",
+      "priority": "5",
+      "analyst": "",
+      "category": "",
+      "created": "12 Aug 2026",
+      "days": 8,
+      "team": "HRIS Service Desk"
+    },
+    {
+      "task_num": "50979210",
+      "summary": "Incident Summary: I need to reset my password for HR Reporting but I don't know how.",
+      "status": "Logged",
+      "priority": "4",
+      "analyst": "",
+      "category": "HR Reporting",
+      "created": "20 Aug 2026",
+      "days": 0,
+      "team": "HRIS Service Desk"
+    },
+    {
+      "task_num": "50979248",
+      "summary": "Manager Self Service Remove - Francesca Ferard",
+      "status": "Logged",
+      "priority": "3",
+      "analyst": "",
+      "category": "",
+      "created": "20 Aug 2026",
+      "days": 0,
+      "team": "HRIS Sys Admin"
+    },
+    {
+      "task_num": "50979251",
+      "summary": "Manager Self Service Remove - Liberty Foden",
+      "status": "Logged",
+      "priority": "3",
+      "analyst": "",
+      "category": "",
+      "created": "20 Aug 2026",
+      "days": 0,
+      "team": "HRIS Sys Admin"
+    },
+    {
+      "task_num": "50979263",
+      "summary": "Manager Self Service Add - Sarah Gooding",
+      "status": "Logged",
+      "priority": "3",
+      "analyst": "",
+      "category": "",
+      "created": "20 Aug 2026",
+      "days": 0,
+      "team": "HRIS Sys Admin"
+    },
+    {
+      "task_num": "50979264",
+      "summary": "Manager Self Service Add - Abdullah Khan",
+      "status": "Logged",
+      "priority": "3",
+      "analyst": "",
+      "category": "",
+      "created": "20 Aug 2026",
+      "days": 0,
+      "team": "HRIS Sys Admin"
+    },
+    {
+      "task_num": "50979278",
+      "summary": "Manager Self Service Remove - Louisa Pagel",
+      "status": "Logged",
+      "priority": "3",
+      "analyst": "",
+      "category": "",
+      "created": "21 Aug 2026",
+      "days": 0,
+      "team": "HRIS Sys Admin"
+    }
+  ]
 }
