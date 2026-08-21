@@ -13,7 +13,115 @@ scope by Kevin same day. Drew was not this repo's "usual" agent before
 
 ---
 
-## One-line resume (latest — 21 Aug 2026)
+## One-line resume (latest — 21 Aug 2026, afternoon)
+
+The 21 Aug 08:30 scheduled run fired but died silently after Step 1 (no
+error in the log, nothing in Windows event logs) — Kevin reported it same
+day. Root-caused and fixed for real, two independent bugs stacked, both
+confirmed via isolated bisection testing on this exact machine, not
+guesswork:
+
+1. **Unescaped literal parens inside a multi-line `if (...)` block.** The
+   old failure-branch echo — `Step 1/2 FAILED (exit %FETCH_EXIT%) ...` —
+   sits inside `if not "%FETCH_EXIT%"=="0" ( ... )`. cmd.exe's block
+   parser ends a parenthesized block at the FIRST unescaped `)` it meets,
+   not by balancing against an earlier `(` — so the `)` right after
+   `%FETCH_EXIT%` was read as the block's real close. Everything after
+   that point misparsed into cmd's classic `- was unexpected at this
+   time.` error, written only to the (invisible, since this always runs
+   hidden) console, never the log — exactly why this looked like total
+   silence. Fired on **every** run regardless of Step 1's real outcome,
+   since cmd must parse a whole if-block to know where to resume even
+   when skipping it — this is why today's run died even though Step 1
+   itself (Outlook fetch) genuinely succeeded. Fixed by rewording to avoid
+   literal parens.
+2. **This machine's cmd.exe cannot launch a second `.bat`/`.cmd` FILE from
+   a cmd.exe process already executing a batch file** — confirmed via
+   `call`, bare invocation, and a fresh `cmd /c "x.bat"` all failing
+   identically with `'"x.bat"' is not recognized as an internal or
+   external command`, while nested `cmd /c dir`/`echo` (trivial commands,
+   not script files) and curl.exe/python.exe (real .exe targets) all
+   worked fine from the exact same nested context. This is what would have
+   blocked Step 2 (`Update HRIS Dashboard.bat`) even with bug 1 fixed.
+   Fixed by routing that one invocation through PowerShell as an
+   intermediary (`powershell -NoProfile -Command "Get-Content
+   'empty_stdin.txt' | & '.\Update HRIS Dashboard.bat'; exit
+   $LASTEXITCODE"`), confirmed empirically (including with a real `pause`
+   inside the target, so it doesn't hang) before applying it live.
+
+**Also added, per Kevin's explicit ask:** the whole run now executes as
+`call :main > "%LOG_FILE%" 2>&1` — one redirection covering the entire
+subroutine, both stdout and stderr — instead of scattered per-line log
+appends, so any *future* cmd.exe parse error lands in the log
+automatically instead of being silently invisible again. All three curl
+downloads now use `-f` so an HTTP error (e.g. a 404 for a file not yet on
+`main`) is caught as a real failure instead of being silently saved as
+file content (this actually bit during testing: `push_automation_status.py`
+hadn't been pushed yet, curl without `-f` saved "404: Not Found" as if it
+were the script, which python then failed to parse with a confusing
+`SyntaxError`).
+
+**New:** `push_automation_status.py` (repo root, new file) pushes
+`data/last_automated_run.json` to GitHub after every run — success or any
+distinct failure mode — and `index.html` now shows a real **"Last
+automated refresh: `<time>` — Success/Failed"** badge next to the existing
+manual-update timestamp, sourced from the automation's own run record
+rather than tickets.json's mtime (a failed run leaving yesterday's data in
+place would otherwise look identical to a fresh successful one).
+
+**Verified live, for real, this session:**
+- Both bugs reproduced via isolated bisection (minimal repro scripts,
+  safe dummy `.bat` files) before touching the real files, and the fixes
+  confirmed to resolve each in isolation before being applied live.
+- Ran the actual fixed `Run HRIS Auto-Refresh.bat` end-to-end for real,
+  twice — first attempt (bug 2 not yet found) failed cleanly with the new
+  clear error instead of a silent parser crash, confirming bug 1's fix
+  and surfacing bug 2; second attempt (both fixes applied) completed
+  successfully: fetched today's real OSM email attachment, ran the real
+  **unmodified** `Update HRIS Dashboard.bat` → `import_osm_report.py`
+  pipeline, parsed 31 tickets, and pushed `data/tickets.json`
+  (SHA `0e0c53b94c61a52fdce8aeef2034f59dcf8faf8d`) — this is also today's
+  real data catch-up, since the 08:30 scheduled run never got this far.
+  `push_automation_status.py` pushed `data/last_automated_run.json`
+  (`status: success`, `step: dashboard_update_ok`) in the same run.
+- Confirmed both new JSON endpoints are live via GitHub Pages directly
+  (`curl https://begb0037admin.github.io/hris-dashboard/data/tickets.json`
+  and `.../data/last_automated_run.json`), and that the rebuilt
+  `index.html` on Pages contains the new `main-header-auto` CSS/markup.
+  **Not verified:** an actual browser screenshot of the rendered badge —
+  no browser/screenshot tool was available this session; the JS
+  (`loadAutomationStatus()`) mirrors the already-proven `loadData()` fetch
+  pattern exactly and both data endpoints it depends on are confirmed live
+  and correctly shaped, but the literal pixel rendering hasn't been
+  visually confirmed.
+- Fixed file deployed to `D:\OneDrive - lelitte.com\Desktop\Run HRIS
+  Auto-Refresh.bat` (CRLF line endings, matching the machine's existing
+  convention) — this is the file Task Scheduler's `HRIS Dashboard Morning
+  Refresh` task actually points at (via the `.vbs` wrapper, unchanged).
+  Also pushed to the repo (`Run_HRIS_Auto_Refresh.bat`, `main`) so a
+  future re-copy to Desktop carries the fix forward. Commit `b0ad42c`
+  (merged as `f4fe3d6` after a GitHub Actions diagnostics-bot commit raced
+  it).
+- `Update HRIS Dashboard.bat` and `import_osm_report.py` (the manual
+  pipeline) were not touched at all — confirmed by diff, only their
+  *invocation method* from the automated orchestrator changed.
+
+**Next scheduled run:** tomorrow, 22 Aug 2026 08:30 — first real
+end-to-end test of the fix under the actual hidden/Task-Scheduler
+execution context (today's verification ran visibly via PowerShell, not
+via `wscript.exe`/Task Scheduler itself, though the PowerShell-intermediary
+fix for bug 2 was specifically chosen and tested because the earlier
+`< NUL`-based approach was already proven live under the real hidden
+context in the 20 Aug session). **Watch item:** if tomorrow's run shows a
+failure toast, `osm_auto_refresh_last_run.log` will now contain the real
+reason (including any future parse error) rather than stopping short —
+check that file first.
+
+Full detail: `HANDOVER.md`'s `Session 2026-08-21 (afternoon)` entry.
+
+---
+
+## Superseded — 21 Aug 2026, morning entry (root cause not yet found at this point)
 
 The morning auto-refresh automation is now **LIVE**. Kevin gave explicit
 go-ahead; Drew ran `Register-HRISAutoRefreshTask.ps1`, found and fixed a
@@ -26,12 +134,9 @@ and verified the resulting Task Scheduler job's trigger/action/principal/
 settings directly against live state. Task `HRIS Dashboard Morning
 Refresh` is `Enabled: True`, `State: Ready`, daily trigger at 08:30
 (every day, not weekdays-only), pointed at the correct `.vbs` wrapper.
-Nothing else is blocking — first real scheduled run is tomorrow,
-22 Aug 2026 08:30. Next action: none required; Kevin will get a desktop
-toast either way (success/failure) per the mechanism already built.
-Only watch item: if tomorrow's run shows a failure toast, check
-`osm_auto_refresh_last_run.log` (path below) first. Full detail in
-`HANDOVER.md`'s `Session 2026-08-21` entry.
+**This entry assumed "nothing else is blocking" — WRONG, see the
+superseding entry above: two real bugs in the script itself meant the
+08:30 run the next morning died silently anyway.**
 
 ---
 
