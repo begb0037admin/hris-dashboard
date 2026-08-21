@@ -118,6 +118,11 @@
     .main-header { margin-bottom: 20px; }
     .main-header h1 { font-size: 1.35rem; font-weight: 800; color: #002147; letter-spacing: -0.01em; }
     .main-header-sub { font-size: 0.78rem; font-weight: 500; color: #3d6b8f; margin-top: 4px; letter-spacing: 0.01em; }
+    .main-header-auto { font-size: 0.76rem; font-weight: 600; margin-top: 7px; display: inline-flex; align-items: center; gap: 6px; padding: 3px 11px 3px 9px; border-radius: 20px; border: 1px solid; letter-spacing: 0.01em; }
+    .main-header-auto.ok { background: #f0fdf4; color: #166534; border-color: #bbf7d0; }
+    .main-header-auto.fail { background: #fff1f0; color: #9f1239; border-color: #fecaca; }
+    .main-header-auto.unknown { background: #f8f9fa; color: #6b7280; border-color: #e5e7eb; }
+    .main-header-auto .auto-dot { font-size: 0.6rem; line-height: 1; }
     .error-state { background: #fff7ed; border: 1px solid #fed7aa; border-radius: 10px; padding: 28px 32px; color: #92400e; }
     .error-state h3 { font-size: 1rem; margin-bottom: 8px; }
     .error-state p { font-size: 0.85rem; line-height: 1.6; }
@@ -258,6 +263,7 @@
     <div class="main-header">
       <h1>HRIS Team &mdash; Open Tickets</h1>
       <div class="main-header-sub" id="main-sub">Loading&hellip;</div>
+      <div class="main-header-auto unknown" id="main-auto"><span class="auto-dot">&#9679;</span><span id="main-auto-text">Checking automated morning refresh&hellip;</span></div>
     </div>
     <div id="cards-container"></div>
   </main>
@@ -510,7 +516,27 @@ function renderDashboard(data,filteredAnalysts){
   document.getElementById('cards-container').innerHTML=html;
 }
 
+function loadAutomationStatus(){
+  var el=document.getElementById('main-auto');
+  var textEl=document.getElementById('main-auto-text');
+  fetch('data/last_automated_run.json?t='+Date.now())
+  .then(function(r){if(!r.ok)throw new Error('HTTP '+r.status);return r.json();})
+  .then(function(s){
+    var ok=s.status==='success';
+    el.className='main-header-auto '+(ok?'ok':'fail');
+    var label='Last automated refresh: '+(s.timestamp_display||'unknown time')+' — '+(ok?'Success':'Failed');
+    if(!ok && s.step){label+=' ('+esc(s.step)+')';}
+    textEl.textContent=label;
+    el.title=s.detail?esc(s.detail):'';
+  })
+  .catch(function(){
+    el.className='main-header-auto unknown';
+    textEl.textContent='No automated run recorded yet';
+  });
+}
+
 loadData();
+loadAutomationStatus();
 </script>
 </body>
 </html>
