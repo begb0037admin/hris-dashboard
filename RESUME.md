@@ -13,17 +13,25 @@ scope by Kevin same day. Drew was not this repo's "usual" agent before
 
 ---
 
-## One-line resume (latest — same-day follow-on, 20 Aug 2026, evening)
+## One-line resume (latest — 21 Aug 2026)
 
-New morning auto-refresh automation is BUILT, pushed to `main`, and
-**live-tested end-to-end against the real mailbox and real GitHub** —
-but the actual Task Scheduler job is **NOT YET REGISTERED**, per Kevin's
-explicit instruction not to deploy/enable it without his go-ahead. Next
-action: Kevin reviews `Register-HRISAutoRefreshTask.ps1` (staged on the
-Desktop) and the two new repo files it depends on
-(`fetch_osm_report.py`, `Run_HRIS_Auto_Refresh.bat`), then either runs
-that `.ps1` himself or tells Drew to run it — that's the only remaining
-step to go live.
+The morning auto-refresh automation is now **LIVE**. Kevin gave explicit
+go-ahead; Drew ran `Register-HRISAutoRefreshTask.ps1`, found and fixed a
+real bug in it (the staged script's `-DisallowStartIfOnBatteries` flag
+doesn't exist on this machine's ScheduledTasks module version, which
+made the first attempt silently fail to register while still printing
+its own "registered" message — caught by checking `Get-ScheduledTask`
+directly rather than trusting the script's own output), then re-ran it
+and verified the resulting Task Scheduler job's trigger/action/principal/
+settings directly against live state. Task `HRIS Dashboard Morning
+Refresh` is `Enabled: True`, `State: Ready`, daily trigger at 08:30
+(every day, not weekdays-only), pointed at the correct `.vbs` wrapper.
+Nothing else is blocking — first real scheduled run is tomorrow,
+22 Aug 2026 08:30. Next action: none required; Kevin will get a desktop
+toast either way (success/failure) per the mechanism already built.
+Only watch item: if tomorrow's run shows a failure toast, check
+`osm_auto_refresh_last_run.log` (path below) first. Full detail in
+`HANDOVER.md`'s `Session 2026-08-21` entry.
 
 ---
 
@@ -325,9 +333,9 @@ of those touches or depends on the SAASIT session at all.
 
 ## Blockers / decisions needed from Kevin
 
-- **New (evening session):** review and approve
-  `Register-HRISAutoRefreshTask.ps1` (Desktop) to actually go live with
-  the morning auto-refresh. Nothing else is blocking it.
+- **RESOLVED 21 Aug 2026:** `Register-HRISAutoRefreshTask.ps1` reviewed,
+  fixed (see `HANDOVER.md` Session 2026-08-21), and run — the morning
+  auto-refresh Task Scheduler job is live. No longer a blocker.
 - **New (evening session), informational only, no action required
   unless Kevin wants it fixed:** the stale Desktop copy of
   `Update HRIS Dashboard.bat` noted above.
