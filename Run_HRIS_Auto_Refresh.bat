@@ -112,6 +112,33 @@ rem the target .bat (verified it does not hang and the real exit code
 rem propagates correctly) -- see below. Update HRIS Dashboard.bat itself
 rem remains completely unmodified; only HOW this script launches it changed.
 rem ============================================================================
+rem
+rem FIFTH change, 22 Aug 2026 -- trigger/retry mechanism. Root cause of the
+rem 22 Aug "no email today" false alarm (see RESUME.md's "8:30 discrepancy
+rem investigation"): the OSM mail rule that files the report into
+rem Inbox/Reports/OSM doesn't always finish before 08:30, even though the
+rem report itself is genuinely sent earlier. Kevin's decision: move the
+rem primary trigger later (08:30 -> 08:45) AND add two retry triggers
+rem (09:15, 09:45) on the SAME Task Scheduler task, so a late-filing
+rem morning gets caught automatically instead of waiting until the next
+rem day or requiring the manual fallback.
+rem
+rem This creates a new requirement: a run that fires after an EARLIER run
+rem already succeeded this morning must do nothing, not silently re-run
+rem the whole pipeline (wasteful, and would overwrite
+rem data/last_automated_run.json's real first-success timestamp with a
+rem later, redundant one -- exactly the "blur multiple attempts together"
+rem outcome Kevin asked to avoid). check_last_run_status.py (new,
+rem downloaded fresh like the other scripts) answers this by checking the
+rem live data/last_automated_run.json for today's status BEFORE anything
+rem else runs -- no Outlook connection, no GitHub push, if today has
+rem already succeeded. If not, it also returns which attempt this is
+rem (1/2/3, wall-clock-time bucket matching 08:45/09:15/09:45) so
+rem push_automation_status.py can record "attempt N of 3" -- if all three
+rem fail, the dashboard shows the LAST attempt's failure clearly labelled
+rem "no more retries today", not an ambiguous blur of three separate
+rem attempts.
+rem ============================================================================
 
 set "PROJECT_DIR=C:\Users\admin\Documents\Claude\Projects\HRIS-Dashboard"
 set "LOG_FILE=%PROJECT_DIR%\osm_auto_refresh_last_run.log"
@@ -143,6 +170,8 @@ rem confirmed to fail (curl could not resolve it), so this must stay encoded.
 set "UPDATE_RAW_URL=https://raw.githubusercontent.com/begb0037admin/hris-dashboard/main/Update%%20HRIS%%20Dashboard.bat"
 set "STATUS_SCRIPT=push_automation_status.py"
 set "STATUS_RAW_URL=https://raw.githubusercontent.com/begb0037admin/hris-dashboard/main/push_automation_status.py"
+set "CHECK_SCRIPT=check_last_run_status.py"
+set "CHECK_RAW_URL=https://raw.githubusercontent.com/begb0037admin/hris-dashboard/main/check_last_run_status.py"
 
 rem Empty file used to satisfy Update HRIS Dashboard.bat's own "pause"
 rem non-interactively (see the PowerShell-intermediary invocation below) --
@@ -150,6 +179,44 @@ rem `copy nul` is the standard batch idiom for creating a zero-byte file.
 copy /y nul "empty_stdin.txt" >nul
 
 echo [%RUN_TS%] Run HRIS Auto-Refresh started
+
+rem Retry-guard check (added 22 Aug 2026) -- see the FIFTH change note
+rem above. Must run BEFORE anything else touches Outlook or GitHub, so a
+rem retry trigger firing after an earlier trigger already succeeded this
+rem morning does genuinely nothing rather than re-running the pipeline.
+rem
+rem Deliberately written with goto's, not a multi-line if(...)else(...)
+rem block -- this file's own hard-won lesson (see the ROOT CAUSE FIXED
+rem note near the top) is that cmd.exe expands %VAR% in a parenthesized
+rem block ONCE, at the moment the block starts, so setting a variable and
+rem reading it back later IN THE SAME block silently uses the stale
+rem pre-block value. Sequential goto-driven lines have no such trap --
+rem each %VAR% expands fresh when that line actually executes.
+set "ATTEMPT_NUM=1"
+set "MAX_ATTEMPTS=3"
+set "CHECK_RESULT="
+curl -sf -o "%CHECK_SCRIPT%" "%CHECK_RAW_URL%?t=%RANDOM%%RANDOM%"
+if errorlevel 1 goto check_download_failed
+
+for /f "delims=" %%L in ('python "%CHECK_SCRIPT%" 2^>nul') do set "CHECK_RESULT=%%L"
+if /i "%CHECK_RESULT%"=="SKIP" goto check_skip
+rem This one for /f DOES use a single-line parenthesized do-body, but only
+rem to SET ATTEMPT_NUM/MAX_ATTEMPTS, never to read them back within the
+rem same block -- safe, no delayed-expansion needed (see note above).
+for /f "tokens=1,2,3 delims=:" %%A in ("%CHECK_RESULT%") do if /i "%%A"=="RUN" (set "ATTEMPT_NUM=%%B" & set "MAX_ATTEMPTS=%%C")
+goto check_done
+
+:check_download_failed
+echo [%RUN_TS%] WARNING - could not download check_last_run_status.py. Proceeding with the run rather than risking a silent skip.
+goto check_done
+
+:check_skip
+echo [%RUN_TS%] Already succeeded earlier this morning per data/last_automated_run.json - retry skipped, dashboard already fresh. Nothing else was touched.
+exit /b 0
+
+:check_done
+echo [%RUN_TS%] This is attempt %ATTEMPT_NUM% of %MAX_ATTEMPTS% today.
+
 echo [%RUN_TS%] Downloading fetch_osm_report.py and push_automation_status.py from GitHub...
 
 rem -f (--fail) makes curl return a real nonzero exit code on an HTTP error
@@ -167,7 +234,7 @@ if errorlevel 1 (
 curl -sf -o "%FETCH_SCRIPT%" "%FETCH_RAW_URL%?t=%RANDOM%%RANDOM%"
 if errorlevel 1 (
     echo [%RUN_TS%] ERROR - could not download fetch_osm_report.py. Dashboard NOT refreshed.
-    if exist "%STATUS_SCRIPT%" python "%STATUS_SCRIPT%" --status failure --step fetch_script_download_failed --detail "curl could not download fetch_osm_report.py from GitHub"
+    if exist "%STATUS_SCRIPT%" python "%STATUS_SCRIPT%" --status failure --step fetch_script_download_failed --detail "curl could not download fetch_osm_report.py from GitHub" --attempt %ATTEMPT_NUM% --max-attempts %MAX_ATTEMPTS%
     exit /b 1
 )
 
@@ -177,7 +244,7 @@ set "FETCH_EXIT=%ERRORLEVEL%"
 
 if not "%FETCH_EXIT%"=="0" (
     echo [%RUN_TS%] Step 1/2 FAILED, exit code %FETCH_EXIT% - Step 2 SKIPPED. Dashboard NOT refreshed this run.
-    if exist "%STATUS_SCRIPT%" python "%STATUS_SCRIPT%" --status failure --step fetch_failed --detail "fetch_osm_report.py exited %FETCH_EXIT% - see osm_auto_refresh_last_run.log"
+    if exist "%STATUS_SCRIPT%" python "%STATUS_SCRIPT%" --status failure --step fetch_failed --detail "fetch_osm_report.py exited %FETCH_EXIT% - see osm_auto_refresh_last_run.log" --attempt %ATTEMPT_NUM% --max-attempts %MAX_ATTEMPTS%
     exit /b %FETCH_EXIT%
 )
 
@@ -185,7 +252,7 @@ echo [%RUN_TS%] Step 1/2 OK. Step 2/2 - downloading current Update HRIS Dashboar
 curl -sf -o "%UPDATE_BAT_NAME%" "%UPDATE_RAW_URL%?t=%RANDOM%%RANDOM%"
 if errorlevel 1 (
     echo [%RUN_TS%] ERROR - could not download "%UPDATE_BAT_NAME%". Dashboard NOT refreshed.
-    if exist "%STATUS_SCRIPT%" python "%STATUS_SCRIPT%" --status failure --step update_bat_download_failed --detail "curl could not download Update HRIS Dashboard.bat from GitHub"
+    if exist "%STATUS_SCRIPT%" python "%STATUS_SCRIPT%" --status failure --step update_bat_download_failed --detail "curl could not download Update HRIS Dashboard.bat from GitHub" --attempt %ATTEMPT_NUM% --max-attempts %MAX_ATTEMPTS%
     exit /b 1
 )
 
@@ -207,10 +274,10 @@ set "UPDATE_EXIT=%ERRORLEVEL%"
 
 if "%UPDATE_EXIT%"=="0" (
     echo [%RUN_TS%] HRIS dashboard refreshed successfully via automated morning run.
-    if exist "%STATUS_SCRIPT%" python "%STATUS_SCRIPT%" --status success --step dashboard_update_ok --detail "Automated morning run completed successfully."
+    if exist "%STATUS_SCRIPT%" python "%STATUS_SCRIPT%" --status success --step dashboard_update_ok --detail "Automated morning run completed successfully." --attempt %ATTEMPT_NUM% --max-attempts %MAX_ATTEMPTS%
 ) else (
     echo [%RUN_TS%] "%UPDATE_BAT_NAME%" failed, exit code %UPDATE_EXIT%.
-    if exist "%STATUS_SCRIPT%" python "%STATUS_SCRIPT%" --status failure --step dashboard_update_failed --detail "Update HRIS Dashboard.bat exited %UPDATE_EXIT% - see osm_auto_refresh_last_run.log"
+    if exist "%STATUS_SCRIPT%" python "%STATUS_SCRIPT%" --status failure --step dashboard_update_failed --detail "Update HRIS Dashboard.bat exited %UPDATE_EXIT% - see osm_auto_refresh_last_run.log" --attempt %ATTEMPT_NUM% --max-attempts %MAX_ATTEMPTS%
 )
 
 exit /b %UPDATE_EXIT%
