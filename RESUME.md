@@ -13,7 +13,70 @@ scope by Kevin same day. Drew was not this repo's "usual" agent before
 
 ---
 
-## One-line resume (latest — 21 Aug 2026, afternoon)
+## One-line resume (latest — 22 Aug 2026, morning)
+
+**First real test of the 21 Aug fix, under genuine Task Scheduler/
+`wscript.exe` hidden execution — verified live, not assumed.**
+
+`Get-ScheduledTaskInfo` confirmed `LastRunTime: 22/08/2026 08:30:01`,
+`LastTaskResult: 1`, `NextRunTime: 23/08/2026 08:30:00` — the task did
+fire today, on time, under the real automated context (not a stale
+value from an earlier day).
+
+**Result: failed again, but this is NOT a recurrence of the 21 Aug bug —
+it's a genuinely different, well-understood failure mode, and the fix
+is proven to be working correctly.** `osm_auto_refresh_last_run.log`
+(`C:\Users\admin\Documents\Claude\Projects\HRIS-Dashboard\`) now shows
+full, real diagnostic detail from the moment the run started, instead of
+dying silently at ~10 seconds with nothing logged (the 21 Aug symptom):
+
+```
+[2026-08-22 08:30:02] Run HRIS Auto-Refresh started
+[2026-08-22 08:30:02] Downloading fetch_osm_report.py and push_automation_status.py from GitHub...
+[2026-08-22 08:30:02] Step 1/2 - fetching today's OSM report attachment from Outlook...
+[2026-08-22 08:30:03] fetch_osm_report.py run started
+[2026-08-22 08:30:04] Found folder: Inbox/Reports/OSM (52 items)
+[2026-08-22 08:30:04]   (most recent matching email is from 2026-08-21, not today 2026-08-22)
+[2026-08-22 08:30:04] Most recent email from reports-prd-ldz@saasiteu.com: received 2026-08-21 08:01:22.378000+00:00, subject 'Report: All Open Tasks by Team'
+ERROR: No email from reports-prd-ldz@saasiteu.com with subject 'Report: All Open Tasks by Team' received TODAY (2026-08-22). The dashboard was NOT refreshed automatically this morning. If the report is just running late, re-run this script once it arrives, or run the manual Update HRIS Dashboard.bat path.
+[2026-08-22 08:30:02] Step 1/2 FAILED, exit code 1 - Step 2 SKIPPED. Dashboard NOT refreshed this run.
+Pushed data/last_automated_run.json: status=failure step=fetch_failed
+```
+
+Outlook COM connected fine, the folder was found fine, `fetch_osm_report.py`
+ran and exited cleanly with a specific, correct diagnosis — today's OSM
+report email simply had not arrived in `Inbox/Reports/OSM` by 08:30 (the
+most recent matching email at that moment was still yesterday's, 21 Aug
+08:01). This is exactly the "silent break made visible" behaviour the
+whole automation was built for, working as designed — the opposite of
+21 Aug's silent parse-crash.
+
+Confirmed via GitHub API (not assumed from the log alone):
+`data/last_automated_run.json` shows
+`{"timestamp": "2026-08-22T08:30:05", "status": "failure", "step":
+"fetch_failed", "detail": "fetch_osm_report.py exited 1 - see
+osm_auto_refresh_last_run.log", "trigger": "automated"}`. Most recent
+`data/tickets.json` commit is still `708a59f` ("OSM import — 2026-08-21
+18:29"), i.e. last night's manual catch-up run — the dashboard has NOT
+been refreshed today as of this check and is currently showing 21 Aug
+data.
+
+**Per this task's own instructions, no manual re-run was performed** —
+report-only, live state left exactly as found.
+
+**Decision needed from Kevin (not yet actioned):** the OSM email has, on
+at least this one observed morning, not landed before the 08:30 trigger
+(its usual arrival window was previously observed as ~08:01–08:16, so
+this may be a one-off late delivery rather than a systemic timing
+mismatch — one data point isn't enough to tell). Whether to address this
+via a later trigger time, a retry-later-in-the-morning mechanism, or just
+leave the manual-fallback path (`Update HRIS Dashboard.bat`) as the
+answer for late-report mornings is Kevin's call, not yet decided or
+built.
+
+---
+
+## Superseded — 21 Aug 2026, afternoon entry (fix confirmed working correctly by the 22 Aug real-world test above)
 
 The 21 Aug 08:30 scheduled run fired but died silently after Step 1 (no
 error in the log, nothing in Windows event logs) — Kevin reported it same
