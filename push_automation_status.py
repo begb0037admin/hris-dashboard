@@ -24,6 +24,14 @@ untouched by this file.
 Usage:
     python push_automation_status.py --status success --step dashboard_update_ok --detail "..."
     python push_automation_status.py --status failure --step fetch_failed --detail "..."
+    python push_automation_status.py --status failure --step fetch_failed --detail "..." --attempt 2 --max-attempts 3
+
+--attempt / --max-attempts (added 22 Aug 2026, both optional, default 1/1):
+    records which of the morning's scheduled attempts (08:45 primary,
+    09:15/09:45 retries -- see check_last_run_status.py) this run was, so
+    the dashboard can show e.g. "Failed (attempt 3 of 3, no more retries
+    today)" instead of a bare failure with no context on whether more
+    retries are still coming.
 
 Requires:
     pip install requests
@@ -65,6 +73,10 @@ def main():
                          help="short machine-readable stage identifier, e.g. "
                               "fetch_failed / dashboard_update_ok")
     parser.add_argument("--detail", default="", help="short human-readable detail line")
+    parser.add_argument("--attempt", type=int, default=1,
+                         help="which scheduled attempt this run was (1-based)")
+    parser.add_argument("--max-attempts", type=int, default=1,
+                         help="total scheduled attempts today")
     args = parser.parse_args()
 
     pat = get_github_pat()
@@ -77,6 +89,8 @@ def main():
         "step": args.step,
         "detail": args.detail,
         "trigger": "automated",
+        "attempt": args.attempt,
+        "max_attempts": args.max_attempts,
     }
     body = json.dumps(payload, indent=2, ensure_ascii=False).encode("utf-8")
 
