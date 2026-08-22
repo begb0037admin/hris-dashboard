@@ -13,7 +13,69 @@ scope by Kevin same day. Drew was not this repo's "usual" agent before
 
 ---
 
-## One-line resume (latest — 22 Aug 2026, morning)
+## One-line resume (latest — 22 Aug 2026, late morning)
+
+**Investigated Kevin's report of seeing today's OSM email at 8:06am despite
+the 08:30 run saying "no email today" — confirmed a genuine mail-rule
+filing delay, not a script bug, not a folder-path mismatch, no fix needed.
+Re-ran the scheduled task live afterward: succeeded end-to-end, dashboard
+now genuinely current.**
+
+**Folder path confirmed correct** — live Outlook COM probe opened the
+exact path `fetch_osm_report.py` hard-codes (`Inbox > Reports > OSM`
+under the default store), confirmed it's the only folder anywhere in any
+of the 5 connected stores with this name/nesting, and matches what Kevin
+sees in Outlook's own UI. No mismatch.
+
+**Root cause, confirmed with direct before/after evidence, not inferred:**
+the 08:30 log (below) recorded the OSM folder at **52 items**; a live
+probe at 11:58 today found **53 items**, with today's email
+(`ReceivedTime` 2026-08-22 08:06:47) now present. This folder receives
+exactly one message a day via a mail rule — the 52→53 delta is direct
+proof the email was filed into this specific watched folder *after* the
+08:30 script ran, even though its `ReceivedTime` (stamped at actual mail
+delivery, not at rule-filing time) reads as 8:06, before 08:30. This is
+a mail-rule/filing delay between delivery and the message landing in the
+folder the script polls — not a date/timezone bug in
+`fetch_osm_report.py`'s comparison logic, which read the real live folder
+state correctly at the moment it ran and failed loudly with an accurate
+diagnosis, exactly as designed.
+
+**One low-priority observation, flagged not fixed:** `msg.ReceivedTime`
+via `win32com`/`pywintypes` carries a `(UTC+00:00) ...London` tzinfo
+label even now, in BST (UTC+1) — the raw digits (08:06:47) match Kevin's
+own stated local observation exactly, suggesting the value is local time
+mislabelled as UTC rather than a true UTC value. Doesn't affect this
+investigation (date component unaffected, arrivals are always mid-morning,
+nowhere near a midnight boundary) — worth remembering only if a future
+bug involves genuine UTC arithmetic on `ReceivedTime` or a near-midnight
+arrival.
+
+**Verified live, for real:** triggered
+`Start-ScheduledTask -TaskName 'HRIS Dashboard Morning Refresh'` at
+12:00:08; polled `Get-ScheduledTask` directly until it left `Running`
+(12:00:29, `LastTaskResult: 0`). Fresh `osm_auto_refresh_last_run.log`
+from this run shows: folder now 53 items, today's email found and its
+attachment saved, `Update HRIS Dashboard.bat` → `import_osm_report.py`
+ran unmodified, 31 tickets parsed, `data/tickets.json` pushed
+(SHA `29b0b32e...`), `push_automation_status.py` pushed
+`status: success`. Confirmed via `raw.githubusercontent.com` (bypassing
+GitHub Pages' build-cache lag, which was still showing stale data at
+check time — expected, not a bug) that `main` genuinely has
+`data/tickets.json` (`updated: 2026-08-22T12:00:19`) and
+`data/last_automated_run.json` (`status: success`,
+`timestamp: 2026-08-22T12:00:21`). Commits `1b5c0ba2` and `3fb07c34`.
+
+**Still open, unchanged, Kevin's call:** whether to move the 08:30
+trigger later, add a retry-later mechanism, or accept the manual fallback
+for occasional late-filing mornings. The automation itself is confirmed
+healthy — this is a scheduling-tolerance question, not a defect.
+
+Full detail: `HANDOVER.md`'s "Session 2026-08-22 (late morning)" entry.
+
+---
+
+## Superseded — 22 Aug 2026, morning entry (root cause now confirmed above — mail-rule filing delay, not a defect)
 
 **First real test of the 21 Aug fix, under genuine Task Scheduler/
 `wscript.exe` hidden execution — verified live, not assumed.**
