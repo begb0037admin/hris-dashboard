@@ -526,6 +526,12 @@ function loadAutomationStatus(){
     el.className='main-header-auto '+(ok?'ok':'fail');
     var label='Last automated refresh: '+(s.timestamp_display||'unknown time')+' — '+(ok?'Success':'Failed');
     if(!ok && s.step){label+=' ('+esc(s.step)+')';}
+    if(!ok && s.attempt && s.max_attempts){
+      label+=' — attempt '+esc(s.attempt)+' of '+esc(s.max_attempts);
+      if(Number(s.attempt)>=Number(s.max_attempts)){
+        label+=', no more automated retries today — run Update HRIS Dashboard.bat manually if needed';
+      }
+    }
     textEl.textContent=label;
     el.title=s.detail?esc(s.detail):'';
   })
