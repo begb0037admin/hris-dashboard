@@ -13,7 +13,70 @@ scope by Kevin same day. Drew was not this repo's "usual" agent before
 
 ---
 
-## One-line resume (latest — 22 Aug 2026, late morning)
+## One-line resume (latest — 22 Aug 2026, afternoon)
+
+**Kevin decided both items left open by the late-morning investigation
+below: moved the trigger later and built a retry mechanism. Both live and
+verified for real this session (see full detail in `HANDOVER.md`'s
+"Session 2026-08-22 (afternoon)" entry).**
+
+**Trigger schedule:** `HRIS Dashboard Morning Refresh` now fires three
+times — **08:45 (primary), 09:15, 09:45 (retries)** — on the same task,
+same Action/Principal/Settings (confirmed unchanged). `NextRunTime`
+confirmed live: `23/08/2026 08:45:00`.
+
+**Retry guard, new file `check_last_run_status.py`:** every trigger
+checks the live `data/last_automated_run.json` FIRST. If today already
+succeeded, it prints `SKIP` and the `.bat` exits 0 immediately — no
+Outlook connection, no GitHub push, and the real first-success timestamp
+is never overwritten by a redundant later run (this is what keeps "Last
+automated refresh" accurate rather than blurred). Otherwise it prints
+`RUN:<attempt>:<max>` (a stateless wall-clock-time bucket: <09:00→1,
+<09:30→2, else→3). `push_automation_status.py` gained `--attempt`/
+`--max-attempts`; `index.html`'s badge now shows "attempt N of 3" on
+failure, and "no more automated retries today" once N=3, so three real
+failures read as one clear final state rather than a confusing blur.
+
+**A real bug caught before any live test:** the first draft of the
+retry-guard used a multi-line `if (...) else (...)` block that set and
+then read back a variable within the SAME block — precisely the
+cmd.exe trap this file already has two prior root-caused incidents
+about (parens expand `%VAR%` once, at parse time). Rewritten with
+sequential `goto`s per this file's own existing lesson, before it ever
+ran live.
+
+**Verified live, for real, this session:** `check_last_run_status.py`
+against genuine live production data (today's real success record) →
+`SKIP`, correct. 5 mocked-`requests` unit tests covering every attempt
+boundary and edge case, all pass. The RUN branch proven against a
+**genuine live network fetch** (not a mock) by pushing synthetic
+failure data to a throwaway branch, pointing a scratch copy of the real
+script at it, confirming `RUN:3:3`, then deleting the branch. The new
+`.bat` `goto` logic tested in isolation against 5 realistic inputs. The
+real, just-deployed `.bat` run directly (hit the SKIP path, confirmed
+`data/last_automated_run.json` on `main` byte-identical before/after).
+The REAL registered Scheduled Task triggered end-to-end via
+`Start-ScheduledTask` — genuine Task Scheduler → `wscript.exe` (hidden)
+→ VBS → Desktop `.bat` chain — `LastTaskResult: 0`, log confirms correct
+skip behaviour under real automated execution. Deployed to Desktop with
+CRLF (confirmed via `file`). All 4 files pushed to `main` via the GitHub
+Contents API (this repo's own `AGENT_MODEL.md` convention, not
+`git push`), each independently confirmed live via
+`raw.githubusercontent.com`. Commits: `d6dfd506`, `0972d487`,
+`6c8fd776`, `a94dc1d4`.
+
+**`Update HRIS Dashboard.bat` / `import_osm_report.py` / the manual
+path: zero changes**, as required.
+
+**First real test of the new schedule under a genuine "hasn't succeeded
+yet" morning: tomorrow, 23 Aug 2026, 08:45.** Everything provably works
+live as of this session; what only tomorrow's real clock can prove is a
+full cycle where the primary run genuinely fails (report not yet filed)
+and a retry picks it up from a cold start.
+
+---
+
+## Superseded — 22 Aug 2026, late morning
 
 **Investigated Kevin's report of seeing today's OSM email at 8:06am despite
 the 08:30 run saying "no email today" — confirmed a genuine mail-rule
