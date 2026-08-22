@@ -1,18 +1,18 @@
 {
-  "updated": "2026-08-21T18:29:25",
-  "updated_display": "Friday 21 August 2026 at 18:29",
+  "updated": "2026-08-22T12:00:19",
+  "updated_display": "Saturday 22 August 2026 at 12:00",
   "report_file": "All Open Tasks by Team - auto.xls",
   "summary": {
     "total": 31,
-    "assigned": 24,
-    "unassigned": 7,
+    "assigned": 26,
+    "unassigned": 5,
     "stale": 6,
-    "oldest_days": 183
+    "oldest_days": 184
   },
   "analysts": [
     {
       "name": "James Salas Guillen",
-      "ticket_count": 6,
+      "ticket_count": 7,
       "tickets": [
         {
           "task_num": "50929404",
@@ -22,7 +22,7 @@
           "analyst": "James Salas Guillen",
           "category": "Odyssey",
           "created": "18 Feb 2026",
-          "days": 183,
+          "days": 184,
           "team": "Health and Safety 2nd Line"
         },
         {
@@ -33,7 +33,7 @@
           "analyst": "James Salas Guillen",
           "category": "Odyssey",
           "created": "31 Jul 2026",
-          "days": 20,
+          "days": 21,
           "team": "Health and Safety 2nd Line"
         },
         {
@@ -44,7 +44,7 @@
           "analyst": "James Salas Guillen",
           "category": "Cority - Occupational Health Management Service",
           "created": "06 Aug 2026",
-          "days": 14,
+          "days": 15,
           "team": "Health and Safety 2nd Line"
         },
         {
@@ -55,7 +55,7 @@
           "analyst": "James Salas Guillen",
           "category": "Cority - Occupational Health Management Service",
           "created": "07 Aug 2026",
-          "days": 13,
+          "days": 14,
           "team": "Health and Safety 2nd Line"
         },
         {
@@ -66,7 +66,7 @@
           "analyst": "James Salas Guillen",
           "category": "Cority - Occupational Health Management Service",
           "created": "17 Aug 2026",
-          "days": 3,
+          "days": 4,
           "team": "Health and Safety 2nd Line"
         },
         {
@@ -77,14 +77,25 @@
           "analyst": "James Salas Guillen",
           "category": "Odyssey",
           "created": "19 Aug 2026",
-          "days": 1,
+          "days": 2,
+          "team": "Health and Safety 2nd Line"
+        },
+        {
+          "task_num": "50979464",
+          "summary": "Reversing waste transaction",
+          "status": "Assigned",
+          "priority": "5",
+          "analyst": "James Salas Guillen",
+          "category": "Odyssey",
+          "created": "21 Aug 2026",
+          "days": 0,
           "team": "Health and Safety 2nd Line"
         }
       ]
     },
     {
       "name": "Asta Palmer",
-      "ticket_count": 8,
+      "ticket_count": 9,
       "tickets": [
         {
           "task_num": "50977943",
@@ -94,7 +105,18 @@
           "analyst": "Asta Palmer",
           "category": "Recruitment",
           "created": "17 Aug 2026",
-          "days": 3,
+          "days": 4,
+          "team": "HRIS Analysis"
+        },
+        {
+          "task_num": "50979433",
+          "summary": "Erasure Requests (x1) - Our Ref: ER/20260730",
+          "status": "Accepted",
+          "priority": "5",
+          "analyst": "Asta Palmer",
+          "category": "Data Protection Request",
+          "created": "21 Aug 2026",
+          "days": 0,
           "team": "HRIS Analysis"
         },
         {
@@ -105,7 +127,7 @@
           "analyst": "Asta Palmer",
           "category": "",
           "created": "28 Jul 2026",
-          "days": 23,
+          "days": 24,
           "team": "HRIS Sys Admin"
         },
         {
@@ -116,7 +138,7 @@
           "analyst": "Asta Palmer",
           "category": "",
           "created": "10 Aug 2026",
-          "days": 10,
+          "days": 11,
           "team": "HRIS Sys Admin"
         },
         {
@@ -127,50 +149,50 @@
           "analyst": "Asta Palmer",
           "category": "People Management",
           "created": "19 Aug 2026",
-          "days": 1,
-          "team": "HRIS Sys Admin"
-        },
-        {
-          "task_num": "50978991",
-          "summary": "HR High Level non-PXD Dashboards AD Groups - Philip Taylor",
-          "status": "Accepted",
-          "priority": "3",
-          "analyst": "Asta Palmer",
-          "category": "",
-          "created": "20 Aug 2026",
-          "days": 0,
-          "team": "HRIS Sys Admin"
-        },
-        {
-          "task_num": "50979010",
-          "summary": "Add Shift Type - Keely Fathers",
-          "status": "Accepted",
-          "priority": "3",
-          "analyst": "Asta Palmer",
-          "category": "",
-          "created": "20 Aug 2026",
-          "days": 0,
+          "days": 2,
           "team": "HRIS Sys Admin"
         },
         {
           "task_num": "50979042",
-          "summary": "Add Shift Type - Keely Fathers",
+          "summary": "Add Shift Type x 10 - Keely Fathers",
           "status": "Accepted",
           "priority": "3",
           "analyst": "Asta Palmer",
           "category": "",
           "created": "20 Aug 2026",
+          "days": 1,
+          "team": "HRIS Sys Admin"
+        },
+        {
+          "task_num": "50979475",
+          "summary": "Manager Self Service Add - Chris Price",
+          "status": "Accepted",
+          "priority": "3",
+          "analyst": "Asta Palmer",
+          "category": "",
+          "created": "21 Aug 2026",
           "days": 0,
           "team": "HRIS Sys Admin"
         },
         {
-          "task_num": "50979184",
-          "summary": "Add Shift Type - Ruth Hilland",
+          "task_num": "50979531",
+          "summary": "Manager Self Service Add - Joseph Ngugi",
           "status": "Accepted",
           "priority": "3",
           "analyst": "Asta Palmer",
           "category": "",
-          "created": "20 Aug 2026",
+          "created": "21 Aug 2026",
+          "days": 0,
+          "team": "HRIS Sys Admin"
+        },
+        {
+          "task_num": "50979547",
+          "summary": "Manager Self Service Add - Samuel Lipworth",
+          "status": "Accepted",
+          "priority": "3",
+          "analyst": "Asta Palmer",
+          "category": "",
+          "created": "21 Aug 2026",
           "days": 0,
           "team": "HRIS Sys Admin"
         }
@@ -188,7 +210,7 @@
           "analyst": "Michael O'Sullivan",
           "category": "",
           "created": "12 Jun 2026",
-          "days": 69,
+          "days": 70,
           "team": "HRIS Analysis"
         },
         {
@@ -199,7 +221,7 @@
           "analyst": "Michael O'Sullivan",
           "category": "Time and Attendance",
           "created": "14 Jul 2026",
-          "days": 37,
+          "days": 38,
           "team": "HRIS Analysis"
         },
         {
@@ -210,7 +232,7 @@
           "analyst": "Michael O'Sullivan",
           "category": "Time and Attendance",
           "created": "15 Jul 2026",
-          "days": 36,
+          "days": 37,
           "team": "HRIS Analysis"
         },
         {
@@ -221,7 +243,7 @@
           "analyst": "Michael O'Sullivan",
           "category": "",
           "created": "05 Aug 2026",
-          "days": 15,
+          "days": 16,
           "team": "HRIS Analysis"
         },
         {
@@ -232,7 +254,7 @@
           "analyst": "Michael O'Sullivan",
           "category": "",
           "created": "05 Aug 2026",
-          "days": 15,
+          "days": 16,
           "team": "HRIS Analysis"
         },
         {
@@ -243,7 +265,7 @@
           "analyst": "Michael O'Sullivan",
           "category": "Interfaces",
           "created": "11 Aug 2026",
-          "days": 9,
+          "days": 10,
           "team": "HRIS Analysis"
         },
         {
@@ -254,7 +276,7 @@
           "analyst": "Michael O'Sullivan",
           "category": "Time and Attendance",
           "created": "14 Aug 2026",
-          "days": 6,
+          "days": 7,
           "team": "HRIS Analysis"
         },
         {
@@ -265,7 +287,7 @@
           "analyst": "Michael O'Sullivan",
           "category": "Time and Attendance",
           "created": "19 Aug 2026",
-          "days": 1,
+          "days": 2,
           "team": "HRIS Analysis"
         }
       ]
@@ -282,7 +304,7 @@
           "analyst": "Simon Burford",
           "category": "Recruitment",
           "created": "23 Apr 2026",
-          "days": 119,
+          "days": 120,
           "team": "HRIS Analysis"
         }
       ]
@@ -299,13 +321,24 @@
           "analyst": "Kevin Lelitte",
           "category": "Roster (WFM)",
           "created": "29 Jun 2026",
-          "days": 52,
+          "days": 53,
           "team": "HRIS Analysis"
         }
       ]
     }
   ],
   "unassigned": [
+    {
+      "task_num": "50979336",
+      "summary": "Balance Ac Dept1: Support Staff (G1-5)",
+      "status": "Logged",
+      "priority": "5",
+      "analyst": "",
+      "category": "Time and Attendance",
+      "created": "21 Aug 2026",
+      "days": 0,
+      "team": "HRIS Analysis"
+    },
     {
       "task_num": "50976936",
       "summary": "HR Systems User Access Request Issues - Nicola Webb",
@@ -314,7 +347,7 @@
       "analyst": "",
       "category": "",
       "created": "12 Aug 2026",
-      "days": 8,
+      "days": 9,
       "team": "HRIS Service Desk"
     },
     {
@@ -325,61 +358,28 @@
       "analyst": "",
       "category": "HR Reporting",
       "created": "20 Aug 2026",
-      "days": 0,
+      "days": 1,
       "team": "HRIS Service Desk"
     },
     {
-      "task_num": "50979248",
-      "summary": "Manager Self Service Remove - Francesca Ferard",
-      "status": "Logged",
-      "priority": "3",
-      "analyst": "",
-      "category": "",
-      "created": "20 Aug 2026",
-      "days": 0,
-      "team": "HRIS Sys Admin"
-    },
-    {
-      "task_num": "50979251",
-      "summary": "Manager Self Service Remove - Liberty Foden",
-      "status": "Logged",
-      "priority": "3",
-      "analyst": "",
-      "category": "",
-      "created": "20 Aug 2026",
-      "days": 0,
-      "team": "HRIS Sys Admin"
-    },
-    {
-      "task_num": "50979263",
-      "summary": "Manager Self Service Add - Sarah Gooding",
-      "status": "Logged",
-      "priority": "3",
-      "analyst": "",
-      "category": "",
-      "created": "20 Aug 2026",
-      "days": 0,
-      "team": "HRIS Sys Admin"
-    },
-    {
-      "task_num": "50979264",
-      "summary": "Manager Self Service Add - Abdullah Khan",
-      "status": "Logged",
-      "priority": "3",
-      "analyst": "",
-      "category": "",
-      "created": "20 Aug 2026",
-      "days": 0,
-      "team": "HRIS Sys Admin"
-    },
-    {
-      "task_num": "50979278",
-      "summary": "Manager Self Service Remove - Louisa Pagel",
+      "task_num": "50979556",
+      "summary": "Add Shift Type - Hannah Lonsdale",
       "status": "Logged",
       "priority": "3",
       "analyst": "",
       "category": "",
       "created": "21 Aug 2026",
+      "days": 0,
+      "team": "HRIS Sys Admin"
+    },
+    {
+      "task_num": "50979575",
+      "summary": "HR User Remove Access - Nazia Islam",
+      "status": "Logged",
+      "priority": "5",
+      "analyst": "",
+      "category": "",
+      "created": "22 Aug 2026",
       "days": 0,
       "team": "HRIS Sys Admin"
     }
