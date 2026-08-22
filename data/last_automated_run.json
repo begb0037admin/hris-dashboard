@@ -1,8 +1,8 @@
 {
-  "timestamp": "2026-08-22T08:30:05",
-  "timestamp_display": "Saturday 22 August 2026 at 08:30",
-  "status": "failure",
-  "step": "fetch_failed",
-  "detail": "fetch_osm_report.py exited 1 - see osm_auto_refresh_last_run.log",
+  "timestamp": "2026-08-22T12:00:21",
+  "timestamp_display": "Saturday 22 August 2026 at 12:00",
+  "status": "success",
+  "step": "dashboard_update_ok",
+  "detail": "Automated morning run completed successfully.",
   "trigger": "automated"
 }
