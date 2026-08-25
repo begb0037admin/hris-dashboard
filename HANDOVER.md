@@ -1,7 +1,7 @@
 # HANDOVER.md — hris-dashboard
 
-Last updated: 03 July 2026
-Status: Live and working. Linda AI connected. Colour system unified.
+Last updated: 25 August 2026
+Status: Live and working. Linda AI connected. Colour system unified. Morning OSM auto-refresh with retry live since 22 Aug. Friendly (non-technical) status messaging live since 25 Aug.
 
 ---
 
@@ -282,3 +282,29 @@ Full technical detail, including the exact bisection trail for both bugs, in `RE
 **First real test of the new schedule under a genuine "hasn't succeeded yet" morning:** tomorrow, **23 Aug 2026, 08:45** (primary trigger). Everything tested live this session proves the mechanism works correctly; what hasn't and can't be tested without waiting for tomorrow is a full real morning cycle where the primary run fails, a retry actually re-runs the fetch+update pipeline from a cold start, and succeeds — the RUN branch's *decision logic* is proven live, but not yet a full retry executing Steps 1+2 against a live "not yet arrived" mailbox state (that's the routine day-to-day Step 1/2 mechanics, already proven live repeatedly in the 20-22 Aug sessions, not new code from this session).
 
 ~~**Decision still open from the 08:30 entry, unchanged by this session:** whether Kevin wants a later trigger time, a retry-later mechanism, or to just rely on the manual fallback for occasional late-report mornings.~~ **RESOLVED by the 2026-08-22 (afternoon) session above** -- Kevin decided both: later trigger (08:45) and a retry mechanism (09:15/09:45), both built and live-verified as of that session. Left here struck through rather than deleted so the decision trail stays visible.
+
+---
+
+## Session 2026-08-25 (morning) -- 9am "not updated" report investigated; confirmed the 22 Aug retry mechanism working exactly as designed, no code changed (Drew, report-only)
+
+**Scope:** Kevin reported at 9am the dashboard looked stale. Investigated live rather than assuming a bug.
+
+**Root cause: not a bug.** The 08:45 primary trigger fired on time and correctly failed loudly (today's OSM email hadn't landed in `Inbox/Reports/OSM` yet -- Kevin's 9am report was accurate at that moment). The 09:15 retry then fired, found the now-arrived email, and succeeded end-to-end -- 48 tickets parsed, `data/tickets.json` and `data/last_automated_run.json` (`status: success`, `attempt: 2 of 3`) both pushed and confirmed live. This is the first real morning the 22 Aug retry mechanism was tested against a genuine "primary fails, retry recovers" case, and it worked unattended with no manual intervention needed. No code or config changed. Full timeline with exact commit SHAs and timestamps in `RESUME.md`'s superseded 25 Aug morning entry.
+
+---
+
+## Session 2026-08-25 (afternoon) -- Friendly, non-technical status messaging replacing raw error/attempt internals on the dashboard UI (Drew, Kevin-approved via screenshots)
+
+**Scope:** Same-day follow-up, separate request. Kevin wants a friendly message instead of raw/technical error text on the dashboard when data is stale, missing, or a fetch/retry has failed -- mirroring a similar ask he made separately for Linda's chat error on `hr-fa-knowledge-base` (Markey's repo, not touched here).
+
+**Found:** the automated-refresh badge (`loadAutomationStatus()` in `index.html`) showed raw internals directly in the visible text on any failure state -- e.g. `Failed (fetch_failed) — attempt 1 of 3` in red, even on attempt 1, which is normal in-progress retry behaviour rather than an actual problem. The "no ticket data" error card printed a raw `Error: HTTP 404`-style line under its heading.
+
+**Fixed, commit `ad3638a6`:** the badge now has three distinct visible states -- green **"up to date"** on success; a new neutral blue **"Data is refreshing — check back shortly."** (new `.main-header-auto.pending` CSS class, same established colour system) while a retry is still pending; red **"Automatic refresh didn't complete this morning — data may be a little behind. Run Update HRIS Dashboard.bat if you need it sooner."** only once all 3 retries are genuinely exhausted. Internal step/detail codes moved to the badge's hover `title` tooltip, not the visible text. The "no ticket data" error card now shows friendly copy only, with the raw fetch error also moved to a `title` tooltip. The existing "no automated run recorded yet" grey state and empty-ticket-list state were already friendly and left unchanged.
+
+**Verified for real before pushing:** built a local Playwright test harness (`python -m http.server` + real Chromium via `playwright.sync_api`) serving the actual edited `index.html` against four synthetic `data/last_automated_run.json` variants (success / mid-retry / exhausted-retries / file-missing) plus a forced ticket-data-404 case -- five real rendered PNG screenshots, not descriptions. Per standing rule (screenshots required for visual-change approval), presented all five to Kevin before touching `main`; Kevin reviewed and approved. Pushed via the GitHub Contents API (this repo's own convention, not `git push`) and confirmed the new strings genuinely live on `main` via `raw.githubusercontent.com` (cache-busted) afterward, not assumed from the push response alone.
+
+**Deliberately not touched:** Linda AI's own `"Connection error: Failed to fetch"` message in this same `index.html` -- same pattern as the `hr-fa-knowledge-base` Linda error Kevin asked Markey to fix separately. Flagged, not fixed, to avoid overlapping Markey's parallel work.
+
+**Untouched, as required:** `data/last_automated_run.json`'s schema and the automation pipeline that writes it (`push_automation_status.py`, `check_last_run_status.py`, `Run_HRIS_Auto_Refresh.bat`) -- display-only change, no automation logic touched.
+
+Full detail in `RESUME.md`'s latest entry (same session).
