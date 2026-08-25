@@ -3,6 +3,8 @@
 Last updated: 11 June 2026
 Status: GitHub Actions migration COMPLETE; token + schedule + session-expiry fixes applied
 
+**Accountable lead: Drew** (`agent-commons/AGENT_DIRECTORY.md`). Any local session working in this repo should dispatch to Drew immediately rather than operating as a generic session — Drew reads its own `AGENT.md`, `MEMORY.md`, and this file before doing anything.
+
 ---
 
 ## What just happened
