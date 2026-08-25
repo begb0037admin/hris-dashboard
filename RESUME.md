@@ -13,7 +13,68 @@ scope by Kevin same day. Drew was not this repo's "usual" agent before
 
 ---
 
-## One-line resume (latest — 22 Aug 2026, afternoon)
+## One-line resume (latest — 25 Aug 2026, morning)
+
+**Kevin reported at 9am that the dashboard hadn't updated. Investigated
+live, root cause confirmed NOT a bug — the 22 Aug retry mechanism worked
+exactly as designed on its first real "primary attempt genuinely fails"
+morning. No code/config change made; this is a report-and-verify entry.**
+
+**Timeline, all confirmed via live `Get-ScheduledTaskInfo`, the real
+`osm_auto_refresh_last_run.log`, and the GitHub API (not inferred):**
+- **08:45 (attempt 1, primary):** fired on time, `LastTaskResult: 1`.
+  `fetch_osm_report.py` found `Inbox/Reports/OSM` at 55 items; most recent
+  matching email was still 24 Aug (today's, 25 Aug, hadn't landed yet —
+  same mail-rule-filing-delay pattern root-caused on 22 Aug). Failed
+  loudly and correctly, exactly as designed; pushed
+  `data/last_automated_run.json` with `status: failure, attempt: 1`.
+  Kevin's 9am report was accurate — dashboard genuinely still showed
+  24 Aug data at that point.
+- **09:15 (attempt 2, retry):** fired on schedule. Today's OSM email had
+  arrived by then. `fetch_osm_report.py` succeeded, `import_osm_report.py`
+  parsed 48 tickets, pushed `data/tickets.json`
+  (SHA `c184fedc5ede6c3b6ac8f05cc642f7983416b7bb`, `updated:
+  2026-08-25T09:15:12`) and `data/last_automated_run.json`
+  (`status: success, step: dashboard_update_ok, attempt: 2`).
+  `LastTaskResult: 0`.
+- Watched the live Scheduled Task transition from `Running` to `Ready`
+  in real time (polled directly, not assumed), then confirmed both new
+  JSON files live on `main` via the GitHub Contents API, then polled
+  `https://begb0037admin.github.io/hris-dashboard/` (cache-busted) until
+  GitHub Pages' normal build lag cleared and the live site genuinely
+  served the 09:15 success data (~90s after the `main` push — expected
+  lag, not a bug, consistent with the 22 Aug session's note about this).
+
+**Current live status, confirmed:** dashboard is fully current — 48
+tickets (26→48 vs 24 Aug's stale 31; all now assigned, 0 unassigned),
+`data/last_automated_run.json` on both `main` and GitHub Pages reads
+`status: success`, `attempt: 2 of 3`. The 09:45 (attempt 3) trigger will
+still fire per schedule but `check_last_run_status.py`'s guard will see
+today's success and print `SKIP` — no redundant run, no risk of
+overwriting the correct 09:15 timestamp.
+
+**Separate, pre-existing, NOT the cause of this morning's report — flagged
+for awareness only:** the unrelated GitHub Actions self-hosted-runner
+SAASIT scrape path (`generate_dashboard.py`, hourly cron) is still
+failing with the same `SAASIT session expired (ISM_4001)` error first
+found 11 Aug 2026 — confirmed still broken as of run #141, 2026-08-25
+08:42 UTC (`last_run_status.txt`). This is a completely different data
+path from the OSM-email pipeline above and does not touch
+`data/tickets.json` when it fails (fails loudly, leaves prior data in
+place, by design). Needs Kevin's interactive Oxford SSO+MFA login
+(`Refresh Session.bat` / `python login.py`) — no agent can do this on
+his behalf. Unchanged, no action taken, not new information — just
+re-confirmed live rather than assumed stale from the 20 Aug note.
+
+**No code or configuration changed this session.** Nothing needed
+fixing — the system self-healed exactly as the 22 Aug retry mechanism
+was built to do. This is the first real-world morning that mechanism
+was tested against a genuine "primary attempt fails, retry recovers"
+case, and it worked end-to-end, unattended, with no manual intervention.
+
+---
+
+## Superseded — 22 Aug 2026, afternoon
 
 **Kevin decided both items left open by the late-morning investigation
 below: moved the trigger later and built a retry mechanism. Both live and
