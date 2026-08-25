@@ -122,6 +122,7 @@
     .main-header-auto.ok { background: #f0fdf4; color: #166534; border-color: #bbf7d0; }
     .main-header-auto.fail { background: #fff1f0; color: #9f1239; border-color: #fecaca; }
     .main-header-auto.unknown { background: #f8f9fa; color: #6b7280; border-color: #e5e7eb; }
+    .main-header-auto.pending { background: #e8f0f7; color: #1a3a5c; border-color: #b8d0e8; }
     .main-header-auto .auto-dot { font-size: 0.6rem; line-height: 1; }
     .error-state { background: #fff7ed; border: 1px solid #fed7aa; border-radius: 10px; padding: 28px 32px; color: #92400e; }
     .error-state h3 { font-size: 1rem; margin-bottom: 8px; }
@@ -495,8 +496,8 @@ function loadData(){
     lindaAnalyse(data,filteredAnalysts);
   })
   .catch(function(err){
-    document.getElementById('main-sub').textContent='Data unavailable';
-    document.getElementById('cards-container').innerHTML='<div class="error-state"><h3>No ticket data found</h3><p>Run <strong>Update HRIS Dashboard.bat</strong> on your Windows machine to generate the latest data, then refresh this page.</p><p style="margin-top:8px;font-size:0.78rem;color:#b45309">Error: '+esc(err.message)+'</p></div>';
+    document.getElementById('main-sub').textContent='Data is refreshing — check back shortly';
+    document.getElementById('cards-container').innerHTML='<div class="error-state" title="'+esc(err.message)+'"><h3>Data isn\'t available right now</h3><p>This usually clears up on its own within a few minutes. If it persists, run <strong>Update HRIS Dashboard.bat</strong> on your Windows machine to refresh manually.</p></div>';
   });
 }
 
@@ -523,17 +524,20 @@ function loadAutomationStatus(){
   .then(function(r){if(!r.ok)throw new Error('HTTP '+r.status);return r.json();})
   .then(function(s){
     var ok=s.status==='success';
-    el.className='main-header-auto '+(ok?'ok':'fail');
-    var label='Last automated refresh: '+(s.timestamp_display||'unknown time')+' — '+(ok?'Success':'Failed');
-    if(!ok && s.step){label+=' ('+esc(s.step)+')';}
-    if(!ok && s.attempt && s.max_attempts){
-      label+=' — attempt '+esc(s.attempt)+' of '+esc(s.max_attempts);
-      if(Number(s.attempt)>=Number(s.max_attempts)){
-        label+=', no more automated retries today — run Update HRIS Dashboard.bat manually if needed';
-      }
+    var exhausted=!ok && s.attempt && s.max_attempts && Number(s.attempt)>=Number(s.max_attempts);
+    var label;
+    if(ok){
+      el.className='main-header-auto ok';
+      label='Last automated refresh: '+(s.timestamp_display||'this morning')+' — up to date';
+    } else if(exhausted){
+      el.className='main-header-auto fail';
+      label='Automatic refresh didn\'t complete this morning — data may be a little behind. Run Update HRIS Dashboard.bat if you need it sooner.';
+    } else {
+      el.className='main-header-auto pending';
+      label='Data is refreshing — check back shortly.';
     }
     textEl.textContent=label;
-    el.title=s.detail?esc(s.detail):'';
+    el.title=(!ok && (s.step||s.detail))?('Internal status: '+esc(s.step||'')+(s.detail?' — '+esc(s.detail):'')):'';
   })
   .catch(function(){
     el.className='main-header-auto unknown';
