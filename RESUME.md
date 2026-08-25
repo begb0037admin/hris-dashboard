@@ -13,7 +13,67 @@ scope by Kevin same day. Drew was not this repo's "usual" agent before
 
 ---
 
-## One-line resume (latest — 25 Aug 2026, morning)
+## One-line resume (latest — 25 Aug 2026, afternoon)
+
+**Kevin asked for friendly, non-technical status messaging on the dashboard
+(mirroring a separate ask Markey is handling for Linda's chat error on
+`hr-fa-knowledge-base` — not touched here). Built, screenshot-verified via a
+real local Playwright render (not just described), Kevin reviewed and
+approved the 4 screenshots, then pushed to `main` and confirmed live.**
+
+**What changed in `index.html` (commit `ad3638a6`):**
+- The automated-refresh badge (`loadAutomationStatus()`) previously showed
+  raw internals in the visible text on any failure — e.g.
+  `Failed (fetch_failed) — attempt 1 of 3` — even on attempt 1, which is
+  normal in-progress retry behaviour, not a real problem, yet displayed in
+  red as if it were one. Replaced with three clearer states: green
+  **"Last automated refresh: `<time>` — up to date"** on success; a new
+  neutral blue **"Data is refreshing — check back shortly."** while a retry
+  is still pending (attempt < max — added a new `.main-header-auto.pending`
+  CSS class, same established colour system, Oxford-blue toned); red
+  **"Automatic refresh didn't complete this morning — data may be a little
+  behind. Run Update HRIS Dashboard.bat if you need it sooner."** only once
+  retries are genuinely exhausted (attempt 3 of 3). Internal step/detail
+  codes (e.g. `fetch_failed`) moved to the badge's hover `title` tooltip
+  only — still there for troubleshooting, no longer in the visible text.
+- `loadData()`'s "no ticket data" error card previously printed
+  `Error: HTTP 404` (or whatever the raw fetch error was) directly under
+  the heading. Now shows friendly copy only ("Data isn't available right
+  now... this usually clears up on its own within a few minutes..."), with
+  the raw error message moved to that card's `title` tooltip instead of
+  its visible text.
+- The "no automated run recorded yet" (grey/unknown) state and the
+  "no ticket rows returned" empty state were already friendly — left as is.
+
+**Verified for real, not just reasoned about:** built a local Playwright
+test harness (`python -m http.server` + `playwright.sync_api`, real Chromium)
+serving the actual edited `index.html` with synthetic `data/tickets.json`
+and four variants of `data/last_automated_run.json` (success, mid-retry,
+exhausted-retries, missing-file), captured a real screenshot of each
+rendered state plus one of the "ticket data missing" error card — five PNGs
+total. Kevin reviewed all five and gave explicit approval before anything
+was pushed (standing rule: screenshots required for visual-change
+approval, text descriptions aren't sufficient). After pushing, confirmed
+the new strings genuinely live on `main` via
+`raw.githubusercontent.com` (cache-busted) before considering this done —
+not assumed from the push response alone.
+
+**Deliberately not touched:** Linda AI's own
+`"Connection error: Failed to fetch"` message in this same `index.html`
+(right-hand panel) — same pattern as the `hr-fa-knowledge-base` Linda chat
+error Kevin separately asked Markey to fix. Flagged for Kevin's awareness,
+not fixed here, to avoid overlapping with Markey's parallel work. If Kevin
+wants this pulled into Drew's scope too, it's a small, contained follow-up
+(one `.catch()` handler, `onDone('Connection error: '+err.message)`).
+
+**Untouched, as required:** `data/last_automated_run.json`'s actual schema
+and the automation pipeline that writes it (`push_automation_status.py`,
+`check_last_run_status.py`, `Run_HRIS_Auto_Refresh.bat`) — this was a
+front-end display-only change, no automation logic touched.
+
+---
+
+## Superseded — 25 Aug 2026, morning
 
 **Kevin reported at 9am that the dashboard hadn't updated. Investigated
 live, root cause confirmed NOT a bug — the 22 Aug retry mechanism worked
