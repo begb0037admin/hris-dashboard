@@ -1,7 +1,7 @@
 # HANDOVER.md — hris-dashboard
 
 Last updated: 27 August 2026
-Status: Live and working. 27 Aug: manual `.bat` "not working" report investigated — fresh export was already live (commit 7b50878), no bug reproduced; stale Desktop `.bat` + "better way" proposal recorded, awaiting Kevin's pick. Morning auto-refresh unaffected. GitHub Actions SAASIT scrape still needs Kevin's SSO re-login (pre-existing).
+Status: Live and working. 27 Aug: (1) manual `.bat` "not working" report investigated — fresh export was already live (7b50878), no bug reproduced. (2) Kevin approved Option 1 + Option 3: `import_osm_report.py` hardened (lazy xlrd, locked-file retry, explicit-file override, advisory lock, push race-retry; schema unchanged), Desktop `.bat` re-synced, and a Startup-folder Downloads watcher built + deployed + LIVE (pinned to bd93285). Morning Scheduled Task untouched. GitHub Actions SAASIT scrape still needs Kevin's SSO re-login (pre-existing).
 
 ---
 
@@ -366,3 +366,71 @@ writes, leave the Scheduled Task untouched, and are git-revertable.
 
 **Next action:** Kevin picks an option (or approves Option 1 alone). No build
 until then. No live-site push outstanding.
+
+---
+
+## Session 2026-08-27 (~11:00 BST) -- Option 1 (harden import_osm_report.py + re-sync Desktop .bat) + Option 3 (Startup Downloads watcher) built, tested, merged, deployed; watcher LIVE (Drew, via coordinator, Kevin-approved)
+
+Follows straight on from the ~10:30 session below. Kevin picked Option 1 + Option 3
+from the "better way" proposal.
+
+**Shipped to `main`:** `207f9c9` (hardened script + watcher files, branch) ->
+`bd93285` (merge) -> `aa77b25` (`.bat` SCRIPT_SHA -> `bd93285`) -> `b769903`
+(`watch_downloads.config.json` script_sha -> `bd93285`). Branch
+`harden-import-and-downloads-watcher` merged then deleted.
+
+**Option 1 -- `import_osm_report.py` hardening.** Parsing / `tickets.json` schema
+UNCHANGED (re-verified byte-identical against the live Downloads file, 44 tickets).
+Added: lazy `xlrd` (xlsx-only runs no longer need it); `read_rows_with_retry()`
+for locked / still-downloading files (clear message + 3x4s retry, no traceback,
+no push); explicit-file override `OSM_IMPORT_FILE` / `--file` / bare `argv[1]`;
+>20-min stale-file gate (prompt if interactive, warn-and-proceed if not, so the
+Scheduled Task / watcher never hang); advisory single-writer lock
+(`%TEMP%\hris_osm_import.lock`, auto-stale 15 min, bounded 90 s wait -- cannot
+deadlock); GitHub Contents-API push race-retry on 409/422; timestamped first
+line; all printed strings ASCII-only (legacy console codepage safety) except the
+commit-message em-dash. 6 unit-style checks + watcher-style invocation all pass.
+
+**Option 3 -- `watch_downloads.py` + `watch_downloads.config.json` +
+`Start HRIS Downloads Watcher.vbs`.** Stdlib-only Startup-folder poll (~60 s) of
+`C:\Users\admin\Downloads`. Runs the PINNED `import_osm_report.py` on a
+settle-detected (2 stable polls) new `All Open Tasks by Team*.xlsx|xls` whose
+`name+size+sha256` is not already in the state file. Kevin's mid-day step becomes
+"save the export to Downloads".
+
+**Collision-safety with "HRIS Dashboard Morning Refresh" (verified):**
+hard-excludes any `- auto` name (the task saves `All Open Tasks by Team - auto.xls`);
+fully idle during weekday 08:40-10:00 (files appearing then are held, not
+dropped, and imported once the window clears); plus the advisory lock and the
+push race-retry. The morning task itself is NOT modified -- it still pulls
+`Update HRIS Dashboard.bat` fresh from `main`, so it auto-adopts the new pin.
+
+**How a watcher-triggered import reaches `main`:** AUTO / direct -- the same
+single `data/tickets.json` Contents-API commit the manual `.bat` and the morning
+task already make unattended. Not staged, not a PR. Safe/revertible: only fires
+on a genuinely new settled file; dedupe never repeats bytes; hardened script;
+`index.html` never touched; revert = `git revert <sha>` on that one JSON commit
+(Pages ~60-90 s). Kill switch: `"enabled": false` in the config (exits within one
+poll) or delete the Startup `.vbs` + `taskkill` the `pythonw`.
+
+**Deployed on DESKTOP-MJDJM64 (~10:56-11:00):**
+`%LOCALAPPDATA%\hris-downloads-watcher\` holds the watcher, config, Startup
+`.vbs`, pinned script, seeded `state.json`, `watcher.log`, `watcher.pid`. Startup
+folder has the launcher. Desktop `Update HRIS Dashboard.bat` replaced with the
+`main` copy (old one -> `Update HRIS Dashboard.bat.bak-20260827`). Watcher
+started and confirmed running (one `pythonw`, matches `watcher.pid`), idle,
+`script_sha=bd93285`, live `tickets.json` unchanged.
+
+**MAINTENANCE (new):** the import-script SHA pin now lives in TWO files --
+`Update HRIS Dashboard.bat` (`SCRIPT_SHA=`) and `watch_downloads.config.json`
+(`"script_sha":`). Any future `import_osm_report.py` change must bump BOTH in the
+same change and re-copy both to their deployed locations (Desktop / %LOCALAPPDATA%).
+The running watcher re-reads its config every poll and auto-refetches the pinned
+script when the sha changes. See RESUME.md (27 Aug ~11:00) for the checklist.
+
+**Not this session:** GitHub Actions SAASIT scrape still needs Kevin's SSO
+re-login (pre-existing, `ISM_4001`).
+
+**Next action:** none required. Optionally, Kevin saves his next real mid-day
+export to Downloads and confirms the dashboard updates within ~3-4 min
+(`watcher.log` shows the run).
