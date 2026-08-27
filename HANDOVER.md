@@ -1,7 +1,7 @@
 # HANDOVER.md — hris-dashboard
 
-Last updated: 25 August 2026
-Status: Live and working. Linda AI connected. Colour system unified. Morning OSM auto-refresh with retry live since 22 Aug. Friendly (non-technical) status messaging live since 25 Aug.
+Last updated: 27 August 2026
+Status: Live and working. 27 Aug: manual `.bat` "not working" report investigated — fresh export was already live (commit 7b50878), no bug reproduced; stale Desktop `.bat` + "better way" proposal recorded, awaiting Kevin's pick. Morning auto-refresh unaffected. GitHub Actions SAASIT scrape still needs Kevin's SSO re-login (pre-existing).
 
 ---
 
@@ -308,3 +308,61 @@ Full technical detail, including the exact bisection trail for both bugs, in `RE
 **Untouched, as required:** `data/last_automated_run.json`'s schema and the automation pipeline that writes it (`push_automation_status.py`, `check_last_run_status.py`, `Run_HRIS_Auto_Refresh.bat`) -- display-only change, no automation logic touched.
 
 Full detail in `RESUME.md`'s latest entry (same session).
+
+---
+
+## Session 2026-08-27 (~10:30 BST) -- "Update HRIS Dashboard.bat not working" investigated; fresh export was already live, no push made; stale Desktop `.bat` + "better way" proposal recorded (Drew, via coordinator)
+
+**Trigger:** Kevin reported the manual `.bat` "is not working" and asked for the
+dashboard to be updated from `C:\Users\admin\Downloads\All Open Tasks by Team.xlsx`.
+
+**Outcome: nothing needed pushing.** The fresh export was already live before
+investigation began:
+- Live `data/tickets.json` on `main` = commit `7b50878` "OSM import — 2026-08-27
+  10:20" (Kevin's own manual `.bat` run at 10:19:58 today). `report_file: All Open
+  Tasks by Team.xlsx`, `total 44 / assigned 40 / unassigned 4 / stale 6 / oldest 189`.
+- Verified byte-identical: re-parsed the Downloads `.xlsx` (mtime 10:16) with the
+  live script's own functions in a no-push dry-run — every ticket matches; only
+  the `updated` timestamps differ (expected).
+- Pages build `built` 09:20 UTC; `index.html` cache-busts its fetch; real
+  Playwright screenshot of the live site confirms the 10:20 data is showing.
+
+**No reproducible hard failure of the `.bat`.** Ran its exact mechanism (curl
+`main` → `pip install openpyxl requests` → `python %TEMP%\import_osm_report.py`)
+with push disabled: curl OK, pip OK, parsed 44 tickets cleanly.
+
+**Real underlying issue — stale Desktop copy + fragile file pick:**
+- `D:\OneDrive - lelitte.com\Desktop\Update HRIS Dashboard.bat` is the **2 Jul
+  2026 version** (unpinned `main`, `pip install openpyxl requests` — no `xlrd`).
+  Missing repo fixes `d3e4c24`, `a23f1dd`, `7b3014b`. Works today only because
+  `xlrd 2.0.2` is already installed and `main`'s script still equals pinned SHA
+  `e503509`.
+- `import_osm_report.py` top-level `import xlrd` hard-exits if `xlrd` absent, even
+  for `.xlsx` runs; `find_report()` silently takes the newest matching file, so a
+  run started before the manual export finishes downloading (or while Excel locks
+  it) imports the 08:01 morning `- auto.xls` or throws a lock error.
+- Most probable trigger for Kevin's experience: first run before the `.xlsx` was
+  ready; retry at 10:19 worked. (A pre-push `.bat` failure leaves no git trace.)
+  Precedent: 25 Aug "not updated" was also not-a-bug.
+
+**Morning auto path (Scheduled Task "HRIS Dashboard Morning Refresh"):** NOT
+affected — `Run_HRIS_Auto_Refresh.bat` pulls `Update HRIS Dashboard.bat` fresh
+from `main` each run, so it uses the good pinned repo copy. Today it succeeded on
+attempt 1 (08:47, `last_automated_run.json` = success). Next run 28 Aug 08:45.
+
+**Separate pre-existing breakage (unchanged, not this issue):** GitHub Actions
+SAASIT scrape (`generate_dashboard.py`) still fails `ISM_4001 session expired`
+(last diag run #159, 26 Aug 16:16 UTC). Needs Kevin's Oxford SSO+MFA re-login via
+`Refresh Session.bat`. The dashboard "Refresh" button triggers this same failing
+workflow.
+
+**"Better way" proposal for the manual mid-day top-up — awaiting Kevin's pick.**
+Full text in RESUME.md (latest section). Summary: Option 1 re-sync + harden the
+script (do regardless, ~1–2 h); Option 2 drag-and-drop file target (~2 h);
+**Option 3 (recommended) folder-watch on Downloads via a Startup-folder poll loop,
+reusing the `ai-usage-dashboard` pattern, so Kevin just saves the export (~3–4 h)**;
+Option 4 browser upload via Cloudflare Worker (~1–2 d). All keep GitHub-only
+writes, leave the Scheduled Task untouched, and are git-revertable.
+
+**Next action:** Kevin picks an option (or approves Option 1 alone). No build
+until then. No live-site push outstanding.
