@@ -1,13 +1,13 @@
 {
-  "updated": "2026-08-27T10:20:03",
-  "updated_display": "Thursday 27 August 2026 at 10:20",
-  "report_file": "All Open Tasks by Team.xlsx",
+  "updated": "2026-08-27T15:14:38",
+  "updated_display": "Thursday 27 August 2026 at 15:14",
+  "report_file": "All Open Tasks by Team (1).xlsx",
   "summary": {
-    "total": 44,
-    "assigned": 40,
-    "unassigned": 4,
+    "total": 31,
+    "assigned": 28,
+    "unassigned": 3,
     "stale": 6,
-    "oldest_days": 189
+    "oldest_days": 190
   },
   "analysts": [
     {
@@ -22,7 +22,7 @@
           "analyst": "James Salas Guillen",
           "category": "Odyssey",
           "created": "18 Feb 2026",
-          "days": 189,
+          "days": 190,
           "team": "Health and Safety 2nd Line"
         },
         {
@@ -51,7 +51,7 @@
     },
     {
       "name": "Asta Palmer",
-      "ticket_count": 26,
+      "ticket_count": 14,
       "tickets": [
         {
           "task_num": "50977943",
@@ -61,19 +61,8 @@
           "analyst": "Asta Palmer",
           "category": "Recruitment",
           "created": "17 Aug 2026",
-          "days": 9,
+          "days": 10,
           "team": "HRIS Analysis"
-        },
-        {
-          "task_num": "50972694",
-          "summary": "01-SEP-2026 - Manager Self Service Change - Damian Robinson",
-          "status": "Accepted",
-          "priority": "3",
-          "analyst": "Asta Palmer",
-          "category": "",
-          "created": "28 Jul 2026",
-          "days": 29,
-          "team": "HRIS Sys Admin"
         },
         {
           "task_num": "50976363",
@@ -94,7 +83,7 @@
           "analyst": "Asta Palmer",
           "category": "People Management",
           "created": "19 Aug 2026",
-          "days": 7,
+          "days": 8,
           "team": "HRIS Sys Admin"
         },
         {
@@ -109,215 +98,6 @@
           "team": "HRIS Sys Admin"
         },
         {
-          "task_num": "50980448",
-          "summary": "Create Work Group - Clive Brown",
-          "status": "Accepted",
-          "priority": "3",
-          "analyst": "Asta Palmer",
-          "category": "",
-          "created": "26 Aug 2026",
-          "days": 0,
-          "team": "HRIS Sys Admin"
-        },
-        {
-          "task_num": "50980450",
-          "summary": "Add Shift Type - Elisha Ward",
-          "status": "Accepted",
-          "priority": "3",
-          "analyst": "Asta Palmer",
-          "category": "",
-          "created": "26 Aug 2026",
-          "days": 0,
-          "team": "HRIS Sys Admin"
-        },
-        {
-          "task_num": "50980467",
-          "summary": "Manager Self Service Add - Dmitri Uzdensky",
-          "status": "Accepted",
-          "priority": "3",
-          "analyst": "Asta Palmer",
-          "category": "",
-          "created": "26 Aug 2026",
-          "days": 0,
-          "team": "HRIS Sys Admin"
-        },
-        {
-          "task_num": "50980469",
-          "summary": "Rename Work Group - Clive Brown",
-          "status": "Accepted",
-          "priority": "3",
-          "analyst": "Asta Palmer",
-          "category": "",
-          "created": "26 Aug 2026",
-          "days": 0,
-          "team": "HRIS Sys Admin"
-        },
-        {
-          "task_num": "50980476",
-          "summary": "Add Shift Type - Isabel Woodcock",
-          "status": "Accepted",
-          "priority": "3",
-          "analyst": "Asta Palmer",
-          "category": "",
-          "created": "26 Aug 2026",
-          "days": 0,
-          "team": "HRIS Sys Admin"
-        },
-        {
-          "task_num": "50980506",
-          "summary": "Manager Self Service Add - Matt Thomas",
-          "status": "Accepted",
-          "priority": "3",
-          "analyst": "Asta Palmer",
-          "category": "",
-          "created": "26 Aug 2026",
-          "days": 0,
-          "team": "HRIS Sys Admin"
-        },
-        {
-          "task_num": "50980511",
-          "summary": "Add Shift Type - Mandy Pipkin",
-          "status": "Accepted",
-          "priority": "3",
-          "analyst": "Asta Palmer",
-          "category": "",
-          "created": "26 Aug 2026",
-          "days": 0,
-          "team": "HRIS Sys Admin"
-        },
-        {
-          "task_num": "50980528",
-          "summary": "Manager Self Service Change - Peter Magill",
-          "status": "Accepted",
-          "priority": "3",
-          "analyst": "Asta Palmer",
-          "category": "",
-          "created": "26 Aug 2026",
-          "days": 0,
-          "team": "HRIS Sys Admin"
-        },
-        {
-          "task_num": "50980529",
-          "summary": "Manager Self Service Change - Vivienne Collins",
-          "status": "Accepted",
-          "priority": "3",
-          "analyst": "Asta Palmer",
-          "category": "",
-          "created": "26 Aug 2026",
-          "days": 0,
-          "team": "HRIS Sys Admin"
-        },
-        {
-          "task_num": "50980530",
-          "summary": "Manager Self Service Change - Charlotte Stagg",
-          "status": "Accepted",
-          "priority": "3",
-          "analyst": "Asta Palmer",
-          "category": "",
-          "created": "26 Aug 2026",
-          "days": 0,
-          "team": "HRIS Sys Admin"
-        },
-        {
-          "task_num": "50980598",
-          "summary": "Manager Self Service Remove - Elizabeth Hallam",
-          "status": "Accepted",
-          "priority": "3",
-          "analyst": "Asta Palmer",
-          "category": "",
-          "created": "26 Aug 2026",
-          "days": 0,
-          "team": "HRIS Sys Admin"
-        },
-        {
-          "task_num": "50980604",
-          "summary": "Manager Self Service Add - Paul Tappin",
-          "status": "Accepted",
-          "priority": "3",
-          "analyst": "Asta Palmer",
-          "category": "",
-          "created": "26 Aug 2026",
-          "days": 0,
-          "team": "HRIS Sys Admin"
-        },
-        {
-          "task_num": "50980605",
-          "summary": "Manager Self Service Change - Jenna Boyce",
-          "status": "Accepted",
-          "priority": "3",
-          "analyst": "Asta Palmer",
-          "category": "",
-          "created": "26 Aug 2026",
-          "days": 0,
-          "team": "HRIS Sys Admin"
-        },
-        {
-          "task_num": "50980606",
-          "summary": "Manager Self Service Change - Ryan Clark",
-          "status": "Accepted",
-          "priority": "3",
-          "analyst": "Asta Palmer",
-          "category": "",
-          "created": "26 Aug 2026",
-          "days": 0,
-          "team": "HRIS Sys Admin"
-        },
-        {
-          "task_num": "50980607",
-          "summary": "Manager Self Service Change - Grant Ritchie",
-          "status": "Accepted",
-          "priority": "3",
-          "analyst": "Asta Palmer",
-          "category": "",
-          "created": "26 Aug 2026",
-          "days": 0,
-          "team": "HRIS Sys Admin"
-        },
-        {
-          "task_num": "50980608",
-          "summary": "Manager Self Service Change - Charlotte Prentice",
-          "status": "Accepted",
-          "priority": "3",
-          "analyst": "Asta Palmer",
-          "category": "",
-          "created": "26 Aug 2026",
-          "days": 0,
-          "team": "HRIS Sys Admin"
-        },
-        {
-          "task_num": "50980609",
-          "summary": "Manager Self Service Change - Louise Hewson",
-          "status": "Accepted",
-          "priority": "3",
-          "analyst": "Asta Palmer",
-          "category": "",
-          "created": "26 Aug 2026",
-          "days": 0,
-          "team": "HRIS Sys Admin"
-        },
-        {
-          "task_num": "50980655",
-          "summary": "Manager Self Service Remove - Danielle Williams",
-          "status": "Accepted",
-          "priority": "3",
-          "analyst": "Asta Palmer",
-          "category": "",
-          "created": "27 Aug 2026",
-          "days": 0,
-          "team": "HRIS Sys Admin"
-        },
-        {
-          "task_num": "50980656",
-          "summary": "Manager Self Service Add - Olutosin Adenipekun",
-          "status": "Accepted",
-          "priority": "3",
-          "analyst": "Asta Palmer",
-          "category": "",
-          "created": "27 Aug 2026",
-          "days": 0,
-          "team": "HRIS Sys Admin"
-        },
-        {
           "task_num": "50980675",
           "summary": "ESS - ZHENGXIN FANG (2420442) pemb7244",
           "status": "Accepted",
@@ -329,8 +109,96 @@
           "team": "HRIS Sys Admin"
         },
         {
-          "task_num": "50980687",
-          "summary": "Create Work Group - Marie-Pier Belanger",
+          "task_num": "50980753",
+          "summary": "ESS set up Pierce Giles (2420614) admn6508",
+          "status": "Accepted",
+          "priority": "5",
+          "analyst": "Asta Palmer",
+          "category": "",
+          "created": "27 Aug 2026",
+          "days": 0,
+          "team": "HRIS Sys Admin"
+        },
+        {
+          "task_num": "50980794",
+          "summary": "Manager Self Service Add - Jenna Boyce",
+          "status": "Accepted",
+          "priority": "3",
+          "analyst": "Asta Palmer",
+          "category": "",
+          "created": "27 Aug 2026",
+          "days": 0,
+          "team": "HRIS Sys Admin"
+        },
+        {
+          "task_num": "50980799",
+          "summary": "Add Shift Type - Elaine Royle",
+          "status": "Accepted",
+          "priority": "3",
+          "analyst": "Asta Palmer",
+          "category": "",
+          "created": "27 Aug 2026",
+          "days": 0,
+          "team": "HRIS Sys Admin"
+        },
+        {
+          "task_num": "50980818",
+          "summary": "Create Work Group - Jessy Graham",
+          "status": "Accepted",
+          "priority": "3",
+          "analyst": "Asta Palmer",
+          "category": "",
+          "created": "27 Aug 2026",
+          "days": 0,
+          "team": "HRIS Sys Admin"
+        },
+        {
+          "task_num": "50980841",
+          "summary": "HR User Change Access - Millicent Webb",
+          "status": "Accepted",
+          "priority": "5",
+          "analyst": "Asta Palmer",
+          "category": "",
+          "created": "27 Aug 2026",
+          "days": 0,
+          "team": "HRIS Sys Admin"
+        },
+        {
+          "task_num": "50980847",
+          "summary": "Create Work Group - Dag Martinsen",
+          "status": "Accepted",
+          "priority": "3",
+          "analyst": "Asta Palmer",
+          "category": "",
+          "created": "27 Aug 2026",
+          "days": 0,
+          "team": "HRIS Sys Admin"
+        },
+        {
+          "task_num": "50980866",
+          "summary": "Delete Work Group - Jenna Boyce",
+          "status": "Accepted",
+          "priority": "3",
+          "analyst": "Asta Palmer",
+          "category": "",
+          "created": "27 Aug 2026",
+          "days": 0,
+          "team": "HRIS Sys Admin"
+        },
+        {
+          "task_num": "50980868",
+          "summary": "Delete Work Group - Jenna Boyce",
+          "status": "Accepted",
+          "priority": "3",
+          "analyst": "Asta Palmer",
+          "category": "",
+          "created": "27 Aug 2026",
+          "days": 0,
+          "team": "HRIS Sys Admin"
+        },
+        {
+          "task_num": "50980874",
+          "summary": "Add Shift Type - Megan Papadopoulos",
           "status": "Accepted",
           "priority": "3",
           "analyst": "Asta Palmer",
@@ -364,7 +232,7 @@
           "analyst": "Michael O'Sullivan",
           "category": "Time and Attendance",
           "created": "14 Jul 2026",
-          "days": 43,
+          "days": 44,
           "team": "HRIS Analysis"
         },
         {
@@ -386,7 +254,7 @@
           "analyst": "Michael O'Sullivan",
           "category": "",
           "created": "05 Aug 2026",
-          "days": 21,
+          "days": 22,
           "team": "HRIS Analysis"
         },
         {
@@ -397,7 +265,7 @@
           "analyst": "Michael O'Sullivan",
           "category": "",
           "created": "05 Aug 2026",
-          "days": 21,
+          "days": 22,
           "team": "HRIS Analysis"
         },
         {
@@ -408,7 +276,7 @@
           "analyst": "Michael O'Sullivan",
           "category": "Interfaces",
           "created": "11 Aug 2026",
-          "days": 15,
+          "days": 16,
           "team": "HRIS Analysis"
         },
         {
@@ -419,7 +287,7 @@
           "analyst": "Michael O'Sullivan",
           "category": "Time and Attendance",
           "created": "24 Aug 2026",
-          "days": 2,
+          "days": 3,
           "team": "HRIS Analysis"
         },
         {
@@ -434,14 +302,14 @@
           "team": "HRIS Analysis"
         },
         {
-          "task_num": "50980294",
-          "summary": "Leaver/rehire issues",
-          "status": "Accepted",
-          "priority": "5",
+          "task_num": "50980824",
+          "summary": "CR 20020762 - UOXU - New NHS ERRBO and USS DB AVC Pension Schemes and Pay Codes",
+          "status": "Assigned",
+          "priority": "4",
           "analyst": "Michael O'Sullivan",
-          "category": "People Management",
-          "created": "26 Aug 2026",
-          "days": 1,
+          "category": "",
+          "created": "27 Aug 2026",
+          "days": 0,
           "team": "HRIS Analysis"
         }
       ]
@@ -475,7 +343,7 @@
           "analyst": "Kevin Lelitte",
           "category": "Roster (WFM)",
           "created": "29 Jun 2026",
-          "days": 58,
+          "days": 59,
           "team": "HRIS Analysis"
         }
       ]
@@ -514,17 +382,6 @@
       "created": "27 Aug 2026",
       "days": 0,
       "team": "Health and Safety 2nd Line"
-    },
-    {
-      "task_num": "50980700",
-      "summary": "Manager Self Service Change - Catherine Elliston",
-      "status": "Logged",
-      "priority": "3",
-      "analyst": "",
-      "category": "",
-      "created": "27 Aug 2026",
-      "days": 0,
-      "team": "HRIS Sys Admin"
     }
   ]
 }
