@@ -13,7 +13,152 @@ scope by Kevin same day. Drew was not this repo's "usual" agent before
 
 ---
 
-## One-line resume (latest — 27 Aug 2026, ~10:30 BST)
+## One-line resume (latest — 27 Aug 2026, ~11:00 BST)
+
+**Kevin approved Option 1 (harden the import script + re-sync his Desktop
+`.bat`) AND Option 3 (Startup-folder Downloads watcher). Both built, tested,
+merged to `main`, and deployed. The watcher is LIVE now (pid recorded in
+`%LOCALAPPDATA%\hris-downloads-watcher\watcher.pid`). No dashboard-visible
+change; `tickets.json` output is byte-identical to before. Nothing outstanding
+for Kevin except optional: confirm it works on his next real mid-day export.**
+
+### What shipped (all on `main`)
+| Commit | What |
+|---|---|
+| [`207f9c9`](https://github.com/begb0037admin/hris-dashboard/commit/207f9c9a8a9cd3f0de1824380339ecc81e0feab5) | hardened `import_osm_report.py` + new `watch_downloads.py` / `watch_downloads.config.json` / `Start HRIS Downloads Watcher.vbs` (branch) |
+| [`bd93285`](https://github.com/begb0037admin/hris-dashboard/commit/bd9328521e52123f419ee573b149027fdadc0215) | merge of that branch to `main` |
+| [`aa77b25`](https://github.com/begb0037admin/hris-dashboard/commit/aa77b25f635e25779a63caf0ae838f4bbb7981c6) | `Update HRIS Dashboard.bat` SCRIPT_SHA bumped to `bd93285` |
+| [`b769903`](https://github.com/begb0037admin/hris-dashboard/commit/b7699032782b8513b01e5c5f626a22eec69a43f5) | `watch_downloads.config.json` `script_sha` set to `bd93285` |
+
+Branch `harden-import-and-downloads-watcher` merged and deleted (repo protocol:
+never leave files on a branch).
+
+### Option 1 — `import_osm_report.py` hardening (schema/parsing UNCHANGED)
+- **Lazy `xlrd`.** Top-level `import xlrd` removed; imported only inside
+  `_read_rows_xls()`. An `.xlsx`-only run no longer dies if `xlrd` is absent.
+- **Locked / partial file handling.** `read_rows_with_retry()` catches
+  `PermissionError` / `zipfile.BadZipFile` / lock-style `OSError`, prints
+  "the export file appears to still be downloading, or is open in Excel",
+  retries 3× at 4 s, then exits with a clear message (no scary traceback, no
+  push). A genuinely malformed file still fails loudly.
+- **Explicit-file override.** `OSM_IMPORT_FILE=<path>` / `--file <path>` / a
+  bare `argv[1]` path bypasses the newest-match guess entirely (used by the
+  watcher; also gives Kevin a drag-a-file-onto-it option for free).
+- **Stale-file gate.** If the newest matching export is > 20 min old: prompt
+  `[y/N]` when interactive; print a warning and proceed when not (so the
+  Scheduled Task and watcher never hang). `is_noninteractive()` = env
+  `OSM_IMPORT_NONINTERACTIVE`, `--yes`/`-y`, or stdin not a TTY.
+- **Advisory single-writer lock** (`%TEMP%\hris_osm_import.lock`, auto-stale
+  15 min, waits ≤ 90 s then proceeds anyway — can never deadlock). Every
+  update path runs this script, so one lock covers manual `.bat` + morning
+  task + watcher.
+- **Push race-retry.** `github_put()` on HTTP 409/422 re-GETs the file SHA and
+  retries the PUT once. Concurrent imports self-heal; `tickets.json` is always
+  one complete valid import.
+- **Timestamped first line** of output (estate-wide requirement).
+- All printed strings scrubbed to ASCII (`--` not `—`) so a legacy Windows
+  console codepage cannot `UnicodeEncodeError`-crash the run mid-import. The
+  commit-message em-dash (`OSM import — <date>`) is kept (goes to the API as
+  UTF-8, matches existing history).
+- **Verified:** re-parsed the live `C:\Users\admin\Downloads\All Open Tasks by
+  Team.xlsx` through the hardened functions — `tickets.json` payload
+  byte-identical to the pre-change output (44 tickets, same summary, same
+  per-analyst split). 6 unit-style checks pass (lazy xlrd, explicit file,
+  missing file, stale gate non-interactive, transient-error retry, loud
+  failure). Watcher-style invocation (`python <pinned> ` + env, stdin
+  DEVNULL) parses cleanly and stops at the PAT guard.
+
+### Option 3 — Downloads watcher
+- `watch_downloads.py` (stdlib only) polls `C:\Users\admin\Downloads` every
+  60 s. When a `All Open Tasks by Team*.xlsx|xls` file is size-stable across 2
+  polls (~2 min) and its `name+size+sha256` is not in the state file, it runs
+  the **pinned** `import_osm_report.py` with `OSM_IMPORT_FILE` +
+  `OSM_IMPORT_NONINTERACTIVE=1`. Kevin's mid-day step becomes: save the export
+  to Downloads.
+- **Never collides with "HRIS Dashboard Morning Refresh":** (a) hard-excludes
+  any name containing `- auto` (the Scheduled Task's file is
+  `All Open Tasks by Team - auto.xls`); (b) fully idle during the weekday
+  08:40–10:00 window — a file that appears then is held and imported once the
+  window clears, not dropped; (c) the advisory lock above; (d) the push
+  race-retry above.
+- **How a watcher-triggered import reaches `main`: AUTO, directly** — the same
+  single `data/tickets.json` Contents-API commit the manual `.bat` and the
+  morning Scheduled Task already make unattended. Not staged, not a PR. This is
+  intended: it is the identical mechanism the morning task already uses 3× per
+  weekday with no human in the loop. Safe/revertible because: only fires on a
+  genuinely new settled file; dedupe never repeats bytes; hardened script
+  (lock + retry + race-retry); `index.html` is never touched by this path;
+  revert = `git revert <sha>` on that one JSON commit (Pages rebuilds
+  ~60–90 s). **Kill switch:** set `"enabled": false` in
+  `watch_downloads.config.json` (watcher exits within one poll) or delete the
+  Startup `.vbs` and `taskkill` the `pythonw`.
+- `--seed` mode records already-present files so a fresh deploy does not
+  re-import them.
+- **Tested (sandbox, stubbed importer, temp dirs):** exclude `- auto` ✓;
+  quiet-hours weekday/ weekend/ boundary ✓; settle → import only after 2
+  stable polls ✓; dedupe (same bytes never re-imported) ✓; changed bytes →
+  re-import ✓; quiet-hours defer-then-import ✓; `--seed` then no re-import ✓;
+  state persisted ✓. `ensure_pinned_script()` fetched `import_osm_report.py`
+  @ `bd93285`, validated non-empty + `def main()` present (guards the
+  silent-empty-content trap).
+
+### Deployed on this machine (DESKTOP-MJDJM64), 27 Aug ~10:56–11:00
+- `%LOCALAPPDATA%\hris-downloads-watcher\` ← `watch_downloads.py`,
+  `watch_downloads.config.json`, `Start HRIS Downloads Watcher.vbs`,
+  `import_osm_report.pinned.py` (+ `.sha`), `state.json` (seeded with the
+  current `All Open Tasks by Team.xlsx`), `watcher.log`, `watcher.pid`.
+- Startup: `…\Start Menu\Programs\Startup\Start HRIS Downloads Watcher.vbs`
+  (runs `pythonw watch_downloads.py` hidden at logon; watcher self-enforces
+  single instance).
+- Desktop `Update HRIS Dashboard.bat` replaced with the `main` copy
+  (SCRIPT_SHA `bd93285`); old one backed up as
+  `Update HRIS Dashboard.bat.bak-20260827`. Verified byte-identical to `main`.
+- Watcher started (`pythonw`, detached); `watcher.log` shows clean start,
+  correct config, `script_sha=bd93285`; one full poll cycle observed with no
+  import (seeded file correctly skipped); live `tickets.json` unchanged
+  (still Kevin's 10:20 commit); `main` HEAD unchanged. Exactly one `pythonw`
+  process running (matches `watcher.pid`).
+
+### MAINTENANCE — SHA pin is now in TWO places, bump them together
+When `import_osm_report.py` changes on `main` and the change needs to ship:
+1. `set SCRIPT_SHA=<new commit sha>` in `Update HRIS Dashboard.bat`, then
+   re-copy that file to `D:\OneDrive - lelitte.com\Desktop\Update HRIS Dashboard.bat`.
+2. `"script_sha": "<same sha>"` in `watch_downloads.config.json`, then re-copy
+   it to `%LOCALAPPDATA%\hris-downloads-watcher\watch_downloads.config.json`
+   (the running watcher re-reads the config every poll and re-fetches the
+   pinned script automatically once the sha changes).
+Miss either and that path keeps silently running the old script. `grep -rn
+"bd9328521e52\|SCRIPT_SHA\|script_sha"` to find every pin.
+
+### Morning Scheduled Task — untouched
+`Run_HRIS_Auto_Refresh.bat` still pulls `Update HRIS Dashboard.bat` fresh from
+`main` each run, so it automatically picks up the new pin. Not modified. Next
+run 28 Aug 08:45.
+
+### Separate pre-existing breakage — unchanged
+GitHub Actions SAASIT scrape (`generate_dashboard.py`) still fails
+`ISM_4001 session expired` — needs Kevin's Oxford SSO+MFA re-login via
+`Refresh Session.bat`. Not in scope for this session.
+
+### Exact next action / owner
+- **Kevin (optional):** on the next real mid-day export, just save it to
+  Downloads and confirm the dashboard updates within ~3–4 min (check
+  `%LOCALAPPDATA%\hris-downloads-watcher\watcher.log`). No action needed
+  otherwise.
+- **Nothing outstanding.** No live-site push pending. Watcher live, `.bat`
+  re-synced, docs updated.
+
+### Rollback
+- Tooling only. To undo: `git revert b769903 aa77b25 bd93285` (restores the
+  20 Aug pinned `.bat` + removes the watcher files from the repo), set
+  `"enabled": false` in the deployed config, delete the Startup `.vbs`,
+  `taskkill /PID <watcher.pid>`. `data/tickets.json` was never touched by this
+  work.
+
+---
+
+## One-line resume — 27 Aug 2026, ~10:30 BST
+
 
 **Kevin reported "Update HRIS Dashboard.bat is not working" and asked for the
 dashboard to be updated from `C:\Users\admin\Downloads\All Open Tasks by Team.xlsx`.
