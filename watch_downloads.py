@@ -17,10 +17,19 @@ Design / safety (see hris-dashboard RESUME.md, 27 Aug 2026 session):
     can never run an import at the same moment as that task. Files that
     appear during quiet hours are held and imported once the window ends.
 
-  * Dedupe. A state file records {name, size, sha256} of every file it
-    has already imported (last 30). It never imports the same bytes
-    twice and never double-fires on the morning "- auto" file even if
-    the exclusion above were removed.
+  * Newest-file-only. The ONLY file it ever imports is the newest
+    matching export by mtime -- exactly like
+    import_osm_report.find_report(). Kevin does NOT need to delete the
+    old file before downloading a fresh one: an un-deleted leftover
+    (bracketed "(1)"/"(2)" or plain, space or no space before the paren)
+    can never win over a newer file. Older files, once settled, are
+    recorded as "superseded" and never looked at again.
+
+  * Dedupe on content. The state file records {name, size, sha256} of
+    every file handled (last 30); a content hash already seen -- in any
+    state -- is never acted on again, whatever the browser named the
+    file. Also never double-fires on the morning "- auto" file even if
+    the name exclusion above were removed.
 
   * Settle detection. A file must be size-stable across `settle_polls`
     consecutive polls (default 2 => ~2 min) before it is eligible, so a
@@ -269,57 +278,98 @@ def run_import(script_path, xlsx_path):
 
 def scan_once(cfg, state, seen):
     """One polling pass. Mutates `state` and `seen` in place.
-    Returns list of (name, ok) for any imports actually run this pass."""
+    Returns list of (name, ok) for any imports actually run this pass.
+
+    NEWEST-FILE-ONLY: the ONLY file this ever imports is the newest matching
+    export by mtime -- exactly like import_osm_report.find_report(). Any older
+    matching file (an un-deleted leftover, bracketed or not) can never win; once
+    it has settled it is recorded as "superseded" and never looked at again.
+    Dedupe is on file content (sha256): the same export bytes are never imported
+    twice, whatever the browser named the file ("(1)", "(2)", space or no space).
+    """
     ran = []
-    done_keys = {(e["name"], e["size"], e["sha256"]) for e in state["imported"]}
+    # Any content hash we have already recorded, in any state (ok / seeded /
+    # superseded / failed) -- we never act on the same bytes twice. A genuinely
+    # fresh export always has a different hash.
+    done_hashes = {e["sha256"] for e in state["imported"]}
     live_paths = set()
 
-    for path, size, mtime in candidates(cfg):
+    cands = candidates(cfg)          # [(path, size, mtime), ...]  '- auto' already excluded
+    for path, size, mtime in cands:
         live_paths.add(path)
         prev = seen.get(path)
         if not prev or prev[0] != size or prev[1] != mtime:
-            seen[path] = [size, mtime, 0]
-            continue
-        prev[2] += 1  # unchanged this poll
-        if prev[2] < cfg["settle_polls"]:
-            continue
-
-        name = os.path.basename(path)
-        try:
-            digest = sha256_of(path)
-        except OSError as e:
-            log(f"could not hash {name} yet ({e}) -- will retry")
-            seen[path] = [size, mtime, 0]
-            continue
-
-        if (name, size, digest) in done_keys:
-            continue  # already imported these exact bytes
-
-        if in_quiet_hours(cfg):
-            log(f"{name} is ready but it is the morning auto-refresh window "
-                f"-- deferring until after {cfg['quiet_hours_weekday'][1]}")
-            seen[path][2] = cfg["settle_polls"]  # stay eligible, re-check next poll
-            continue
-
-        script = ensure_pinned_script(cfg)
-        if not script:
-            log(f"{name} ready but no runnable import script -- will retry next poll")
-            continue
-
-        ok = run_import(script, path)
-        state["imported"].append({
-            "name": name, "size": size, "mtime": mtime, "sha256": digest,
-            "status": "ok" if ok else "failed",
-            "imported_at": datetime.now().strftime("%Y-%m-%d %H:%M:%S"),
-        })
-        save_state(state, cfg["state_keep"])
-        done_keys.add((name, size, digest))
-        ran.append((name, ok))
-        if ok:
-            log("dashboard updated -- allow ~60-90s for GitHub Pages to rebuild")
+            seen[path] = [size, mtime, 0]        # new / still changing -> reset settle counter
+        else:
+            prev[2] += 1                         # size+mtime unchanged this poll
 
     for gone in [p for p in seen if p not in live_paths]:
         del seen[gone]
+
+    if not cands:
+        return ran
+
+    def _settled(p):
+        s = seen.get(p)
+        return bool(s) and s[2] >= cfg["settle_polls"]
+
+    newest_path = max(cands, key=lambda c: c[2])[0]
+
+    # Older-than-newest files: once settled, retire them without importing.
+    for path, size, mtime in cands:
+        if path == newest_path or not _settled(path):
+            continue
+        name = os.path.basename(path)
+        try:
+            digest = sha256_of(path)
+        except OSError:
+            continue
+        if digest in done_hashes:
+            continue
+        state["imported"].append({
+            "name": name, "size": size, "mtime": mtime, "sha256": digest,
+            "status": "superseded",
+            "imported_at": datetime.now().strftime("%Y-%m-%d %H:%M:%S"),
+        })
+        done_hashes.add(digest)
+        save_state(state, cfg["state_keep"])
+        log(f"ignoring older leftover (a newer export is present): {name}")
+
+    # The newest matching export: settle -> hash -> dedupe -> quiet-hours -> import.
+    npath, nsize, nmtime = next(c for c in cands if c[0] == newest_path)
+    name = os.path.basename(npath)
+    if not _settled(npath):
+        return ran                               # still downloading / just changed -- wait
+    try:
+        digest = sha256_of(npath)
+    except OSError as e:
+        log(f"could not hash {name} yet ({e}) -- will retry")
+        seen[npath] = [nsize, nmtime, 0]
+        return ran
+    if digest in done_hashes:
+        return ran                               # these exact bytes already handled
+
+    if in_quiet_hours(cfg):
+        log(f"{name} is ready but it is the morning auto-refresh window "
+            f"-- deferring until after {cfg['quiet_hours_weekday'][1]}")
+        seen[npath][2] = cfg["settle_polls"]     # stay eligible, re-check next poll
+        return ran
+
+    script = ensure_pinned_script(cfg)
+    if not script:
+        log(f"{name} ready but no runnable import script -- will retry next poll")
+        return ran
+
+    ok = run_import(script, npath)
+    state["imported"].append({
+        "name": name, "size": nsize, "mtime": nmtime, "sha256": digest,
+        "status": "ok" if ok else "failed",
+        "imported_at": datetime.now().strftime("%Y-%m-%d %H:%M:%S"),
+    })
+    save_state(state, cfg["state_keep"])
+    ran.append((name, ok))
+    if ok:
+        log("dashboard updated -- allow ~60-90s for GitHub Pages to rebuild")
     return ran
 
 # ── main loop ──────────────────────────────────────────────────────────────
