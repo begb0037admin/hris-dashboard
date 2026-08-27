@@ -13,7 +13,134 @@ scope by Kevin same day. Drew was not this repo's "usual" agent before
 
 ---
 
-## One-line resume (latest — 25 Aug 2026, afternoon)
+## One-line resume (latest — 27 Aug 2026, ~10:30 BST)
+
+**Kevin reported "Update HRIS Dashboard.bat is not working" and asked for the
+dashboard to be updated from `C:\Users\admin\Downloads\All Open Tasks by Team.xlsx`.
+Investigated live (Drew, via coordinator). Finding: the fresh export was ALREADY
+live before investigation started — no push was needed. No hard failure of the
+`.bat` could be reproduced; his own run succeeded. Real underlying issue is a
+stale Desktop copy of the `.bat` plus fragile file-selection logic. "Better way"
+proposal recorded below for Kevin's decision — nothing built yet.**
+
+### Data status — already current, verified, no push made
+- Live `data/tickets.json` on `main` = commit `7b50878` "OSM import — 2026-08-27 10:20",
+  author "kevin lelitte" (i.e. `import_osm_report.py`'s own GitHub PUT — Kevin's
+  manual `.bat` run at 10:19:58 BST today).
+- `report_file: All Open Tasks by Team.xlsx`; summary `total 44 / assigned 40 /
+  unassigned 4 / stale 6 / oldest 189`.
+- Independently re-parsed `C:\Users\admin\Downloads\All Open Tasks by Team.xlsx`
+  (mtime 27 Aug 10:16) with the live script's own functions in a **no-push
+  dry-run**: byte-identical to live `tickets.json` for every ticket (only the
+  `updated`/`updated_display` timestamps differ, which is expected — they are
+  `datetime.now()`).
+- GitHub Pages build for `7b50878`: `status: built`, 09:20 UTC. `index.html`
+  cache-busts its fetch (`fetch('data/tickets.json?t='+Date.now())`), so the
+  live site genuinely serves the 10:20 data now.
+- Rendered a real Playwright screenshot of the live dashboard (1440-wide, full
+  page) — header reads "Source: All Open Tasks by Team.xlsx — Thursday 27
+  August 2026 at 10:20", queue summary 44/40/4, analyst blocks James 3 / Asta
+  26 / Michael 9 / Simon 1 / Kevin 1 / Unassigned 4. Sent to coordinator.
+- Delta vs the 08:47 morning auto import (`- auto.xls`): +8 new task numbers,
+  −4 resolved, unassigned 8→4 (Asta 17→26). Plausible 2-hour movement; no
+  analyst appeared/vanished.
+
+### Root cause of "not working" — no reproducible hard failure
+- Ran the **exact** Desktop `.bat` mechanism (curl `main` → `pip install
+  openpyxl requests` → `python %TEMP%\import_osm_report.py`) with the push
+  disabled: curl OK (12797 bytes), pip OK, script found the new `.xlsx`,
+  parsed 44 tickets cleanly. It works on this machine right now.
+- The Desktop file `D:\OneDrive - lelitte.com\Desktop\Update HRIS Dashboard.bat`
+  is the **2 July 2026 version** (656 bytes, unpinned `main` pull, `pip install
+  openpyxl requests` with **no `xlrd`**). It is missing three later repo fixes
+  to `Update HRIS Dashboard.bat`: `d3e4c24` (dep auto-install hardening),
+  `a23f1dd` (add `xlrd`), `7b3014b` (pin download to SHA `e503509`, Kevin-approved
+  20 Aug). It works today only incidentally: `xlrd 2.0.2` is already installed
+  globally, and `main`'s `import_osm_report.py` still equals the pinned SHA
+  (`git diff e503509 origin/main -- import_osm_report.py` = empty).
+- Latent defects in that stale manual path: (a) `import_osm_report.py` does an
+  unconditional top-level `import xlrd` and hard-exits if it is absent — even
+  for `.xlsx`-only runs — and the Desktop `.bat` would not reinstall it;
+  (b) `find_report()` silently picks the **newest** file matching
+  `All Open Tasks by Team*.xlsx|xls` in Downloads, so a run started before the
+  manual export finishes downloading (or while Excel still locks it) imports
+  the 08:01 morning `- auto.xls` instead, or throws a lock error; (c) `pip
+  install` on every run — slow, network-dependent, noisy.
+- Most probable trigger for Kevin's experience (not confirmable after the fact —
+  a pre-push `.bat` failure leaves no git trace): first run before the fresh
+  `.xlsx` had finished downloading / while Excel held it open → wrong file or a
+  lock error → retry at 10:19 succeeded. Precedent: the 25 Aug "dashboard hasn't
+  updated" report was also not-a-bug (timing + Pages lag).
+
+### Morning auto path (Scheduled Task "HRIS Dashboard Morning Refresh")
+- **Not affected by the stale Desktop `.bat`.** `Run_HRIS_Auto_Refresh.bat`
+  (Desktop copy dated 22 Aug, matches repo) downloads `Update HRIS Dashboard.bat`
+  **fresh from GitHub `main`** every run, so it uses the good pinned repo copy,
+  not Kevin's Desktop file. Today path B succeeded on attempt 1: commits
+  `90a8039` + `3da82d4`, `data/last_automated_run.json` = `status: success`
+  08:47. Next scheduled run 28 Aug 08:45.
+- **Separate, pre-existing, still broken (NOT this issue):** the GitHub Actions
+  self-hosted-runner SAASIT scrape (`generate_dashboard.py`, `update-dashboard.yml`,
+  hourly cron) still fails `SAASIT session expired (ISM_4001)` — last diagnostic
+  run #159, 26 Aug 16:16 UTC. Needs Kevin's interactive Oxford SSO+MFA re-login
+  via `Refresh Session.bat`; no agent can do this. This also means the
+  dashboard's on-page "Refresh" button (Cloudflare Worker → `workflow_dispatch`
+  on that workflow) currently triggers a run that fails.
+
+### "Better way" proposal for the manual mid-day top-up — DECISION NEEDED FROM KEVIN
+All options keep GitHub-only writes, timestamped output, and leave the morning
+Scheduled Task untouched. All are git-revertable.
+
+- **Option 1 — re-sync + harden (do this regardless, ~1–2 h).** Copy the repo's
+  current `Update HRIS Dashboard.bat` to the Desktop. In `import_osm_report.py`:
+  make `import xlrd` lazy (only when a `.xls` is actually selected); detect
+  `.crdownload`/`PermissionError`/`BadZipFile` and print a clear "export still
+  downloading or open in Excel — close it and re-run" message with a short
+  retry; print the chosen filename + mtime prominently and refuse (with a
+  prompt) if the newest match is > ~20 min old; after push, print the Pages URL
+  and the ~60–90 s rebuild lag.
+- **Option 2 — drag-and-drop target (~2 h).** Desktop shortcut that passes the
+  dropped file path as an explicit arg to the script (new optional `argv[1]`),
+  bypassing `find_report()`'s newest-guessing entirely. Fast, removes the
+  wrong-file failure mode; still local Python + PAT.
+- **Option 3 — folder-watch, no click (RECOMMENDED, ~3–4 h).** A small always-on
+  watcher (poll `C:\Users\admin\Downloads` every ~60 s, launched from the
+  Startup folder — the same pattern already running live for
+  `ai-usage-dashboard`). On a settle-detected new/changed `All Open Tasks by
+  Team*.xlsx|xls` it runs the **same** `import_osm_report.py` and pushes.
+  Kevin's whole manual step becomes "just save the export to Downloads".
+  Dedupe by last-imported filename+mtime+SHA so it does not double-fire on the
+  morning `- auto.xls`. Reuses a proven pattern, one shared import script,
+  coexists cleanly with the Scheduled Task.
+- **Option 4 — browser upload via Cloudflare Worker (~1–2 d).** File input on the
+  dashboard → POST xlsx to a Worker that parses it (SheetJS) and commits
+  `tickets.json` with the server-held PAT. No local Python/PAT/machine needed;
+  works from any device. Higher complexity/risk; parsing logic forks from the
+  Python version unless deliberately shared.
+
+**Recommendation: Option 3, with Option 1's hardening folded in first** (cheap,
+de-risks every path). Option 2 is the fast fallback if Kevin wants to keep an
+explicit manual trigger. Option 4 only if he needs to update from a phone /
+non-work machine.
+
+### Exact next action / owner
+1. **Kevin (via coordinator):** pick a "better way" option (or approve Option 1
+   alone). Nothing to build until then.
+2. **No live-site push outstanding** — data is current. If a redundant re-import
+   is ever run it only bumps the "updated" timestamp text with zero data change;
+   not worth doing.
+3. If Kevin wants Option 1/2/3: Drew implements on a branch, screenshots any
+   dashboard-visible change for approval, merges to `main` immediately per this
+   repo's branch protocol.
+
+### Rollback / deploy status
+- No deploy made this session. Live `main` HEAD `7b50878` is Kevin's own good
+  data. Nothing to roll back.
+
+---
+
+## One-line resume — 25 Aug 2026, afternoon
+
 
 **Kevin asked for friendly, non-technical status messaging on the dashboard
 (mirroring a separate ask Markey is handling for Linda's chat error on
