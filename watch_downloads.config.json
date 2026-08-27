@@ -1,0 +1,13 @@
+{
+  "_comment": "Config for watch_downloads.py (HRIS Dashboard 'just save the export' watcher, Option 3, added 27 Aug 2026). Kill switch: set enabled=false and the watcher exits within one poll. script_sha MUST be bumped in lockstep with SCRIPT_SHA in 'Update HRIS Dashboard.bat' whenever import_osm_report.py changes on main -- see hris-dashboard RESUME.md 'MAINTENANCE' note.",
+  "enabled": true,
+  "script_sha": "",
+  "poll_seconds": 60,
+  "settle_polls": 2,
+  "downloads_dir": "C:\\Users\\admin\\Downloads",
+  "patterns": ["All Open Tasks by Team*.xlsx", "All Open Tasks by Team*.xls"],
+  "exclude_substrings": ["- auto", "~$", ".crdownload", ".tmp", ".part"],
+  "quiet_hours_weekday": ["08:40", "10:00"],
+  "state_keep": 30,
+  "ensure_deps": true
+}
