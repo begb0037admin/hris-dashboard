@@ -434,3 +434,34 @@ re-login (pre-existing, `ISM_4001`).
 **Next action:** none required. Optionally, Kevin saves his next real mid-day
 export to Downloads and confirms the dashboard updates within ~3-4 min
 (`watcher.log` shows the run).
+
+
+---
+
+## Session 2026-08-27 (~11:40 BST) -- bracketed browser filenames verified; watcher hardened to import only the newest matching export (Drew, via coordinator)
+
+Coordinator asked whether `All Open Tasks by Team (1).xlsx` / `(2)` / no-space
+`Team(1).xlsx` etc. break either import path (Kevin deletes the old file before
+each download specifically to avoid the browser's `(1)` suffix).
+
+**`import_osm_report.py` -- no change needed.** `(` `)` are not `glob`
+metacharacters. Verified: `glob` matches every `(N)` variant; `openpyxl` reads
+paren paths (44 tickets, byte-identical data); `OSM_IMPORT_FILE` / `--file` /
+bare-argv overrides accept paren paths; lock path is filename-independent;
+console output ASCII. `find_report()` already picks `max` by mtime, so a stale
+un-bracketed leftover never beats a fresh bracketed file.
+
+**`watch_downloads.py` -- weakness found and fixed** (`4387ba1` -> merge
+`caf92bf`). `scan_once()` imported every un-seeded settled file in one pass in
+non-deterministic `glob` order, so a leftover could win. Now: newest-file-by-
+mtime ONLY is imported; older settled files are recorded `superseded` and
+ignored forever; dedupe is content-hash only. `import_osm_report.py` unchanged,
+so no SHA-pin bump.
+
+7 new scenarios + the original regression set all pass (stubbed importer, temp
+dirs). Deployed: `watch_downloads.py` re-pulled to `%LOCALAPPDATA%`; watcher
+restarted (pid 34812 -> 38824, single instance, idle). Live `tickets.json`
+untouched.
+
+**Net effect:** Kevin can leave the old export in Downloads and just download
+the new one -- newest wins, brackets or not.
