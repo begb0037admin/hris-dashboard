@@ -13,7 +13,51 @@ scope by Kevin same day. Drew was not this repo's "usual" agent before
 
 ---
 
-## One-line resume (latest — 27 Aug 2026, ~11:00 BST)
+## One-line resume (latest — 27 Aug 2026, ~11:40 BST)
+
+**Follow-up to the ~11:00 build. Coordinator asked whether bracketed browser
+filenames (`All Open Tasks by Team (1).xlsx`, `(2)`, no-space `Team(1).xlsx`,
+etc.) break either path, so Kevin can stop deleting the old file before each
+download. Verified precisely.**
+
+- **Manual `.bat` / `import_osm_report.py`: no change needed.** `(` `)` are not
+  `glob` metacharacters; verified `glob` matches every `(N)` variant (space and
+  no-space), `openpyxl` reads paren paths (44 tickets, byte-identical data),
+  `OSM_IMPORT_FILE` / `--file` / bare-argv overrides all accept paren paths, the
+  advisory lock path is filename-independent, console output is ASCII.
+  `find_report()` already does `max(..., key=os.path.getmtime)` so the freshest
+  file wins — an old un-bracketed leftover is never picked over a fresh
+  bracketed one.
+- **Watcher: one real weakness found and fixed** ([`4387ba1`](https://github.com/begb0037admin/hris-dashboard/commit/4387ba1f79030da1e2631aab24fe16a89c98df6a) →
+  merge [`caf92bf`](https://github.com/begb0037admin/hris-dashboard/commit/caf92bfc197576acfae40aade9b74773d84ed218)).
+  `scan_once()` was importing *every* un-seeded matching file that settled in a
+  pass, in non-deterministic `glob` order — so an un-deleted leftover could be
+  the last import and overwrite a fresh bracketed download. Now **newest-file-by-
+  mtime only**: only the single newest matching export is ever imported (same
+  rule as `find_report()`); older matching files, once settled, are recorded
+  `"superseded"` and never re-examined. Dedupe changed to **content-hash only**,
+  so identical export bytes are never re-imported whatever the file was named.
+  `import_osm_report.py` unchanged ⇒ **no SHA-pin bump** (`SCRIPT_SHA` /
+  `script_sha` still `bd93285`).
+- **Tested (stubbed importer, temp dirs):** old plain leftover + fresh `(1)` →
+  only `(1)` imported, leftover superseded ✓; 5 mixed leftovers on a cold start
+  → only the newest imported, 4 retired ✓; `(3)`→`(4)` re-download → `(4)`
+  imported ✓; identical-bytes `(4)`→`(5)` → sha dedupe, skipped ✓; morning
+  `- auto` present *and newer* → still excluded, manual `(1)` wins ✓; quiet-hours
+  defer then import ✓; seed then fresh `(1)` → only `(1)` ✓. Original settle=2 /
+  changed-bytes-reimport / exclusion regression all still pass.
+- **Deployed:** `watch_downloads.py` re-pulled to `%LOCALAPPDATA%\hris-downloads-watcher\`;
+  running watcher restarted (old pid 34812 killed, now **pid 38824**, single
+  instance, idle, seeded file skipped). Live `tickets.json` unchanged
+  (Kevin's 10:20 commit). No dashboard-visible change.
+
+**Net effect for Kevin:** he can just download the fresh export and leave the
+old file in Downloads — both the `.bat` and the watcher take the newest, brackets
+or not. Deleting first still works fine; it's simply no longer required.
+
+---
+
+## One-line resume — 27 Aug 2026, ~11:00 BST
 
 **Kevin approved Option 1 (harden the import script + re-sync his Desktop
 `.bat`) AND Option 3 (Startup-folder Downloads watcher). Both built, tested,
