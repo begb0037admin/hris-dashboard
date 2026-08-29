@@ -1,18 +1,18 @@
 {
-  "updated": "2026-08-28T09:15:14",
-  "updated_display": "Friday 28 August 2026 at 09:15",
+  "updated": "2026-08-29T08:45:13",
+  "updated_display": "Saturday 29 August 2026 at 08:45",
   "report_file": "All Open Tasks by Team - auto.xls",
   "summary": {
-    "total": 25,
-    "assigned": 17,
-    "unassigned": 8,
-    "stale": 6,
-    "oldest_days": 190
+    "total": 39,
+    "assigned": 13,
+    "unassigned": 26,
+    "stale": 4,
+    "oldest_days": 191
   },
   "analysts": [
     {
       "name": "James Salas Guillen",
-      "ticket_count": 3,
+      "ticket_count": 2,
       "tickets": [
         {
           "task_num": "50929404",
@@ -22,18 +22,7 @@
           "analyst": "James Salas Guillen",
           "category": "Odyssey",
           "created": "18 Feb 2026",
-          "days": 190,
-          "team": "Health and Safety 2nd Line"
-        },
-        {
-          "task_num": "50973604",
-          "summary": "Odyssey",
-          "status": "Waiting",
-          "priority": "5",
-          "analyst": "James Salas Guillen",
-          "category": "Odyssey",
-          "created": "31 Jul 2026",
-          "days": 27,
+          "days": 191,
           "team": "Health and Safety 2nd Line"
         },
         {
@@ -44,7 +33,7 @@
           "analyst": "James Salas Guillen",
           "category": "Cority - Occupational Health Management Service",
           "created": "17 Aug 2026",
-          "days": 10,
+          "days": 11,
           "team": "Health and Safety 2nd Line"
         }
       ]
@@ -61,7 +50,7 @@
           "analyst": "Asta Palmer",
           "category": "Recruitment",
           "created": "17 Aug 2026",
-          "days": 10,
+          "days": 11,
           "team": "HRIS Analysis"
         },
         {
@@ -72,14 +61,14 @@
           "analyst": "Asta Palmer",
           "category": "",
           "created": "10 Aug 2026",
-          "days": 17,
+          "days": 18,
           "team": "HRIS Sys Admin"
         }
       ]
     },
     {
       "name": "Michael O'Sullivan",
-      "ticket_count": 10,
+      "ticket_count": 7,
       "tickets": [
         {
           "task_num": "50959922",
@@ -89,29 +78,7 @@
           "analyst": "Michael O'Sullivan",
           "category": "",
           "created": "12 Jun 2026",
-          "days": 76,
-          "team": "HRIS Analysis"
-        },
-        {
-          "task_num": "50968899",
-          "summary": "AG Case # 9080309 - Long service additional leave error",
-          "status": "Accepted",
-          "priority": "5",
-          "analyst": "Michael O'Sullivan",
-          "category": "Time and Attendance",
-          "created": "14 Jul 2026",
-          "days": 44,
-          "team": "HRIS Analysis"
-        },
-        {
-          "task_num": "50969185",
-          "summary": "AG Case - Long service not calculating properly from manual override",
-          "status": "Accepted",
-          "priority": "5",
-          "analyst": "Michael O'Sullivan",
-          "category": "Time and Attendance",
-          "created": "15 Jul 2026",
-          "days": 43,
+          "days": 77,
           "team": "HRIS Analysis"
         },
         {
@@ -122,7 +89,7 @@
           "analyst": "Michael O'Sullivan",
           "category": "",
           "created": "05 Aug 2026",
-          "days": 22,
+          "days": 23,
           "team": "HRIS Analysis"
         },
         {
@@ -133,7 +100,7 @@
           "analyst": "Michael O'Sullivan",
           "category": "",
           "created": "05 Aug 2026",
-          "days": 22,
+          "days": 23,
           "team": "HRIS Analysis"
         },
         {
@@ -144,7 +111,7 @@
           "analyst": "Michael O'Sullivan",
           "category": "Interfaces",
           "created": "11 Aug 2026",
-          "days": 16,
+          "days": 17,
           "team": "HRIS Analysis"
         },
         {
@@ -155,7 +122,7 @@
           "analyst": "Michael O'Sullivan",
           "category": "Time and Attendance",
           "created": "24 Aug 2026",
-          "days": 3,
+          "days": 4,
           "team": "HRIS Analysis"
         },
         {
@@ -166,7 +133,7 @@
           "analyst": "Michael O'Sullivan",
           "category": "Payroll",
           "created": "25 Aug 2026",
-          "days": 2,
+          "days": 3,
           "team": "HRIS Analysis"
         },
         {
@@ -177,18 +144,7 @@
           "analyst": "Michael O'Sullivan",
           "category": "",
           "created": "27 Aug 2026",
-          "days": 0,
-          "team": "HRIS Analysis"
-        },
-        {
-          "task_num": "50980831",
-          "summary": "Anna Francis (2394962) error message when appointing",
-          "status": "Accepted",
-          "priority": "5",
-          "analyst": "Michael O'Sullivan",
-          "category": "People Management",
-          "created": "27 Aug 2026",
-          "days": 0,
+          "days": 1,
           "team": "HRIS Analysis"
         }
       ]
@@ -205,7 +161,7 @@
           "analyst": "Simon Burford",
           "category": "Recruitment",
           "created": "23 Apr 2026",
-          "days": 126,
+          "days": 127,
           "team": "HRIS Analysis"
         }
       ]
@@ -222,7 +178,7 @@
           "analyst": "Kevin Lelitte",
           "category": "Roster (WFM)",
           "created": "29 Jun 2026",
-          "days": 59,
+          "days": 60,
           "team": "HRIS Analysis"
         }
       ]
@@ -237,7 +193,7 @@
       "analyst": "",
       "category": "",
       "created": "27 Aug 2026",
-      "days": 0,
+      "days": 1,
       "team": "Health and Safety 2nd Line"
     },
     {
@@ -248,7 +204,7 @@
       "analyst": "",
       "category": "",
       "created": "27 Aug 2026",
-      "days": 0,
+      "days": 1,
       "team": "Health and Safety 2nd Line"
     },
     {
@@ -259,7 +215,7 @@
       "analyst": "",
       "category": "IRIS - Health and Safety Incident Reporting and Investigatio",
       "created": "27 Aug 2026",
-      "days": 0,
+      "days": 1,
       "team": "Health and Safety 2nd Line"
     },
     {
@@ -270,28 +226,17 @@
       "analyst": "",
       "category": "HR Reporting",
       "created": "27 Aug 2026",
-      "days": 0,
+      "days": 1,
       "team": "HRIS Service Desk"
     },
     {
-      "task_num": "50980885",
-      "summary": "Manager Self Service Request Issues - Grant Ritchie",
+      "task_num": "50981154",
+      "summary": "RE: Logged: Support Call# 11706571 - HRIS Call Logged – Pending Review",
       "status": "Logged",
-      "priority": "3",
+      "priority": "5",
       "analyst": "",
-      "category": "",
-      "created": "27 Aug 2026",
-      "days": 0,
-      "team": "HRIS Service Desk"
-    },
-    {
-      "task_num": "50980920",
-      "summary": "Manager Self Service Request Issues - Laura Tweedale",
-      "status": "Logged",
-      "priority": "3",
-      "analyst": "",
-      "category": "",
-      "created": "27 Aug 2026",
+      "category": "HR Self-Service",
+      "created": "28 Aug 2026",
       "days": 0,
       "team": "HRIS Service Desk"
     },
@@ -303,7 +248,7 @@
       "analyst": "",
       "category": "",
       "created": "27 Aug 2026",
-      "days": 0,
+      "days": 1,
       "team": "HRIS Sys Admin"
     },
     {
@@ -314,6 +259,215 @@
       "analyst": "",
       "category": "",
       "created": "27 Aug 2026",
+      "days": 1,
+      "team": "HRIS Sys Admin"
+    },
+    {
+      "task_num": "50981075",
+      "summary": "Manager Self Service Change - Laura Tweedale",
+      "status": "Logged",
+      "priority": "3",
+      "analyst": "",
+      "category": "",
+      "created": "28 Aug 2026",
+      "days": 0,
+      "team": "HRIS Sys Admin"
+    },
+    {
+      "task_num": "50981089",
+      "summary": "Manager Self Service Change - Alexandra Vincent",
+      "status": "Logged",
+      "priority": "3",
+      "analyst": "",
+      "category": "",
+      "created": "28 Aug 2026",
+      "days": 0,
+      "team": "HRIS Sys Admin"
+    },
+    {
+      "task_num": "50981091",
+      "summary": "Manager Self Service Change - Erin Gordon",
+      "status": "Logged",
+      "priority": "3",
+      "analyst": "",
+      "category": "",
+      "created": "28 Aug 2026",
+      "days": 0,
+      "team": "HRIS Sys Admin"
+    },
+    {
+      "task_num": "50981092",
+      "summary": "Manager Self Service Add - David Willis",
+      "status": "Logged",
+      "priority": "3",
+      "analyst": "",
+      "category": "",
+      "created": "28 Aug 2026",
+      "days": 0,
+      "team": "HRIS Sys Admin"
+    },
+    {
+      "task_num": "50981132",
+      "summary": "Add Shift Type - Kristina Limbu",
+      "status": "Logged",
+      "priority": "3",
+      "analyst": "",
+      "category": "",
+      "created": "28 Aug 2026",
+      "days": 0,
+      "team": "HRIS Sys Admin"
+    },
+    {
+      "task_num": "50981144",
+      "summary": "Create Work Group - Victoria Skipper",
+      "status": "Logged",
+      "priority": "3",
+      "analyst": "",
+      "category": "",
+      "created": "28 Aug 2026",
+      "days": 0,
+      "team": "HRIS Sys Admin"
+    },
+    {
+      "task_num": "50981155",
+      "summary": "Create Work Group - David Maldonado-Perez",
+      "status": "Logged",
+      "priority": "3",
+      "analyst": "",
+      "category": "",
+      "created": "28 Aug 2026",
+      "days": 0,
+      "team": "HRIS Sys Admin"
+    },
+    {
+      "task_num": "50981157",
+      "summary": "Create Work Group - Renuka Teague",
+      "status": "Logged",
+      "priority": "3",
+      "analyst": "",
+      "category": "",
+      "created": "28 Aug 2026",
+      "days": 0,
+      "team": "HRIS Sys Admin"
+    },
+    {
+      "task_num": "50981158",
+      "summary": "Create Work Group - Laura Bell",
+      "status": "Logged",
+      "priority": "3",
+      "analyst": "",
+      "category": "",
+      "created": "28 Aug 2026",
+      "days": 0,
+      "team": "HRIS Sys Admin"
+    },
+    {
+      "task_num": "50981204",
+      "summary": "Add Shift Type - Vida Wong",
+      "status": "Logged",
+      "priority": "3",
+      "analyst": "",
+      "category": "",
+      "created": "28 Aug 2026",
+      "days": 0,
+      "team": "HRIS Sys Admin"
+    },
+    {
+      "task_num": "50981213",
+      "summary": "Add Shift Type - Rebecca Fitzek",
+      "status": "Logged",
+      "priority": "3",
+      "analyst": "",
+      "category": "",
+      "created": "28 Aug 2026",
+      "days": 0,
+      "team": "HRIS Sys Admin"
+    },
+    {
+      "task_num": "50981225",
+      "summary": "Add Shift Type - Rebecca Fitzek",
+      "status": "Logged",
+      "priority": "3",
+      "analyst": "",
+      "category": "",
+      "created": "28 Aug 2026",
+      "days": 0,
+      "team": "HRIS Sys Admin"
+    },
+    {
+      "task_num": "50981239",
+      "summary": "ESS - Jennah Amin (2414266) quee4848",
+      "status": "Logged",
+      "priority": "5",
+      "analyst": "",
+      "category": "HR Self-Service",
+      "created": "28 Aug 2026",
+      "days": 0,
+      "team": "HRIS Sys Admin"
+    },
+    {
+      "task_num": "50981240",
+      "summary": "ESS - Benjamin Fischer (2420674) exet6670",
+      "status": "Logged",
+      "priority": "5",
+      "analyst": "",
+      "category": "HR Self-Service",
+      "created": "28 Aug 2026",
+      "days": 0,
+      "team": "HRIS Sys Admin"
+    },
+    {
+      "task_num": "50981267",
+      "summary": "Manager Self Service Remove - Michael Weymouth",
+      "status": "Logged",
+      "priority": "3",
+      "analyst": "",
+      "category": "",
+      "created": "28 Aug 2026",
+      "days": 0,
+      "team": "HRIS Sys Admin"
+    },
+    {
+      "task_num": "50981268",
+      "summary": "Manager Self Service Add - Neil French",
+      "status": "Logged",
+      "priority": "3",
+      "analyst": "",
+      "category": "",
+      "created": "28 Aug 2026",
+      "days": 0,
+      "team": "HRIS Sys Admin"
+    },
+    {
+      "task_num": "50981276",
+      "summary": "Create Work Group - Andreu Casas",
+      "status": "Logged",
+      "priority": "3",
+      "analyst": "",
+      "category": "",
+      "created": "28 Aug 2026",
+      "days": 0,
+      "team": "HRIS Sys Admin"
+    },
+    {
+      "task_num": "50981286",
+      "summary": "Manager Self Service Add - Andreu Casas",
+      "status": "Logged",
+      "priority": "3",
+      "analyst": "",
+      "category": "",
+      "created": "28 Aug 2026",
+      "days": 0,
+      "team": "HRIS Sys Admin"
+    },
+    {
+      "task_num": "50981346",
+      "summary": "Manager Self Service Add - Xiao Zhou",
+      "status": "Logged",
+      "priority": "3",
+      "analyst": "",
+      "category": "",
+      "created": "28 Aug 2026",
       "days": 0,
       "team": "HRIS Sys Admin"
     }
