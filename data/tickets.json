@@ -1,13 +1,13 @@
 {
-  "updated": "2026-08-31T08:45:13",
-  "updated_display": "Monday 31 August 2026 at 08:45",
+  "updated": "2026-09-01T08:45:13",
+  "updated_display": "Tuesday 01 September 2026 at 08:45",
   "report_file": "All Open Tasks by Team - auto.xls",
   "summary": {
-    "total": 39,
+    "total": 40,
     "assigned": 13,
-    "unassigned": 26,
+    "unassigned": 27,
     "stale": 4,
-    "oldest_days": 193
+    "oldest_days": 194
   },
   "analysts": [
     {
@@ -22,7 +22,7 @@
           "analyst": "James Salas Guillen",
           "category": "Odyssey",
           "created": "18 Feb 2026",
-          "days": 193,
+          "days": 194,
           "team": "Health and Safety 2nd Line"
         },
         {
@@ -33,7 +33,7 @@
           "analyst": "James Salas Guillen",
           "category": "Cority - Occupational Health Management Service",
           "created": "17 Aug 2026",
-          "days": 13,
+          "days": 14,
           "team": "Health and Safety 2nd Line"
         }
       ]
@@ -50,7 +50,7 @@
           "analyst": "Asta Palmer",
           "category": "Recruitment",
           "created": "17 Aug 2026",
-          "days": 13,
+          "days": 14,
           "team": "HRIS Analysis"
         },
         {
@@ -61,7 +61,7 @@
           "analyst": "Asta Palmer",
           "category": "",
           "created": "10 Aug 2026",
-          "days": 20,
+          "days": 21,
           "team": "HRIS Sys Admin"
         }
       ]
@@ -78,7 +78,7 @@
           "analyst": "Michael O'Sullivan",
           "category": "",
           "created": "12 Jun 2026",
-          "days": 79,
+          "days": 80,
           "team": "HRIS Analysis"
         },
         {
@@ -89,7 +89,7 @@
           "analyst": "Michael O'Sullivan",
           "category": "",
           "created": "05 Aug 2026",
-          "days": 25,
+          "days": 26,
           "team": "HRIS Analysis"
         },
         {
@@ -100,7 +100,7 @@
           "analyst": "Michael O'Sullivan",
           "category": "",
           "created": "05 Aug 2026",
-          "days": 25,
+          "days": 26,
           "team": "HRIS Analysis"
         },
         {
@@ -111,7 +111,7 @@
           "analyst": "Michael O'Sullivan",
           "category": "Interfaces",
           "created": "11 Aug 2026",
-          "days": 19,
+          "days": 20,
           "team": "HRIS Analysis"
         },
         {
@@ -122,7 +122,7 @@
           "analyst": "Michael O'Sullivan",
           "category": "Time and Attendance",
           "created": "24 Aug 2026",
-          "days": 6,
+          "days": 7,
           "team": "HRIS Analysis"
         },
         {
@@ -133,7 +133,7 @@
           "analyst": "Michael O'Sullivan",
           "category": "Payroll",
           "created": "25 Aug 2026",
-          "days": 5,
+          "days": 6,
           "team": "HRIS Analysis"
         },
         {
@@ -144,7 +144,7 @@
           "analyst": "Michael O'Sullivan",
           "category": "",
           "created": "27 Aug 2026",
-          "days": 3,
+          "days": 4,
           "team": "HRIS Analysis"
         }
       ]
@@ -161,7 +161,7 @@
           "analyst": "Simon Burford",
           "category": "Recruitment",
           "created": "23 Apr 2026",
-          "days": 129,
+          "days": 130,
           "team": "HRIS Analysis"
         }
       ]
@@ -178,7 +178,7 @@
           "analyst": "Kevin Lelitte",
           "category": "Roster (WFM)",
           "created": "29 Jun 2026",
-          "days": 62,
+          "days": 63,
           "team": "HRIS Analysis"
         }
       ]
@@ -193,7 +193,7 @@
       "analyst": "",
       "category": "",
       "created": "27 Aug 2026",
-      "days": 3,
+      "days": 4,
       "team": "Health and Safety 2nd Line"
     },
     {
@@ -204,7 +204,7 @@
       "analyst": "",
       "category": "",
       "created": "27 Aug 2026",
-      "days": 3,
+      "days": 4,
       "team": "Health and Safety 2nd Line"
     },
     {
@@ -215,7 +215,7 @@
       "analyst": "",
       "category": "IRIS - Health and Safety Incident Reporting and Investigatio",
       "created": "27 Aug 2026",
-      "days": 3,
+      "days": 4,
       "team": "Health and Safety 2nd Line"
     },
     {
@@ -226,7 +226,7 @@
       "analyst": "",
       "category": "HR Reporting",
       "created": "27 Aug 2026",
-      "days": 3,
+      "days": 4,
       "team": "HRIS Service Desk"
     },
     {
@@ -237,7 +237,7 @@
       "analyst": "",
       "category": "HR Self-Service",
       "created": "28 Aug 2026",
-      "days": 2,
+      "days": 3,
       "team": "HRIS Service Desk"
     },
     {
@@ -248,7 +248,7 @@
       "analyst": "",
       "category": "",
       "created": "27 Aug 2026",
-      "days": 3,
+      "days": 4,
       "team": "HRIS Sys Admin"
     },
     {
@@ -259,7 +259,7 @@
       "analyst": "",
       "category": "",
       "created": "27 Aug 2026",
-      "days": 3,
+      "days": 4,
       "team": "HRIS Sys Admin"
     },
     {
@@ -270,7 +270,7 @@
       "analyst": "",
       "category": "",
       "created": "28 Aug 2026",
-      "days": 2,
+      "days": 3,
       "team": "HRIS Sys Admin"
     },
     {
@@ -281,7 +281,7 @@
       "analyst": "",
       "category": "",
       "created": "28 Aug 2026",
-      "days": 2,
+      "days": 3,
       "team": "HRIS Sys Admin"
     },
     {
@@ -292,7 +292,7 @@
       "analyst": "",
       "category": "",
       "created": "28 Aug 2026",
-      "days": 2,
+      "days": 3,
       "team": "HRIS Sys Admin"
     },
     {
@@ -303,7 +303,7 @@
       "analyst": "",
       "category": "",
       "created": "28 Aug 2026",
-      "days": 2,
+      "days": 3,
       "team": "HRIS Sys Admin"
     },
     {
@@ -314,7 +314,7 @@
       "analyst": "",
       "category": "",
       "created": "28 Aug 2026",
-      "days": 2,
+      "days": 3,
       "team": "HRIS Sys Admin"
     },
     {
@@ -325,7 +325,7 @@
       "analyst": "",
       "category": "",
       "created": "28 Aug 2026",
-      "days": 2,
+      "days": 3,
       "team": "HRIS Sys Admin"
     },
     {
@@ -336,7 +336,7 @@
       "analyst": "",
       "category": "",
       "created": "28 Aug 2026",
-      "days": 2,
+      "days": 3,
       "team": "HRIS Sys Admin"
     },
     {
@@ -347,7 +347,7 @@
       "analyst": "",
       "category": "",
       "created": "28 Aug 2026",
-      "days": 2,
+      "days": 3,
       "team": "HRIS Sys Admin"
     },
     {
@@ -358,7 +358,7 @@
       "analyst": "",
       "category": "",
       "created": "28 Aug 2026",
-      "days": 2,
+      "days": 3,
       "team": "HRIS Sys Admin"
     },
     {
@@ -369,7 +369,7 @@
       "analyst": "",
       "category": "",
       "created": "28 Aug 2026",
-      "days": 2,
+      "days": 3,
       "team": "HRIS Sys Admin"
     },
     {
@@ -380,7 +380,7 @@
       "analyst": "",
       "category": "",
       "created": "28 Aug 2026",
-      "days": 2,
+      "days": 3,
       "team": "HRIS Sys Admin"
     },
     {
@@ -391,7 +391,7 @@
       "analyst": "",
       "category": "",
       "created": "28 Aug 2026",
-      "days": 2,
+      "days": 3,
       "team": "HRIS Sys Admin"
     },
     {
@@ -402,7 +402,7 @@
       "analyst": "",
       "category": "HR Self-Service",
       "created": "28 Aug 2026",
-      "days": 2,
+      "days": 3,
       "team": "HRIS Sys Admin"
     },
     {
@@ -413,7 +413,7 @@
       "analyst": "",
       "category": "HR Self-Service",
       "created": "28 Aug 2026",
-      "days": 2,
+      "days": 3,
       "team": "HRIS Sys Admin"
     },
     {
@@ -424,7 +424,7 @@
       "analyst": "",
       "category": "",
       "created": "28 Aug 2026",
-      "days": 2,
+      "days": 3,
       "team": "HRIS Sys Admin"
     },
     {
@@ -435,7 +435,7 @@
       "analyst": "",
       "category": "",
       "created": "28 Aug 2026",
-      "days": 2,
+      "days": 3,
       "team": "HRIS Sys Admin"
     },
     {
@@ -446,7 +446,7 @@
       "analyst": "",
       "category": "",
       "created": "28 Aug 2026",
-      "days": 2,
+      "days": 3,
       "team": "HRIS Sys Admin"
     },
     {
@@ -457,7 +457,7 @@
       "analyst": "",
       "category": "",
       "created": "28 Aug 2026",
-      "days": 2,
+      "days": 3,
       "team": "HRIS Sys Admin"
     },
     {
@@ -468,7 +468,18 @@
       "analyst": "",
       "category": "",
       "created": "28 Aug 2026",
-      "days": 2,
+      "days": 3,
+      "team": "HRIS Sys Admin"
+    },
+    {
+      "task_num": "50981387",
+      "summary": "Manager Self Service Add - Lisa Shelton",
+      "status": "Logged",
+      "priority": "3",
+      "analyst": "",
+      "category": "",
+      "created": "01 Sep 2026",
+      "days": 0,
       "team": "HRIS Sys Admin"
     }
   ]
