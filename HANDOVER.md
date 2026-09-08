@@ -1,7 +1,7 @@
 # HANDOVER.md — hris-dashboard
 
-Last updated: 8 September 2026
-Status: Live and working. 27 Aug: (1) manual `.bat` "not working" report investigated — fresh export was already live (7b50878), no bug reproduced. (2) Kevin approved Option 1 + Option 3: `import_osm_report.py` hardened (lazy xlrd, locked-file retry, explicit-file override, advisory lock, push race-retry; schema unchanged), Desktop `.bat` re-synced, and a Startup-folder Downloads watcher built + deployed + LIVE (pinned to bd93285). Morning Scheduled Task untouched. GitHub Actions SAASIT scrape still needs Kevin's SSO re-login (pre-existing).
+Last updated: 8 September 2026 (later — migration decision)
+Status: Live and working. **8 Sep:** (1) classic-Outlook rule-filing race root-caused + same-day fix shipped (`ed1ad73` — `fetch_osm_report.py` now falls back to the top-level Inbox when the `Inbox/Reports/OSM` rule lags). (2) **DECISION: migrate the morning OSM fetch off classic Outlook COM onto IMAP on the Oxford laptop, reusing work-inbox's token cache, pushing straight to GitHub — NOT built yet, later session. See `MIGRATION-IMAP.md`.** Desktop keeps `Update HRIS Dashboard.bat` + Downloads watcher as manual fallback. 27 Aug: (1) manual `.bat` "not working" report investigated — fresh export was already live (7b50878), no bug reproduced. (2) Kevin approved Option 1 + Option 3: `import_osm_report.py` hardened (lazy xlrd, locked-file retry, explicit-file override, advisory lock, push race-retry; schema unchanged), Desktop `.bat` re-synced, and a Startup-folder Downloads watcher built + deployed + LIVE (pinned to bd93285). Morning Scheduled Task untouched. GitHub Actions SAASIT scrape still needs Kevin's SSO re-login (pre-existing).
 
 ---
 
@@ -546,3 +546,56 @@ to this session's fix, not touched.
 Full diagnostic trail (including the two earlier, individually-correct-at-
 the-time "newest is 07/09" reads that Kevin's screenshot rightly challenged):
 `begb0037admin/drew/memory/hris-dashboard-morning-banner-semantics.md`.
+
+
+## Session 2026-09-08 (~10:00-10:45 BST) -- DECISION: migrate morning OSM fetch to laptop IMAP (option c). No build this session. (Drew, via coordinator)
+
+Follows straight on from the ~09:35 fix entry above. Kevin's pushback drove a
+real investigation of moving hris-dashboard's OSM report fetch off classic
+Outlook COM, the way work-inbox/command-centre already did for mail.
+
+**What was actually verified live this session (not assumed):**
+- The ChatGPT/Codex `codex_apps` connector on this desktop DOES expose a full
+  `microsoft_outlook_email.*` namespace (46 tools incl. `search_messages`,
+  `list_messages`, `list_attachments`, `fetch_attachment`). Ran it read-only
+  against `kevin.lelitte@admin.ox.ac.uk`: found today's real SAASIT email,
+  `list_attachments` returned the real `.xls` metadata, `fetch_attachment`
+  materialised it to a short-TTL presigned Azure-blob URL, and a plain `curl`
+  of that URL returned **32704 bytes, sha256 byte-identical** to the file
+  classic-Outlook COM had fetched earlier the same morning. So the connector
+  path genuinely works end to end -- my earlier "no attachment access"
+  assertion was wrong and is retracted.
+- BUT connector tool-loading in headless `codex exec` is flaky per call --
+  ~8 attempts over ~10 minutes before the tools loaded in a session (matches
+  work-inbox's documented "availability FLIPS run-to-run").
+- `DESKTOP-MJDJM64` (`dsregcmd /status`): `AzureAdJoined NO`, `DomainJoined NO`,
+  `AzureAdPrt NO`, only `WorkplaceJoined` to `lelitte.com` -- confirms it is the
+  "no-PRT admin desktop" from work-inbox's migration record. Fresh IMAP OAuth
+  here would need a full Oxford user+pwd+MFA on every periodic re-auth.
+- Oxford laptop `101l-de013193` (live over SSH): AC + DC standby/hibernate both
+  `0` (never), wake-history count 0, uptime since 3 Sep (5 days), on AC at 100%,
+  and three work-inbox scheduled tasks (Bridge Briefing 07:00, Draft Diff 07:30,
+  Parity Shadow 07:00) all `Ready` and firing every weekday. It is demonstrably
+  reliable in the morning window -- currently more so than the desktop.
+- work-inbox's IMAP token cache: `%LOCALAPPDATA%\WorkInboxAI\msal_imap_token_cache.bin`
+  on the laptop, Thunderbird public client id `9e5f94bc-...`, scope
+  `https://outlook.office365.com/IMAP.AccessAsUser.All`, same mailbox
+  hris-dashboard targets. PRT-backed re-auth = one browser click, ~22s.
+- Laptop `GITHUB_PAT` (User scope) EXISTS but reads length 16 -- too short for a
+  real GitHub PAT; scope/validity must be confirmed or replaced at build time.
+
+**Decision (Kevin): option (c).** Port to `fetch_osm_report_imap.py` on the
+laptop, reuse work-inbox's token cache, push `data/tickets.json` +
+`data/last_automated_run.json` straight to GitHub via the Contents API. No file
+copy / share / runner needed -- hris-dashboard already publishes via a GitHub
+push -> Pages, nothing on the desktop computes or hosts the dashboard. Desktop
+keeps `Update HRIS Dashboard.bat` + `watch_downloads.py` unchanged as manual
+fallback. Full comparison + rationale + build plan: **`MIGRATION-IMAP.md`**
+(new this session).
+
+**NOT started.** No code, no scheduled-task change, no `codex login`, no token
+priming. Build is a later session, on Kevin's explicit go-ahead only.
+
+**Next action:** future build session works `MIGRATION-IMAP.md`'s "Open items
+to resolve at build time" list -- see RESUME.md's latest "EXACT NEXT ACTION"
+block, and the kickoff prompt the coordinator holds.
