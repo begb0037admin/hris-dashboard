@@ -1,10 +1,10 @@
 {
-  "updated": "2026-09-08T07:40:51",
-  "updated_display": "Tuesday 08 September 2026 at 07:40",
-  "report_file": "All Open Tasks by Team.xlsx",
+  "updated": "2026-09-08T09:31:43",
+  "updated_display": "Tuesday 08 September 2026 at 09:31",
+  "report_file": "All Open Tasks by Team - auto.xls",
   "summary": {
-    "total": 20,
-    "assigned": 17,
+    "total": 21,
+    "assigned": 18,
     "unassigned": 3,
     "stale": 6,
     "oldest_days": 201
@@ -79,7 +79,7 @@
     },
     {
       "name": "Michael O'Sullivan",
-      "ticket_count": 9,
+      "ticket_count": 10,
       "tickets": [
         {
           "task_num": "50959922",
@@ -179,6 +179,17 @@
           "created": "04 Sep 2026",
           "days": 3,
           "team": "HRIS Analysis"
+        },
+        {
+          "task_num": "50983183",
+          "summary": "Request to remove 'Submitted' leave requests for Chemistry 2",
+          "status": "Accepted",
+          "priority": "5",
+          "analyst": "Michael O'Sullivan",
+          "category": "Time and Attendance",
+          "created": "07 Sep 2026",
+          "days": 0,
+          "team": "HRIS Analysis"
         }
       ]
     },
@@ -230,15 +241,15 @@
   ],
   "unassigned": [
     {
-      "task_num": "50983183",
-      "summary": "Request to remove 'Submitted' leave requests for Chemistry 2",
+      "task_num": "50983415",
+      "summary": "Unable to access reports in people XD",
       "status": "Logged",
       "priority": "5",
       "analyst": "",
-      "category": "Time and Attendance",
+      "category": "HR Reporting",
       "created": "07 Sep 2026",
       "days": 0,
-      "team": "HRIS Analysis"
+      "team": "HRIS Service Desk"
     },
     {
       "task_num": "50983560",
