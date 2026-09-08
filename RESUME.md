@@ -13,7 +13,78 @@ scope by Kevin same day. Drew was not this repo's "usual" agent before
 
 ---
 
-## One-line resume (latest — 8 Sep 2026, ~09:35 BST)
+## One-line resume (latest — 8 Sep 2026, ~10:45 BST)
+
+**DECISION MADE (Kevin): migrate the morning OSM report fetch OFF classic
+Outlook COM ONTO IMAP, running on the Oxford laptop (`101l-de013193` /
+`AD-OAK\begb0037`), reusing work-inbox's already-proven IMAP token cache,
+pushing `data/tickets.json` straight to GitHub. NOT built yet — scheduled
+for a later session.** See `MIGRATION-IMAP.md` (new this session) for the
+full 3-option comparison, why option (c) won, the target chain, and the
+open build-time items.
+
+Why: today's incident (below) is a *classic-Outlook-COM-specific* failure —
+`fetch_osm_report.py` uses `Dispatch("Outlook.Application")`, and it depends
+on a client-side Outlook rule that only runs while classic Outlook is open.
+The same-day fix (`ed1ad73`, Inbox/Reports/OSM + top-level-Inbox fallback)
+is a band-aid; it does not remove the classic-Outlook dependency. work-inbox
+and command-centre already moved their mail path to IMAP + OAuth2 (stdlib,
+zero win32com) on the Oxford laptop; hris-dashboard's OSM fetch is the last
+classic-Outlook-COM dependency in Kevin's estate.
+
+**Options weighed (full detail in `MIGRATION-IMAP.md`):**
+- (a) ChatGPT/Codex `microsoft_outlook_email.*` connector from the desktop —
+  **verified live to work end to end this session** (search → list_attachments
+  → fetch_attachment → download; byte-identical sha256 to the COM-fetched
+  file). Rejected as primary: per-call connector-tool-loading is flaky
+  (~8 attempts / 10 min before tools loaded), needs retry/backoff, widens the
+  connector trust model (needs Kevin's sign-off), shares Kevin's personal
+  ChatGPT quota.
+- (b) IMAP from the desktop with a fresh Oxford auth — rejected: `DESKTOP-MJDJM64`
+  has NO Oxford AAD/PRT (`dsregcmd`: AzureAdJoined/DomainJoined/AzureAdPrt all
+  NO; only Workplace-Joined to `lelitte.com`), so periodic re-auth would need a
+  full Oxford user+pwd+MFA each time, not a silent SSO click. Most setup, worst
+  machine for it.
+- **(c) IMAP from the laptop, reuse work-inbox's token cache, push to GitHub —
+  CHOSEN.** Zero new credentials (same mailbox, same `IMAP.AccessAsUser.All`
+  scope, PRT-backed one-click re-auth), zero per-call flakiness, zero bridging
+  mechanism (hris-dashboard already publishes via a GitHub Contents API push
+  → Pages, not via anything on the desktop). Laptop confirmed hardened for the
+  morning window: AC+DC standby/hibernate = never, wake-history 0, 5-day
+  uptime, on AC, and 3 work-inbox tasks already fire reliably at 07:00-07:30
+  every weekday.
+
+**Desktop keeps** `Update HRIS Dashboard.bat` + the Startup Downloads watcher
+(`watch_downloads.py`) as the unchanged manual fallback. Nothing about the
+desktop path is removed by this migration.
+
+### EXACT NEXT ACTION (future build session — do NOT start without Kevin's go)
+Read `MIGRATION-IMAP.md` end to end first, then work its "Open items to
+resolve at build time" list in order:
+1. Confirm/replace the laptop's `GITHUB_PAT` (a User-scope var exists,
+   **length 16 — too short for a real GitHub PAT**, scope/validity unknown) —
+   it needs `contents:write` on `begb0037admin/hris-dashboard`.
+2. Confirm the laptop lid-close power action (couldn't be read cleanly over
+   SSH this session) — must be "Do nothing" on AC or the 08:45 run can miss.
+3. Build `fetch_osm_report_imap.py` reusing `imap_mail.py`'s auth pattern
+   (`msal` silent token off `%LOCALAPPDATA%\WorkInboxAI\msal_imap_token_cache.bin`);
+   **search the top-level INBOX by sender+subject+date via IMAP SEARCH — drop
+   the `Inbox/Reports/OSM` subfolder dependency entirely** (that removes the
+   rule-filing race at the root, not just patches it).
+4. Register a laptop scheduled task (mirror `Run_HRIS_Auto_Refresh.bat`'s
+   08:45/09:15/09:45 shape + retry-guard) that runs fetch → `import_osm_report.py`
+   → GitHub push, all on the laptop.
+5. Parallel dry-run period: run the laptop IMAP fetch alongside the live
+   desktop COM path (log-only, no push, or push to a scratch path) for several
+   scheduled cycles; diff the resulting `tickets.json` against the COM path's.
+   Only cut over on Kevin's fresh explicit go-ahead + a clean diff run.
+6. At cutover: disable the desktop `Run_HRIS_Auto_Refresh.bat` scheduled task
+   (keep the `.bat` file + watcher for manual use), enable the laptop task.
+   Screenshot the dashboard after the first real laptop-driven run for Kevin.
+
+---
+
+## 8 Sep 2026, ~09:35 BST — today's incident + same-day fix (superseded as "latest" by the migration decision above, kept for the record)
 
 **Root cause found and fixed for "dashboard shows failure banner even though
 today's SAASIT email genuinely exists."** Not a stale/cached read — the
