@@ -1,10 +1,10 @@
 {
-  "timestamp": "2026-09-08T09:19:46",
-  "timestamp_display": "Tuesday 08 September 2026 at 09:19",
+  "timestamp": "2026-09-08T09:31:52",
+  "timestamp_display": "Tuesday 08 September 2026 at 09:31",
   "status": "success",
-  "step": "manual_override_data_already_fresh",
-  "detail": "Data already live from the 07:40 manual/watcher import (20 tickets, today). SAASIT report email had not arrived, so the automated email path could not run today. Status set to success manually per Kevin to clear the stale refresh banner and stop retry toasts.",
+  "step": "dashboard_update_ok",
+  "detail": "Fixed fetch_osm_report.py (Inbox/Reports/OSM + top-level Inbox fallback, commit ed1ad73) found and imported today's real 08:00 SAASIT report attachment. 21 tickets, source: All Open Tasks by Team - auto.xls.",
   "trigger": "automated",
-  "attempt": 2,
+  "attempt": 3,
   "max_attempts": 3
 }
