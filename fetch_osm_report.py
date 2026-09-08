@@ -4,8 +4,12 @@ Team" report attachment from Outlook, for the HRIS dashboard's morning
 auto-refresh.
 
 WHAT THIS DOES (and does NOT do):
-  - Connects to Outlook via COM, looks in the specific mail-rule-filtered
-    folder Inbox > Reports > OSM for today's report email from
+  - Connects to Outlook via COM, looks first in the mail-rule-filtered
+    folder Inbox > Reports > OSM, then falls back to the top-level Inbox
+    (added 2026-09-08 — the client-side rule that files the report into
+    Reports/OSM only runs while classic Outlook is open, and can lag past
+    this script's own morning run, leaving today's report sitting unfiled
+    in the top-level Inbox), for today's report email from
     reports-prd-ldz@saasiteu.com, subject "Report: All Open Tasks by Team".
   - Saves its .xls/.xlsx attachment into the Downloads folder, using the
     SAME filename pattern import_osm_report.py already looks for
@@ -125,49 +129,70 @@ def find_osm_folder(inbox):
     return folder
 
 
-def find_todays_report(folder):
-    """Returns the MailItem for today's OSM report, or None if not found.
+def _received_local_ymd(msg):
+    """(year, month, day) an item was received, in LOCAL time.
 
-    Also returns diagnostic info about the most recent matching-sender
-    email (regardless of date) so a failure message can say *why* — e.g.
-    "the sender matched but it's from yesterday" vs "no email from this
-    sender at all" are very different failure modes worth distinguishing.
+    msg.ReceivedTime comes back from COM as a timezone-aware value
+    (observed live: UTC, e.g. '...+00:00'). The old code took .year/.month/
+    .day straight off that UTC value and compared it to a local date, which
+    is only safe well away from midnight. Convert to local time first so a
+    report that lands near a day boundary is still bucketed onto the right
+    calendar day around the BST/UTC offset.
+    """
+    rt = msg.ReceivedTime
+    try:
+        if getattr(rt, "tzinfo", None) is not None:
+            rt = rt.astimezone()  # -> machine local time
+    except Exception:
+        pass
+    return rt.year, rt.month, rt.day
+
+
+def scan_folder_for_today(folder, today, label):
+    """Scan the newest items of `folder` for today's OSM report.
+
+    Returns (todays_msg_or_None, most_recent_from_sender_or_None). The
+    second value is diagnostic — the most recent matching-sender email in
+    this folder regardless of date — so a failure can say *why* ("sender
+    matched but it's from yesterday" vs "no email from this sender at all").
+
+    Unlike the old find_todays_report, this does NOT give up at the first
+    sender+subject match that isn't dated today. A stray item sorting above
+    today's (clock skew, a message re-filed with an odd ReceivedTime, sort
+    not applied) must not make a report that IS present look absent. Scans
+    up to 60 of the newest items.
     """
     items = folder.Items
-    items.Sort("[ReceivedTime]", True)  # descending — newest first
+    try:
+        items.Sort("[ReceivedTime]", True)  # descending — newest first
+    except pywintypes.com_error as e:
+        log(f"  ({label}: could not sort by ReceivedTime ({e}) — scanning in natural order)")
 
-    today = datetime.now().date()
     most_recent_from_sender = None
-
     checked = 0
-    for msg in items:
+    msg = items.GetFirst()
+    while msg is not None:
         checked += 1
-        if checked > 30:
-            # The folder holds ~50 historical reports; today's (if present)
-            # will always be at/near the top given descending sort. 30 is
-            # generous headroom, not a tight fit.
+        if checked > 60:
             break
+        current, msg = msg, items.GetNext()
         try:
-            if getattr(msg, "Class", None) != 43:  # olMail only
+            if getattr(current, "Class", None) != 43:  # olMail only
                 continue
-            sender = (getattr(msg, "SenderEmailAddress", "") or "").strip().lower()
-            subject = (getattr(msg, "Subject", "") or "").strip()
+            sender = (getattr(current, "SenderEmailAddress", "") or "").strip().lower()
             if sender != OSM_SENDER_EMAIL.lower():
                 continue
             if most_recent_from_sender is None:
-                most_recent_from_sender = msg
+                most_recent_from_sender = current
+            subject = (getattr(current, "Subject", "") or "").strip()
             if subject != OSM_SUBJECT:
-                log(f"  (skipping — sender matched but subject was {subject!r}, expected {OSM_SUBJECT!r})")
+                log(f"  ({label}: sender matched but subject was {subject!r}, expected {OSM_SUBJECT!r} — skipping)")
                 continue
-            received = msg.ReceivedTime
-            received_date = datetime(received.year, received.month, received.day).date()
-            if received_date == today:
-                return msg, most_recent_from_sender
-            else:
-                log(f"  (most recent matching email is from {received_date}, not today {today})")
-                return None, most_recent_from_sender
+            y, m, d = _received_local_ymd(current)
+            if (y, m, d) == (today.year, today.month, today.day):
+                return current, most_recent_from_sender
         except Exception as e:
-            log(f"  (error reading an item while scanning: {e})")
+            log(f"  ({label}: error reading an item while scanning: {e})")
             continue
 
     return None, most_recent_from_sender
@@ -238,9 +263,27 @@ def main():
         log(f"DRY RUN mode: saving to {target_dir} instead of {DOWNLOADS_DIR}")
 
     outlook, mapi, inbox = connect_to_outlook()
-    osm_folder = find_osm_folder(inbox)
+    today = datetime.now().date()
 
-    msg, most_recent_from_sender = find_todays_report(osm_folder)
+    # Primary location: the mail-rule-filtered folder Inbox/Reports/OSM.
+    osm_folder = find_osm_folder(inbox)
+    msg, most_recent_from_sender = scan_folder_for_today(osm_folder, today, "Inbox/Reports/OSM")
+    checked_locations = "Inbox/Reports/OSM"
+
+    # Fallback: the client-side rule that files the report out of the
+    # top-level Inbox into Reports/OSM only runs while classic Outlook is
+    # open, and can lag well past this script's morning run — confirmed
+    # live 2026-09-08, when today's 08:00 report sat unfiled in the
+    # top-level Inbox past the 09:15 retry. If it isn't in the subfolder
+    # yet, check the top-level Inbox itself before giving up.
+    if msg is None:
+        log("Today's report not found in Inbox/Reports/OSM yet — checking the top-level Inbox in case the mail rule hasn't filed it yet...")
+        inbox_msg, inbox_most_recent = scan_folder_for_today(inbox, today, "Inbox")
+        checked_locations = "Inbox/Reports/OSM and the top-level Inbox"
+        if inbox_msg is not None:
+            msg = inbox_msg
+        if most_recent_from_sender is None:
+            most_recent_from_sender = inbox_most_recent
 
     if msg is None:
         if most_recent_from_sender is not None:
@@ -253,7 +296,8 @@ def main():
                 pass
             sys.exit(
                 f"ERROR: No email from {OSM_SENDER_EMAIL} with subject "
-                f"{OSM_SUBJECT!r} received TODAY ({datetime.now().date()}). "
+                f"{OSM_SUBJECT!r} received TODAY ({today}). "
+                f"Checked {checked_locations}. "
                 f"The dashboard was NOT refreshed automatically this morning. "
                 f"If the report is just running late, re-run this script once "
                 f"it arrives, or run the manual Update HRIS Dashboard.bat path."
@@ -261,9 +305,9 @@ def main():
         else:
             sys.exit(
                 f"ERROR: No email at all from {OSM_SENDER_EMAIL} found in "
-                f"Inbox/Reports/OSM (checked the 30 most recent items). "
+                f"{checked_locations} (checked the 60 most recent items in each). "
                 f"Sender address may have changed, or the mail rule filing "
-                f"mail into this folder may have stopped working — check "
+                f"mail into Reports/OSM may have stopped working — check "
                 f"Outlook directly."
             )
 
