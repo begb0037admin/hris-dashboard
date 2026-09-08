@@ -1,13 +1,13 @@
 {
-  "updated": "2026-09-06T09:45:13",
-  "updated_display": "Sunday 06 September 2026 at 09:45",
-  "report_file": "All Open Tasks by Team - auto.xls",
+  "updated": "2026-09-08T07:39:02",
+  "updated_display": "Tuesday 08 September 2026 at 07:39",
+  "report_file": "All Open Tasks by Team.xlsx",
   "summary": {
-    "total": 28,
-    "assigned": 24,
-    "unassigned": 4,
+    "total": 20,
+    "assigned": 17,
+    "unassigned": 3,
     "stale": 6,
-    "oldest_days": 199
+    "oldest_days": 201
   },
   "analysts": [
     {
@@ -22,7 +22,7 @@
           "analyst": "James Salas Guillen",
           "category": "Odyssey",
           "created": "18 Feb 2026",
-          "days": 199,
+          "days": 201,
           "team": "Health and Safety 2nd Line"
         },
         {
@@ -33,7 +33,7 @@
           "analyst": "James Salas Guillen",
           "category": "",
           "created": "27 Aug 2026",
-          "days": 9,
+          "days": 11,
           "team": "Health and Safety 2nd Line"
         },
         {
@@ -44,7 +44,7 @@
           "analyst": "James Salas Guillen",
           "category": "",
           "created": "27 Aug 2026",
-          "days": 9,
+          "days": 11,
           "team": "Health and Safety 2nd Line"
         },
         {
@@ -55,14 +55,14 @@
           "analyst": "James Salas Guillen",
           "category": "Odyssey",
           "created": "03 Sep 2026",
-          "days": 2,
+          "days": 4,
           "team": "Health and Safety 2nd Line"
         }
       ]
     },
     {
       "name": "Asta Palmer",
-      "ticket_count": 7,
+      "ticket_count": 1,
       "tickets": [
         {
           "task_num": "50977943",
@@ -72,74 +72,8 @@
           "analyst": "Asta Palmer",
           "category": "Recruitment",
           "created": "17 Aug 2026",
-          "days": 19,
+          "days": 21,
           "team": "HRIS Analysis"
-        },
-        {
-          "task_num": "50982957",
-          "summary": "Add Shift Type - Rona Sutherland",
-          "status": "Accepted",
-          "priority": "3",
-          "analyst": "Asta Palmer",
-          "category": "",
-          "created": "04 Sep 2026",
-          "days": 1,
-          "team": "HRIS Sys Admin"
-        },
-        {
-          "task_num": "50982975",
-          "summary": "Add Shift Type - Katie Sillence",
-          "status": "Accepted",
-          "priority": "3",
-          "analyst": "Asta Palmer",
-          "category": "",
-          "created": "04 Sep 2026",
-          "days": 1,
-          "team": "HRIS Sys Admin"
-        },
-        {
-          "task_num": "50982994",
-          "summary": "Add Shift Type - Kim Edwards",
-          "status": "Accepted",
-          "priority": "3",
-          "analyst": "Asta Palmer",
-          "category": "",
-          "created": "04 Sep 2026",
-          "days": 1,
-          "team": "HRIS Sys Admin"
-        },
-        {
-          "task_num": "50983013",
-          "summary": "Add Shift Type - Keely Fathers",
-          "status": "Accepted",
-          "priority": "3",
-          "analyst": "Asta Palmer",
-          "category": "",
-          "created": "04 Sep 2026",
-          "days": 1,
-          "team": "HRIS Sys Admin"
-        },
-        {
-          "task_num": "50983018",
-          "summary": "Manager Self Service Change - Charlotte Prentice",
-          "status": "Accepted",
-          "priority": "3",
-          "analyst": "Asta Palmer",
-          "category": "",
-          "created": "04 Sep 2026",
-          "days": 1,
-          "team": "HRIS Sys Admin"
-        },
-        {
-          "task_num": "50983030",
-          "summary": "HR User Change Access - Christian Panzer",
-          "status": "Accepted",
-          "priority": "5",
-          "analyst": "Asta Palmer",
-          "category": "",
-          "created": "04 Sep 2026",
-          "days": 1,
-          "team": "HRIS Sys Admin"
         }
       ]
     },
@@ -155,7 +89,7 @@
           "analyst": "Michael O'Sullivan",
           "category": "",
           "created": "12 Jun 2026",
-          "days": 85,
+          "days": 87,
           "team": "HRIS Analysis"
         },
         {
@@ -166,7 +100,7 @@
           "analyst": "Michael O'Sullivan",
           "category": "",
           "created": "05 Aug 2026",
-          "days": 31,
+          "days": 33,
           "team": "HRIS Analysis"
         },
         {
@@ -177,7 +111,7 @@
           "analyst": "Michael O'Sullivan",
           "category": "",
           "created": "05 Aug 2026",
-          "days": 31,
+          "days": 33,
           "team": "HRIS Analysis"
         },
         {
@@ -188,7 +122,7 @@
           "analyst": "Michael O'Sullivan",
           "category": "Interfaces",
           "created": "11 Aug 2026",
-          "days": 25,
+          "days": 27,
           "team": "HRIS Analysis"
         },
         {
@@ -199,7 +133,7 @@
           "analyst": "Michael O'Sullivan",
           "category": "Time and Attendance",
           "created": "24 Aug 2026",
-          "days": 12,
+          "days": 14,
           "team": "HRIS Analysis"
         },
         {
@@ -210,7 +144,7 @@
           "analyst": "Michael O'Sullivan",
           "category": "Payroll",
           "created": "25 Aug 2026",
-          "days": 11,
+          "days": 13,
           "team": "HRIS Analysis"
         },
         {
@@ -221,7 +155,7 @@
           "analyst": "Michael O'Sullivan",
           "category": "Time and Attendance",
           "created": "03 Sep 2026",
-          "days": 2,
+          "days": 4,
           "team": "HRIS Analysis"
         },
         {
@@ -232,7 +166,7 @@
           "analyst": "Michael O'Sullivan",
           "category": "Time and Attendance",
           "created": "03 Sep 2026",
-          "days": 2,
+          "days": 4,
           "team": "HRIS Analysis"
         },
         {
@@ -243,7 +177,7 @@
           "analyst": "Michael O'Sullivan",
           "category": "",
           "created": "04 Sep 2026",
-          "days": 1,
+          "days": 3,
           "team": "HRIS Analysis"
         }
       ]
@@ -260,7 +194,7 @@
           "analyst": "Simon Burford",
           "category": "Recruitment",
           "created": "23 Apr 2026",
-          "days": 135,
+          "days": 137,
           "team": "HRIS Analysis"
         }
       ]
@@ -277,7 +211,7 @@
           "analyst": "Kevin Lelitte",
           "category": "Roster (WFM)",
           "created": "29 Jun 2026",
-          "days": 68,
+          "days": 70,
           "team": "HRIS Analysis"
         },
         {
@@ -288,72 +222,44 @@
           "analyst": "Kevin Lelitte",
           "category": "HR Reporting",
           "created": "01 Sep 2026",
-          "days": 4,
+          "days": 6,
           "team": "HRIS Analysis"
-        }
-      ]
-    },
-    {
-      "name": "Christopher Sanders",
-      "ticket_count": 1,
-      "tickets": [
-        {
-          "task_num": "50983094",
-          "summary": "RE: DSO update request",
-          "status": "Assigned",
-          "priority": "5",
-          "analyst": "Christopher Sanders",
-          "category": "IRIS - Health and Safety Incident Reporting and Investigatio",
-          "created": "04 Sep 2026",
-          "days": 1,
-          "team": "Health and Safety 2nd Line"
         }
       ]
     }
   ],
   "unassigned": [
     {
-      "task_num": "50980666",
-      "summary": "IRIS - Incident merge request",
+      "task_num": "50983183",
+      "summary": "Request to remove 'Submitted' leave requests for Chemistry 2",
       "status": "Logged",
       "priority": "5",
       "analyst": "",
-      "category": "IRIS - Health and Safety Incident Reporting and Investigatio",
-      "created": "27 Aug 2026",
-      "days": 9,
-      "team": "Health and Safety 2nd Line"
+      "category": "Time and Attendance",
+      "created": "07 Sep 2026",
+      "days": 0,
+      "team": "HRIS Analysis"
     },
     {
-      "task_num": "50983025",
-      "summary": "HR Reporting Email - Melanie Furniss",
-      "status": "Logged",
-      "priority": "5",
-      "analyst": "",
-      "category": "",
-      "created": "04 Sep 2026",
-      "days": 1,
-      "team": "HRIS Service Desk"
-    },
-    {
-      "task_num": "50983078",
-      "summary": "Add Shift Type - Rachel Kowalski",
+      "task_num": "50983560",
+      "summary": "Manager Self Service Change - Oluwatobi Odubayo",
       "status": "Logged",
       "priority": "3",
       "analyst": "",
       "category": "",
-      "created": "04 Sep 2026",
-      "days": 1,
+      "created": "07 Sep 2026",
+      "days": 0,
       "team": "HRIS Sys Admin"
     },
     {
-      "task_num": "50983082",
-      "summary": "Add Shift Type - Kristina Limbu",
+      "task_num": "50983567",
+      "summary": "Manager Self Service Add - Kate Wood",
       "status": "Logged",
       "priority": "3",
       "analyst": "",
       "category": "",
-      "created": "04 Sep 2026",
-      "days": 1,
+      "created": "07 Sep 2026",
+      "days": 0,
       "team": "HRIS Sys Admin"
     }
   ]
