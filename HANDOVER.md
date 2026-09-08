@@ -1,6 +1,6 @@
 # HANDOVER.md — hris-dashboard
 
-Last updated: 27 August 2026
+Last updated: 8 September 2026
 Status: Live and working. 27 Aug: (1) manual `.bat` "not working" report investigated — fresh export was already live (7b50878), no bug reproduced. (2) Kevin approved Option 1 + Option 3: `import_osm_report.py` hardened (lazy xlrd, locked-file retry, explicit-file override, advisory lock, push race-retry; schema unchanged), Desktop `.bat` re-synced, and a Startup-folder Downloads watcher built + deployed + LIVE (pinned to bd93285). Morning Scheduled Task untouched. GitHub Actions SAASIT scrape still needs Kevin's SSO re-login (pre-existing).
 
 ---
@@ -465,3 +465,84 @@ untouched.
 
 **Net effect:** Kevin can leave the old export in Downloads and just download
 the new one -- newest wins, brackets or not.
+
+
+## Session 2026-09-08 (~09:20-09:35 BST) -- root cause found for the morning-refresh failure banner: classic-vs-new-Outlook mail-rule lag; fetch_osm_report.py fixed (Drew, via coordinator)
+
+Kevin saw the dashboard's "Automatic refresh didn't complete this morning"
+state (banner/toasts) and, separately, had a screenshot proving today's
+08:00 SAASIT email genuinely existed -- directly contradicting the
+automation's own "no email today" reads. Both were momentarily true: the
+email existed in the mailbox, but had not yet been filed into the folder
+`fetch_osm_report.py` looks in.
+
+**Root cause (confirmed by direct COM enumeration, not inferred):** the
+Outlook rule that files `reports-prd-ldz@saasiteu.com`'s daily report out of
+the top-level Inbox into `Inbox/Reports/OSM` only runs while **classic**
+Outlook (`OUTLOOK.EXE`) is open. This morning only new Outlook (`olk.exe`,
+started 07:43) was running; classic was not. So the rule had not filed
+today's 08:00 email by the 08:45 or 09:15 scheduled runs -- confirmed live:
+`Inbox/Reports/OSM`'s newest item was still 2026-09-07 at both times and at
+a ~09:17 manual re-check, while the email sat unfiled in the top-level
+Inbox throughout. Somewhere between ~09:17 and ~09:28 the rule ran (most
+likely `fetch_osm_report.py`'s own `Dispatch("Outlook.Application")` spawns
+a hidden classic-Outlook instance each run, which processes queued rules on
+startup) and filed it correctly.
+
+**Fix:** [`ed1ad73`](https://github.com/begb0037admin/hris-dashboard/commit/ed1ad73d3f778c998d7161b27710b2709b734d20)
+to `fetch_osm_report.py` on `main`:
+- New `scan_folder_for_today(folder, today, label)` replaces
+  `find_todays_report(folder)`. Checks `Inbox/Reports/OSM` first; if not
+  found there, **falls back to the top-level Inbox** before concluding
+  today's report is genuinely missing.
+- Removed an early-bail bug: the old code returned `None` immediately on
+  the *first* sender+subject match that wasn't dated today, trusting
+  `Items.Sort` completely. Now scans up to 60 of the newest items before
+  concluding absence -- a stray out-of-order item can no longer hide a real
+  match further down.
+- `ReceivedTime` (observed live: timezone-aware, UTC) is now converted to
+  local time (`.astimezone()`) before the date comparison. The old code
+  compared UTC y/m/d straight against a local `datetime.now().date()` --
+  not today's actual failure mode (today's email was hours from midnight),
+  but a real latent risk raised explicitly by the coordinator and worth
+  closing while in this function.
+- Not a redesign: same sender/subject/attachment matching, same exit codes,
+  same loud-failure behaviour, same contract with `Run_HRIS_Auto_Refresh.bat`.
+  `fetch_osm_report.py` is not SHA-pinned anywhere (only `import_osm_report.py`
+  is) -- the bat pulls it fresh from `main` every run, so this fix is live
+  immediately, no pin to bump.
+- Verified via `--dry-run` against the live mailbox both before and after
+  the edit -- both runs found and saved today's real attachment cleanly,
+  exit 0.
+
+**Full corrected refresh performed**, from the genuine emailed source (not
+the earlier 07:38 manual/watcher import that had been covering for it):
+fixed `fetch_osm_report.py` (real run) saved
+`All Open Tasks by Team - auto.xls` (32704 bytes, today's real 08:00
+attachment) -> pinned `import_osm_report.py` (`bd93285`) imported it
+non-interactively -> **21 tickets** -> `data/tickets.json` pushed -> pushed
+`data/last_automated_run.json` `status=success step=dashboard_update_ok
+attempt=3/3`. (One earlier `status=success` push at 09:19, before the real
+root cause was understood, used a manual-override step
+`manual_override_data_already_fresh` to clear the banner off the 07:38
+data while the email was still being chased down -- superseded by the
+09:31 genuine success push above.) Live dashboard confirmed via headless
+screenshot: green "Last automated refresh: ... 09:31 -- up to date", source
+line "All Open Tasks by Team - auto.xls".
+
+**Scheduled Task "HRIS Dashboard Morning Refresh":** the 09:45 retry
+trigger (Trigger[2]) was disabled briefly mid-session as an interim
+guard against a repeat failure toast while the real fix was still being
+found, then **re-enabled** once the genuine fix + genuine success status
+were confirmed live. All three triggers (08:45/09:15/09:45) are back to
+normal for tomorrow.
+
+**Not touched / still true:** the separate, long-dead GitHub Actions SAASIT
+Playwright scrape (`generate_dashboard.py` / the dashboard "Refresh" button)
+-- `ISM_4001 session expired`, `session.json` last modified 11 June 2026 --
+still needs Kevin's Oxford SSO re-login via `Refresh Session.bat`. Unrelated
+to this session's fix, not touched.
+
+Full diagnostic trail (including the two earlier, individually-correct-at-
+the-time "newest is 07/09" reads that Kevin's screenshot rightly challenged):
+`begb0037admin/drew/memory/hris-dashboard-morning-banner-semantics.md`.
