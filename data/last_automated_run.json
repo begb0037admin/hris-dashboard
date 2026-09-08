@@ -1,9 +1,9 @@
 {
-  "timestamp": "2026-09-08T09:15:08",
-  "timestamp_display": "Tuesday 08 September 2026 at 09:15",
-  "status": "failure",
-  "step": "fetch_failed",
-  "detail": "fetch_osm_report.py exited 1 - see osm_auto_refresh_last_run.log",
+  "timestamp": "2026-09-08T09:19:46",
+  "timestamp_display": "Tuesday 08 September 2026 at 09:19",
+  "status": "success",
+  "step": "manual_override_data_already_fresh",
+  "detail": "Data already live from the 07:40 manual/watcher import (20 tickets, today). SAASIT report email had not arrived, so the automated email path could not run today. Status set to success manually per Kevin to clear the stale refresh banner and stop retry toasts.",
   "trigger": "automated",
   "attempt": 2,
   "max_attempts": 3
