@@ -1,6 +1,6 @@
 {
-  "timestamp": "2026-09-08T07:39:49",
-  "timestamp_display": "Tuesday 08 September 2026 at 07:39",
+  "timestamp": "2026-09-08T08:45:05",
+  "timestamp_display": "Tuesday 08 September 2026 at 08:45",
   "status": "failure",
   "step": "fetch_failed",
   "detail": "fetch_osm_report.py exited 1 - see osm_auto_refresh_last_run.log",
