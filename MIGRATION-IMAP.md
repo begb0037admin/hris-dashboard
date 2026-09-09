@@ -1,28 +1,103 @@
 # MIGRATION-IMAP.md — hris-dashboard OSM report fetch: classic Outlook COM → Codex M365 connector
 
-**Status: DECISION REVISED 9 Sep 2026 (Kevin). NOT BUILT.** The 8 Sep decision
-below chose option (c), IMAP — superseded same week by Kevin's standing
-architecture decision that the **Codex M365 connector is the standard for all
-Microsoft 365 access going forward, and no new COM or IMAP paths are to be
-built** (see `agent-commons/operating-model/CODEX_M365_CONNECTOR_METHOD.md`
-and `AGENT_DIRECTORY.md`'s "Shared rules"). Building a new IMAP integration
-here would create something needing migration again almost immediately.
+**Status: LIVE. Built, verified, and cut over 9 Sep 2026 (Drew).** The
+classic-Outlook-COM path (`fetch_osm_report.py`, run from the desktop) is
+retired from the automated morning refresh. `fetch_osm_report_connector.py`
+(Microsoft Outlook Email app connector, personal-account CODEX_HOME, same
+verb-based re-contamination guard pattern as work-inbox's `lane_b_call1.py`)
+now runs on the Oxford laptop (`101L-DE013193`, `AD-OAK\begb0037`), scheduled
+task `HRIS Dashboard Morning Refresh (connector)`, triggers 08:45/09:15/09:45
+Mon–Fri. The desktop's own `HRIS Dashboard Morning Refresh` scheduled task is
+**disabled** (not deleted — the `.bat`/COM script and its Task Scheduler
+entry both still exist, one `Enable-ScheduledTask` away from being a manual
+rollback if ever needed). `Update HRIS Dashboard.bat` (Kevin's manual
+"run now") and the Startup Downloads watcher are **untouched**, exactly as
+planned — the desktop manual fallback path is fully intact.
 
-**Target is now option (a) below (the connector), not option (c).** Section 2's
-evaluation of (a) already found it fully verified end-to-end on 8 Sep
-(sha256-byte-identical attachment fetch) — the reasons it was originally kept
-as fallback rather than primary (flaky per-call tool loading, quota, needing
-its own risk acceptance) are the same class of tradeoff already accepted for
-work-inbox's own mail-connector cutover (see work-inbox `HANDOVER.md` section Q,
-Kevin's explicit fresh risk acceptance, 9 Sep 2026) — this is the same mailbox,
-same identity class, same accepted risk, not a fresh one to re-litigate.
-Section 3's IMAP-specific target chain and section 4's IMAP-specific open items
-need re-drafting around the connector approach at build time — this is
-engineering work for the owning session, not pre-designed here.
+## What actually happened, 9 Sep 2026 (read this before the older sections below — they are the design history, this is the outcome)
 
-**Owning agent:** Drew (`begb0037admin/drew`).
+Built `fetch_osm_report_connector.py` (hris-dashboard root) and
+`Run HRIS OSM Connector Fetch (laptop).ps1` (the scheduled-task wrapper),
+both reusing work-inbox's `lane_b_call1.py` connector primitives directly
+(imported via `sys.path`, not duplicated — see that script's own docstring
+for exactly what's imported vs. locally re-implemented and why). Verified
+live, for real, against the real mailbox, same day:
 
----
+1. **Guard self-test** (`--selftest-guard`, pure-function, no codex) passed
+   on both the desktop and the laptop clone.
+2. **Live connector fetch, first real attempt, succeeded on the first try**
+   (no retries needed): `search_messages` found today's real OSM report
+   email, `list_attachments` listed the real `.xls`, `fetch_attachment`
+   materialised a presigned download URL, plain `requests.get()` downloaded
+   40896 real bytes. No guard trip (no unexpected/off-scope/write tool call
+   observed).
+3. **Content-integrity verification:** the downloaded file parsed cleanly via
+   `import_osm_report.py`'s own `parse_report()`/`group_tickets()` — 39 real
+   tickets across 5 named analysts + unassigned, sane distribution, no
+   anomalies.
+4. **Honest gap, disclosed not hidden:** this was NOT a same-day
+   byte-identical diff against the COM path, because the COM path
+   (`fetch_osm_report.py`, desktop) genuinely **failed all 3 scheduled
+   attempts that same morning** (`data/last_automated_run.json` recorded
+   `status: failure, step: fetch_failed`, exhausted 3/3 attempts by 09:45) —
+   there was no COM-fetched file for today to diff against. Verification
+   instead rests on: (a) the already-documented 8 Sep 2026 proof that this
+   exact three-step connector chain produces a sha256-byte-identical file to
+   the COM path (see section 2(a) below, unretracted), plus (b) today's live
+   content-integrity check (item 3 above) proving the connector path's
+   output is genuinely correct data, not merely "a file downloaded without
+   erroring."
+5. **Used to fix a real live incident, not just tested in isolation:** since
+   today's COM path had genuinely failed and the dashboard was showing a
+   stale "failure" banner, the connector-fetched file was pushed for real —
+   `import_osm_report.py` → `data/tickets.json` (39 tickets, SHA
+   `1f5bd8ac5c911a13026ff67bcb9c62dc120f132c`) → `push_automation_status.py
+   --status success`. Live dashboard screenshot confirmed: green
+   "Last automated refresh: Wednesday 09 September 2026 at 18:27 — up to
+   date", source line "All Open Tasks by Team - auto.xls".
+   `C:\Users\admin\Documents\Meetings\hris_dashboard_connector_cutover_9sept.png`
+6. **Cutover performed same session**, per Kevin's advance go-ahead ("you have
+   Kevin's go-ahead for the cutover step itself once verification passes"):
+   scheduled task `HRIS Dashboard Morning Refresh (connector)` registered on
+   the laptop (triggers 08:45/09:15/09:45 Mon–Fri, `InteractiveToken` logon
+   matching work-inbox's own proven task shape — see the registration
+   gotcha below), desktop's `HRIS Dashboard Morning Refresh` task disabled.
+7. **First real unattended morning run (08:45 tomorrow) has not happened
+   yet at the time of writing** — today's proof was a manually-triggered
+   live run, not yet a genuine unattended scheduled firing. That is the
+   next thing to check, not a re-build.
+
+### Real registration gotcha found this session (useful for any future cross-account scheduled-task work)
+
+Registering an `Interactive`-logon scheduled task for a DIFFERENT Windows
+account than the one creating it, via `schtasks /create ... /ru begb0037
+/it` (no stored password), silently creates a task that **never actually
+fires** — not on-demand (`schtasks /run` / `Start-ScheduledTask`), and not
+even on its own natural trigger time. `Last Run Time` stays at the
+Windows epoch placeholder (`30/11/1999`) forever; no Task Scheduler
+Operational-log event is even written for the attempt. This is NOT a
+permissions error surfaced anywhere — it fails completely silently.
+
+**Root cause (confirmed by comparing XML exports):** the already-working
+production task (`Work Inbox Bridge Briefing`) has its `<Principal>`
+`<UserId>` set to the account's **SID**
+(`S-1-5-21-1658931844-4182391637-1812126793-312275`), not the bare account
+name. `schtasks /create /ru begb0037 /it` resolves/stores the principal
+differently (by name, not SID) and that form does not bind correctly for a
+task created by a *different* logged-on account (`begb0037-a`, local admin)
+than the one it names. **Fix: export the SID from a known-working task
+(`schtasks /query /tn "<task>" /xml`), build the new task's XML with that
+exact SID in `<UserId>`, and import via `schtasks /create /tn "<name>" /xml
+"<path>" /f`.** Verified twice this session: a throwaway single-shot
+`TimeTrigger` test task built this way fired correctly and logged `Last
+Result: 0` at its scheduled time; the real production task was then built
+the same way. Also note when transferring XML content over SSH from a
+non-Windows shell: `schtasks /create /xml` requires the file to actually be
+UTF-16LE **with a byte-order mark** — a `<?xml version="1.0"
+encoding="UTF-16"?>` declaration alone, converted with `iconv -f utf-8 -t
+utf-16le` but with no BOM prepended, fails with a misleading "ERROR: The
+task XML is malformed. (1,2)::ERROR: one root element" even though the file
+content itself is byte-for-byte correct.
 
 ## 1. Why this migration exists
 
