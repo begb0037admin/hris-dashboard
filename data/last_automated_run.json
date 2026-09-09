@@ -1,10 +1,10 @@
 {
-  "timestamp": "2026-09-08T09:31:52",
-  "timestamp_display": "Tuesday 08 September 2026 at 09:31",
-  "status": "success",
-  "step": "dashboard_update_ok",
-  "detail": "Fixed fetch_osm_report.py (Inbox/Reports/OSM + top-level Inbox fallback, commit ed1ad73) found and imported today's real 08:00 SAASIT report attachment. 21 tickets, source: All Open Tasks by Team - auto.xls.",
+  "timestamp": "2026-09-09T08:45:12",
+  "timestamp_display": "Wednesday 09 September 2026 at 08:45",
+  "status": "failure",
+  "step": "fetch_failed",
+  "detail": "fetch_osm_report.py exited 1 - see osm_auto_refresh_last_run.log",
   "trigger": "automated",
-  "attempt": 3,
+  "attempt": 1,
   "max_attempts": 3
 }
