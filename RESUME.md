@@ -11,6 +11,38 @@ scope by Kevin same day. Drew was not this repo's "usual" agent before
 11 Aug 2026 — see `HANDOVER.md` session log for the first Drew touch
 (GitHub Actions schedule-trigger fix).
 
+
+## One-line resume (latest — 9 Sep 2026, ~18:45 BST)
+
+**LIVE: OSM report fetch migrated off classic Outlook COM onto the Codex
+M365 connector.** Built, verified live against the real mailbox (first
+attempt succeeded, no retries, no guard trip, 39 tickets parsed correctly),
+used to fix a genuine same-day COM-path failure, and cut over same session:
+laptop scheduled task `HRIS Dashboard Morning Refresh (connector)`
+registered (08:45/09:15/09:45 Mon-Fri, `101L-DE013193`); desktop's
+`HRIS Dashboard Morning Refresh` (COM) task disabled, not deleted. Manual
+fallback (`Update HRIS Dashboard.bat` + Startup Downloads watcher)
+untouched. Full detail: `MIGRATION-IMAP.md` (new top section) and
+`HANDOVER.md` (new top session entry). Screenshot:
+`C:\Users\admin\Documents\Meetings\hris_dashboard_connector_cutover_9sept.png`.
+
+### EXACT NEXT ACTION
+Confirm tomorrow's (10 Sep 2026) morning cadence actually fires
+UNATTENDED — today's proof was a manually-triggered live run, not yet an
+observed natural 08:45/09:15/09:45 firing. Check on the laptop:
+`Get-ScheduledTask -TaskName 'HRIS Dashboard Morning Refresh (connector)' |
+Get-ScheduledTaskInfo` for a genuine `LastRunTime`/`LastTaskResult` from
+tomorrow morning, and check `data/last_automated_run.json` /
+`data/tickets.json` on GitHub for a fresh push with no human trigger. If it
+fires cleanly for a few consecutive mornings, this migration is fully
+closed out with no further action. If it does NOT fire, re-read
+`MIGRATION-IMAP.md`'s "Real registration gotcha" section first (SID vs.
+bare username in `<UserId>`) before assuming new code is broken — the
+connector fetch logic itself was proven correct live on 9 Sep, so a
+non-firing task is far more likely to be a Task Scheduler registration
+detail than a regression in `fetch_osm_report_connector.py` or
+`Run HRIS OSM Connector Fetch (laptop).ps1`.
+
 ---
 
 ## One-line resume (latest — 8 Sep 2026, ~10:45 BST)
