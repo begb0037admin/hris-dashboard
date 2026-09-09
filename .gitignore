@@ -11,3 +11,5 @@ push_to_github.bat
 test_filter.py
 HRIS_DASHBOARD_README.md
 __pycache__/
+
+data/osm_fetch/
