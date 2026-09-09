@@ -1,13 +1,13 @@
 {
-  "updated": "2026-09-08T09:31:43",
-  "updated_display": "Tuesday 08 September 2026 at 09:31",
+  "updated": "2026-09-09T18:27:47",
+  "updated_display": "Wednesday 09 September 2026 at 18:27",
   "report_file": "All Open Tasks by Team - auto.xls",
   "summary": {
-    "total": 21,
-    "assigned": 18,
-    "unassigned": 3,
+    "total": 39,
+    "assigned": 34,
+    "unassigned": 5,
     "stale": 6,
-    "oldest_days": 201
+    "oldest_days": 202
   },
   "analysts": [
     {
@@ -22,7 +22,7 @@
           "analyst": "James Salas Guillen",
           "category": "Odyssey",
           "created": "18 Feb 2026",
-          "days": 201,
+          "days": 202,
           "team": "Health and Safety 2nd Line"
         },
         {
@@ -33,7 +33,7 @@
           "analyst": "James Salas Guillen",
           "category": "",
           "created": "27 Aug 2026",
-          "days": 11,
+          "days": 12,
           "team": "Health and Safety 2nd Line"
         },
         {
@@ -44,7 +44,7 @@
           "analyst": "James Salas Guillen",
           "category": "",
           "created": "27 Aug 2026",
-          "days": 11,
+          "days": 12,
           "team": "Health and Safety 2nd Line"
         },
         {
@@ -55,14 +55,14 @@
           "analyst": "James Salas Guillen",
           "category": "Odyssey",
           "created": "03 Sep 2026",
-          "days": 4,
+          "days": 5,
           "team": "Health and Safety 2nd Line"
         }
       ]
     },
     {
       "name": "Asta Palmer",
-      "ticket_count": 1,
+      "ticket_count": 18,
       "tickets": [
         {
           "task_num": "50977943",
@@ -72,14 +72,201 @@
           "analyst": "Asta Palmer",
           "category": "Recruitment",
           "created": "17 Aug 2026",
-          "days": 21,
+          "days": 22,
           "team": "HRIS Analysis"
+        },
+        {
+          "task_num": "50983560",
+          "summary": "Manager Self Service Change - Oluwatobi Odubayo",
+          "status": "Accepted",
+          "priority": "3",
+          "analyst": "Asta Palmer",
+          "category": "",
+          "created": "07 Sep 2026",
+          "days": 1,
+          "team": "HRIS Sys Admin"
+        },
+        {
+          "task_num": "50983567",
+          "summary": "Manager Self Service Add - Kate Wood",
+          "status": "Accepted",
+          "priority": "3",
+          "analyst": "Asta Palmer",
+          "category": "",
+          "created": "07 Sep 2026",
+          "days": 1,
+          "team": "HRIS Sys Admin"
+        },
+        {
+          "task_num": "50983690",
+          "summary": "Add Shift Type - Lisa Culleton",
+          "status": "Accepted",
+          "priority": "3",
+          "analyst": "Asta Palmer",
+          "category": "",
+          "created": "08 Sep 2026",
+          "days": 0,
+          "team": "HRIS Sys Admin"
+        },
+        {
+          "task_num": "50983697",
+          "summary": "Manager Self Service Add - Florin Najera-Uresti",
+          "status": "Accepted",
+          "priority": "3",
+          "analyst": "Asta Palmer",
+          "category": "",
+          "created": "08 Sep 2026",
+          "days": 0,
+          "team": "HRIS Sys Admin"
+        },
+        {
+          "task_num": "50983709",
+          "summary": "Average Work Schedule Hours matching Contract Hours on appointment error",
+          "status": "Accepted",
+          "priority": "5",
+          "analyst": "Asta Palmer",
+          "category": "Time and Attendance",
+          "created": "08 Sep 2026",
+          "days": 0,
+          "team": "HRIS Sys Admin"
+        },
+        {
+          "task_num": "50983719",
+          "summary": "Add Shift Type - Rebecca Fitzek",
+          "status": "Accepted",
+          "priority": "3",
+          "analyst": "Asta Palmer",
+          "category": "",
+          "created": "08 Sep 2026",
+          "days": 0,
+          "team": "HRIS Sys Admin"
+        },
+        {
+          "task_num": "50983720",
+          "summary": "Add Shift Type - Joana Gomes Esteves Leal Pelado",
+          "status": "Accepted",
+          "priority": "3",
+          "analyst": "Asta Palmer",
+          "category": "",
+          "created": "08 Sep 2026",
+          "days": 0,
+          "team": "HRIS Sys Admin"
+        },
+        {
+          "task_num": "50983750",
+          "summary": "Add Shift Type - Isabel Riddy",
+          "status": "Accepted",
+          "priority": "3",
+          "analyst": "Asta Palmer",
+          "category": "",
+          "created": "08 Sep 2026",
+          "days": 0,
+          "team": "HRIS Sys Admin"
+        },
+        {
+          "task_num": "50983757",
+          "summary": "Add Shift Type - Anna Caughey",
+          "status": "Accepted",
+          "priority": "3",
+          "analyst": "Asta Palmer",
+          "category": "",
+          "created": "08 Sep 2026",
+          "days": 0,
+          "team": "HRIS Sys Admin"
+        },
+        {
+          "task_num": "50983779",
+          "summary": "Add Shift Type - Vicenta Calvo Sanchez",
+          "status": "Accepted",
+          "priority": "3",
+          "analyst": "Asta Palmer",
+          "category": "",
+          "created": "08 Sep 2026",
+          "days": 0,
+          "team": "HRIS Sys Admin"
+        },
+        {
+          "task_num": "50983804",
+          "summary": "Create Work Group - Catherine Daw",
+          "status": "Accepted",
+          "priority": "3",
+          "analyst": "Asta Palmer",
+          "category": "",
+          "created": "08 Sep 2026",
+          "days": 0,
+          "team": "HRIS Sys Admin"
+        },
+        {
+          "task_num": "50983805",
+          "summary": "Create Work Group - Catherine Daw",
+          "status": "Accepted",
+          "priority": "3",
+          "analyst": "Asta Palmer",
+          "category": "",
+          "created": "08 Sep 2026",
+          "days": 0,
+          "team": "HRIS Sys Admin"
+        },
+        {
+          "task_num": "50983807",
+          "summary": "Create Work Group - Catherine Daw",
+          "status": "Accepted",
+          "priority": "3",
+          "analyst": "Asta Palmer",
+          "category": "",
+          "created": "08 Sep 2026",
+          "days": 0,
+          "team": "HRIS Sys Admin"
+        },
+        {
+          "task_num": "50983808",
+          "summary": "Create Work Group - Catherine Daw",
+          "status": "Accepted",
+          "priority": "3",
+          "analyst": "Asta Palmer",
+          "category": "",
+          "created": "08 Sep 2026",
+          "days": 0,
+          "team": "HRIS Sys Admin"
+        },
+        {
+          "task_num": "50983811",
+          "summary": "Create Work Group - Catherine Daw",
+          "status": "Accepted",
+          "priority": "3",
+          "analyst": "Asta Palmer",
+          "category": "",
+          "created": "08 Sep 2026",
+          "days": 0,
+          "team": "HRIS Sys Admin"
+        },
+        {
+          "task_num": "50983812",
+          "summary": "Create Work Group - Catherine Daw",
+          "status": "Accepted",
+          "priority": "3",
+          "analyst": "Asta Palmer",
+          "category": "",
+          "created": "08 Sep 2026",
+          "days": 0,
+          "team": "HRIS Sys Admin"
+        },
+        {
+          "task_num": "50983815",
+          "summary": "Add Shift Type - Toby Hill",
+          "status": "Accepted",
+          "priority": "3",
+          "analyst": "Asta Palmer",
+          "category": "",
+          "created": "08 Sep 2026",
+          "days": 0,
+          "team": "HRIS Sys Admin"
         }
       ]
     },
     {
       "name": "Michael O'Sullivan",
-      "ticket_count": 10,
+      "ticket_count": 9,
       "tickets": [
         {
           "task_num": "50959922",
@@ -89,7 +276,7 @@
           "analyst": "Michael O'Sullivan",
           "category": "",
           "created": "12 Jun 2026",
-          "days": 87,
+          "days": 88,
           "team": "HRIS Analysis"
         },
         {
@@ -100,7 +287,7 @@
           "analyst": "Michael O'Sullivan",
           "category": "",
           "created": "05 Aug 2026",
-          "days": 33,
+          "days": 34,
           "team": "HRIS Analysis"
         },
         {
@@ -111,7 +298,7 @@
           "analyst": "Michael O'Sullivan",
           "category": "",
           "created": "05 Aug 2026",
-          "days": 33,
+          "days": 34,
           "team": "HRIS Analysis"
         },
         {
@@ -122,7 +309,7 @@
           "analyst": "Michael O'Sullivan",
           "category": "Interfaces",
           "created": "11 Aug 2026",
-          "days": 27,
+          "days": 28,
           "team": "HRIS Analysis"
         },
         {
@@ -133,7 +320,7 @@
           "analyst": "Michael O'Sullivan",
           "category": "Time and Attendance",
           "created": "24 Aug 2026",
-          "days": 14,
+          "days": 15,
           "team": "HRIS Analysis"
         },
         {
@@ -144,18 +331,7 @@
           "analyst": "Michael O'Sullivan",
           "category": "Payroll",
           "created": "25 Aug 2026",
-          "days": 13,
-          "team": "HRIS Analysis"
-        },
-        {
-          "task_num": "50982529",
-          "summary": "Request to remove 'Submitted' leave requests for Chemistry",
-          "status": "Accepted",
-          "priority": "5",
-          "analyst": "Michael O'Sullivan",
-          "category": "Time and Attendance",
-          "created": "03 Sep 2026",
-          "days": 4,
+          "days": 14,
           "team": "HRIS Analysis"
         },
         {
@@ -166,7 +342,7 @@
           "analyst": "Michael O'Sullivan",
           "category": "Time and Attendance",
           "created": "03 Sep 2026",
-          "days": 4,
+          "days": 5,
           "team": "HRIS Analysis"
         },
         {
@@ -177,7 +353,7 @@
           "analyst": "Michael O'Sullivan",
           "category": "",
           "created": "04 Sep 2026",
-          "days": 3,
+          "days": 4,
           "team": "HRIS Analysis"
         },
         {
@@ -188,7 +364,7 @@
           "analyst": "Michael O'Sullivan",
           "category": "Time and Attendance",
           "created": "07 Sep 2026",
-          "days": 0,
+          "days": 1,
           "team": "HRIS Analysis"
         }
       ]
@@ -205,7 +381,7 @@
           "analyst": "Simon Burford",
           "category": "Recruitment",
           "created": "23 Apr 2026",
-          "days": 137,
+          "days": 138,
           "team": "HRIS Analysis"
         }
       ]
@@ -217,12 +393,12 @@
         {
           "task_num": "50964224",
           "summary": "Visitor Experience team are having difficulties with rostering and the Leave and Absence module",
-          "status": "Waiting",
+          "status": "Accepted",
           "priority": "5",
           "analyst": "Kevin Lelitte",
           "category": "Roster (WFM)",
           "created": "29 Jun 2026",
-          "days": 70,
+          "days": 71,
           "team": "HRIS Analysis"
         },
         {
@@ -233,7 +409,7 @@
           "analyst": "Kevin Lelitte",
           "category": "HR Reporting",
           "created": "01 Sep 2026",
-          "days": 6,
+          "days": 7,
           "team": "HRIS Analysis"
         }
       ]
@@ -248,28 +424,50 @@
       "analyst": "",
       "category": "HR Reporting",
       "created": "07 Sep 2026",
-      "days": 0,
+      "days": 1,
       "team": "HRIS Service Desk"
     },
     {
-      "task_num": "50983560",
-      "summary": "Manager Self Service Change - Oluwatobi Odubayo",
+      "task_num": "50983899",
+      "summary": "HR User Change Access - Bethany Gray",
       "status": "Logged",
-      "priority": "3",
+      "priority": "5",
       "analyst": "",
       "category": "",
-      "created": "07 Sep 2026",
+      "created": "08 Sep 2026",
       "days": 0,
       "team": "HRIS Sys Admin"
     },
     {
-      "task_num": "50983567",
-      "summary": "Manager Self Service Add - Kate Wood",
+      "task_num": "50983924",
+      "summary": "Add Shift Type - Joana Gomes Esteves Leal Pelado",
       "status": "Logged",
       "priority": "3",
       "analyst": "",
       "category": "",
-      "created": "07 Sep 2026",
+      "created": "08 Sep 2026",
+      "days": 0,
+      "team": "HRIS Sys Admin"
+    },
+    {
+      "task_num": "50983979",
+      "summary": "Create Work Group - Trey Ideker",
+      "status": "Logged",
+      "priority": "3",
+      "analyst": "",
+      "category": "",
+      "created": "08 Sep 2026",
+      "days": 0,
+      "team": "HRIS Sys Admin"
+    },
+    {
+      "task_num": "50983996",
+      "summary": "Add Shift Type - Leah Hill",
+      "status": "Logged",
+      "priority": "3",
+      "analyst": "",
+      "category": "",
+      "created": "08 Sep 2026",
       "days": 0,
       "team": "HRIS Sys Admin"
     }
