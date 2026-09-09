@@ -1,8 +1,24 @@
-# MIGRATION-IMAP.md — hris-dashboard OSM report fetch: classic Outlook COM → laptop IMAP
+# MIGRATION-IMAP.md — hris-dashboard OSM report fetch: classic Outlook COM → Codex M365 connector
 
-**Status: DECIDED, NOT BUILT.** Decision made 8 Sep 2026 (Kevin). Build is a
-later session, gated on Kevin's fresh explicit go-ahead. This document is the
-brief for that session.
+**Status: DECISION REVISED 9 Sep 2026 (Kevin). NOT BUILT.** The 8 Sep decision
+below chose option (c), IMAP — superseded same week by Kevin's standing
+architecture decision that the **Codex M365 connector is the standard for all
+Microsoft 365 access going forward, and no new COM or IMAP paths are to be
+built** (see `agent-commons/operating-model/CODEX_M365_CONNECTOR_METHOD.md`
+and `AGENT_DIRECTORY.md`'s "Shared rules"). Building a new IMAP integration
+here would create something needing migration again almost immediately.
+
+**Target is now option (a) below (the connector), not option (c).** Section 2's
+evaluation of (a) already found it fully verified end-to-end on 8 Sep
+(sha256-byte-identical attachment fetch) — the reasons it was originally kept
+as fallback rather than primary (flaky per-call tool loading, quota, needing
+its own risk acceptance) are the same class of tradeoff already accepted for
+work-inbox's own mail-connector cutover (see work-inbox `HANDOVER.md` section Q,
+Kevin's explicit fresh risk acceptance, 9 Sep 2026) — this is the same mailbox,
+same identity class, same accepted risk, not a fresh one to re-litigate.
+Section 3's IMAP-specific target chain and section 4's IMAP-specific open items
+need re-drafting around the connector approach at build time — this is
+engineering work for the owning session, not pre-designed here.
 
 **Owning agent:** Drew (`begb0037admin/drew`).
 
