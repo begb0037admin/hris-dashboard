@@ -1,5 +1,99 @@
 # HANDOVER.md — hris-dashboard
 
+Last updated: 9 September 2026, evening (Drew) — Codex M365 connector migration BUILT, VERIFIED LIVE, CUT OVER
+Status: Live and working. **9 Sep evening: OSM report fetch migrated off classic Outlook COM onto the Codex M365 connector, live.** Full session writeup below (new top entry). Desktop's `HRIS Dashboard Morning Refresh` (COM) scheduled task is **disabled** (not deleted); `Update HRIS Dashboard.bat` + Startup Downloads watcher remain the live manual fallback, untouched. New laptop scheduled task `HRIS Dashboard Morning Refresh (connector)` (101L-DE013193, triggers 08:45/09:15/09:45 Mon-Fri) is now the automated path. 8 Sep / 27 Aug entries preserved below for history.
+
+---
+
+## Session 2026-09-09 evening — Codex M365 connector migration for the OSM report fetch: BUILT, VERIFIED LIVE, CUT OVER (Drew)
+
+**Instruction:** migrate `fetch_osm_report.py`'s classic-Outlook-COM attachment
+fetch onto the Codex M365 connector (option (a) in `MIGRATION-IMAP.md`, per
+Kevin's 9 Sep architecture decision superseding the earlier IMAP plan — see
+that file's own top-of-file note). Full design detail, verification evidence,
+and a real cross-account scheduled-task registration gotcha are all recorded
+in `MIGRATION-IMAP.md`'s new top section — this entry is the short version.
+
+**Built:**
+- `fetch_osm_report_connector.py` (repo root) — imports work-inbox's
+  `lane_b_call1.py` connector/guard primitives directly (`run_codex_json`,
+  `extract_tool_calls`, `ReContaminationDetected`, `READ_VERB_RE`/
+  `WRITE_VERB_RE`, `FAILOVER_CODEX_HOME`) rather than duplicating them, runs
+  its own narrower danger-scan restricted to `microsoft_outlook_email` only
+  (least-privilege — this script has no legitimate reason to touch calendar/
+  Teams tools). Same CLI contract as `fetch_osm_report.py`
+  (`--dry-run DIR`). Deliberately distinct exit codes 0/1/2/3/4 (see its own
+  docstring) — this explicitly avoids the exit-code-collision bug class
+  work-inbox hit the same week (its own `main()`'s guard-HALT return value
+  vs. an uncaught exception both defaulting to exit 1).
+- `Run HRIS OSM Connector Fetch (laptop).ps1` — the scheduled-task wrapper,
+  mirrors work-inbox's `Run Laptop Bridge Briefing.ps1` mail-guard shape
+  (retry-guard, dispatch on exit code, disable-on-guard-HALT, otherwise leave
+  enabled for the normal cadence to retry).
+- `.gitignore` — added `data/osm_fetch/` (connector-fetched attachments +
+  call transcripts are local working files, never committed — same
+  convention as work-inbox's `data/lane_b/`).
+
+**Verified live, same day, against the real mailbox** (full evidence in
+`MIGRATION-IMAP.md`): guard self-test passed; live connector fetch succeeded
+on the first attempt (search → list_attachments → fetch_attachment →
+download, 40896 bytes, no guard trip); downloaded file parsed cleanly (39
+real tickets, `import_osm_report.py`'s own parser); **used to fix a genuine
+same-day COM-path failure** (the desktop's classic-Outlook path had
+exhausted all 3 scheduled attempts that same morning) — pushed
+`data/tickets.json` (SHA `1f5bd8ac5c911a13026ff67bcb9c62dc120f132c`, 39
+tickets) and `data/last_automated_run.json` (`status: success`). Live
+dashboard screenshot confirmed:
+`C:\Users\admin\Documents\Meetings\hris_dashboard_connector_cutover_9sept.png`
+— green "Last automated refresh: Wednesday 09 September 2026 at 18:27 — up
+to date".
+
+**Honest gap, not hidden:** no same-day byte-identical diff against the COM
+path was possible (COM itself failed today, nothing to diff against).
+Verification instead rests on the already-documented 8 Sep 2026 sha256-
+identical proof of this exact connector chain, plus today's live content-
+integrity check. Flagged clearly in `MIGRATION-IMAP.md` — a future session
+should not read this as "never verified against COM," it should read it as
+"verified twice, by two different methods, on two different days."
+
+**Cutover performed same session** (per Kevin's advance go-ahead — no second
+confirmation sought, nothing new/destructive surfaced): laptop scheduled
+task `HRIS Dashboard Morning Refresh (connector)` registered
+(08:45/09:15/09:45 Mon-Fri); desktop's `HRIS Dashboard Morning Refresh`
+task **disabled** (`Disable-ScheduledTask`, not deleted — one
+`Enable-ScheduledTask` away from rollback). `Update HRIS Dashboard.bat` and
+the Startup Downloads watcher untouched.
+
+**Real gotcha found and fixed this session (scheduled-task registration,
+not this migration's actual logic):** registering an `Interactive`-logon
+task for a different Windows account via `schtasks /create /ru <user> /it`
+(no stored password) silently creates a task that never fires, not even on
+its own natural trigger — no error, no Task Scheduler log entry, `Last Run
+Time` stays at the epoch placeholder forever. Root cause: the working
+production task's `<UserId>` is the account's **SID**, not the bare
+username; fix is to export a known-working task's XML, reuse its exact SID,
+and import via `schtasks /create /xml`. Verified via a disposable
+single-shot test task before trusting it for the real task. Full detail
+(incl. a UTF-16-BOM gotcha for the XML file itself) in `MIGRATION-IMAP.md`.
+Also pushed to `agent-commons` as a cross-cutting confirmed fact (relevant
+to any future agent doing cross-account Windows scheduled-task work, not
+just this repo).
+
+**Not yet observed:** the first genuinely UNATTENDED morning firing
+(08:45/09:15/09:45 tomorrow) — today's proof was a manually-triggered live
+run. Next session (or Kevin, informally) should confirm tomorrow's morning
+cadence actually fired and pushed a fresh `tickets.json`/
+`last_automated_run.json` without anyone triggering it by hand. See
+`RESUME.md` for the exact next-action framing.
+
+**Effort-level governance:** raised to high for this session's design+build
+phase on Kevin's explicit approval; returning to normal now that the design+
+build phase is closed out (verified live, cut over, documented) — remaining
+follow-up (confirming tomorrow's unattended run) is mechanical, not
+architectural.
+
+# HANDOVER.md — hris-dashboard
+
 Last updated: 8 September 2026 (later — migration decision)
 Status: Live and working. **8 Sep:** (1) classic-Outlook rule-filing race root-caused + same-day fix shipped (`ed1ad73` — `fetch_osm_report.py` now falls back to the top-level Inbox when the `Inbox/Reports/OSM` rule lags). (2) **DECISION: migrate the morning OSM fetch off classic Outlook COM onto IMAP on the Oxford laptop, reusing work-inbox's token cache, pushing straight to GitHub — NOT built yet, later session. See `MIGRATION-IMAP.md`.** Desktop keeps `Update HRIS Dashboard.bat` + Downloads watcher as manual fallback. 27 Aug: (1) manual `.bat` "not working" report investigated — fresh export was already live (7b50878), no bug reproduced. (2) Kevin approved Option 1 + Option 3: `import_osm_report.py` hardened (lazy xlrd, locked-file retry, explicit-file override, advisory lock, push race-retry; schema unchanged), Desktop `.bat` re-synced, and a Startup-folder Downloads watcher built + deployed + LIVE (pinned to bd93285). Morning Scheduled Task untouched. GitHub Actions SAASIT scrape still needs Kevin's SSO re-login (pre-existing).
 
