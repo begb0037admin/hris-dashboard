@@ -12,7 +12,43 @@ scope by Kevin same day. Drew was not this repo's "usual" agent before
 (GitHub Actions schedule-trigger fix).
 
 
-## One-line resume (latest — 9 Sep 2026, ~18:45 BST)
+## One-line resume (latest — 10 Sep 2026, ~11:15 BST)
+
+**Priority 4 (Luna/effort-level pilot) implemented for this repo's OSM
+connector fetch.** `fetch_osm_report_connector.py` now sources model+effort
+from `work-inbox/codex_model_policy.py` (cross-repo import, same pattern it
+already uses for `run_codex_json`) instead of running on an unexamined
+`codex exec` default. Classified **High** (MODEL_POLICY.md precedence rule —
+the connector namespace is write-capable even though this fetch is
+read-only/guarded), model **Luna** (`gpt-5.6-luna`), confirmed available via
+`models_cache.json` on this identity (`C:\WorkInboxAI\codex-laneb`, the
+FAILOVER_CODEX_HOME this script always uses). New distinct exit code 5
+("MODEL POLICY VIOLATION") added so a code/config bug in the policy wiring
+can never be mistaken for exit 3's ordinary "connector unavailable this
+cycle." Full detail: `HANDOVER.md` new top entry and
+`begb0037admin/constitution/MODEL_POLICY.md`'s "Implementation and
+enforcement" section (now marked BUILT). Companion change in
+`begb0037admin/work-inbox/lane_b_call1.py` (the shared command builder this
+script imports) — see that repo's own `HANDOVER.md`.
+
+**Also closed today:** the previous EXACT NEXT ACTION below (confirm the
+first unattended 08:45/09:15/09:45 firing) — CONFIRMED. Checked live on the
+laptop (`101l-de013193`): `Get-ScheduledTaskInfo -TaskName 'HRIS Dashboard
+Morning Refresh (connector)'` shows `LastRunTime 10/09/2026 09:45:00,
+LastTaskResult 0` — a genuine unattended firing, not a manual trigger. This
+migration item is now fully closed, no further action needed on it.
+
+### EXACT NEXT ACTION (superseded entry below is CLOSED, see above)
+Commit and push the `fetch_osm_report_connector.py` change (currently a
+local, uncommitted working-tree edit on the admin desktop machine, verified
+via `--selftest-guard` which still passes) — pending Codex's touchpoint-3
+end-to-end review pass alongside the paired work-inbox change before
+pushing either. Once pushed, observe one real scheduled-task run's log
+output for the new `[hris_osm] codex model/effort: -m gpt-5.6-luna -c
+model_reasoning_effort=high` line to confirm the policy wiring is actually
+what fires in production, not just what passed locally.
+
+## One-line resume (superseded — 9 Sep 2026, ~18:45 BST)
 
 **LIVE: OSM report fetch migrated off classic Outlook COM onto the Codex
 M365 connector.** Built, verified live against the real mailbox (first
@@ -26,22 +62,12 @@ untouched. Full detail: `MIGRATION-IMAP.md` (new top section) and
 `HANDOVER.md` (new top session entry). Screenshot:
 `C:\Users\admin\Documents\Meetings\hris_dashboard_connector_cutover_9sept.png`.
 
-### EXACT NEXT ACTION
-Confirm tomorrow's (10 Sep 2026) morning cadence actually fires
-UNATTENDED — today's proof was a manually-triggered live run, not yet an
-observed natural 08:45/09:15/09:45 firing. Check on the laptop:
-`Get-ScheduledTask -TaskName 'HRIS Dashboard Morning Refresh (connector)' |
-Get-ScheduledTaskInfo` for a genuine `LastRunTime`/`LastTaskResult` from
-tomorrow morning, and check `data/last_automated_run.json` /
-`data/tickets.json` on GitHub for a fresh push with no human trigger. If it
-fires cleanly for a few consecutive mornings, this migration is fully
-closed out with no further action. If it does NOT fire, re-read
-`MIGRATION-IMAP.md`'s "Real registration gotcha" section first (SID vs.
-bare username in `<UserId>`) before assuming new code is broken — the
-connector fetch logic itself was proven correct live on 9 Sep, so a
-non-firing task is far more likely to be a Task Scheduler registration
-detail than a regression in `fetch_osm_report_connector.py` or
-`Run HRIS OSM Connector Fetch (laptop).ps1`.
+### EXACT NEXT ACTION — CLOSED 10 Sep 2026
+Confirmed live: `Get-ScheduledTaskInfo -TaskName 'HRIS Dashboard Morning
+Refresh (connector)'` on the laptop shows `LastRunTime 10/09/2026 09:45:00,
+LastTaskResult 0` — a genuine unattended firing (the task's own natural
+08:45/09:15/09:45 cadence, not a manual trigger). No further action needed
+on this item.
 
 ---
 

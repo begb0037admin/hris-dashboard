@@ -1,7 +1,25 @@
 # HANDOVER.md — hris-dashboard
 
-Last updated: 9 September 2026, evening (Drew) — Codex M365 connector migration BUILT, VERIFIED LIVE, CUT OVER
-Status: Live and working. **9 Sep evening: OSM report fetch migrated off classic Outlook COM onto the Codex M365 connector, live.** Full session writeup below (new top entry). Desktop's `HRIS Dashboard Morning Refresh` (COM) scheduled task is **disabled** (not deleted); `Update HRIS Dashboard.bat` + Startup Downloads watcher remain the live manual fallback, untouched. New laptop scheduled task `HRIS Dashboard Morning Refresh (connector)` (101L-DE013193, triggers 08:45/09:15/09:45 Mon-Fri) is now the automated path. 8 Sep / 27 Aug entries preserved below for history.
+Last updated: 10 September 2026 (Drew) — Priority 4 (Luna/effort-level policy) implemented for the OSM connector fetch; unattended morning firing confirmed
+Status: Live and working. **10 Sep: model/effort selection for `fetch_osm_report_connector.py`'s codex exec calls now sourced from `codex_model_policy.py` (shared with work-inbox), classified High, model Luna.** Also: the connector cutover's last open item (first unattended 08:45/09:15/09:45 firing) is CONFIRMED. Full detail below (new top entry). 9 Sep entry (the connector migration itself) preserved below for history.
+
+---
+
+## Session 2026-09-10 — Priority 4: Luna/effort-level policy wired into the OSM connector fetch; unattended firing confirmed (Drew)
+
+**Instruction:** `begb0037admin/agent-commons/COORDINATOR_HANDOVER.md` Priority 4 — implement model/effort selection sourced from `begb0037admin/constitution/MODEL_POLICY.md` for this repo's Codex-connector call, alongside the equivalent work-inbox change (Lane B). Full spec, verification trail, and the paired work-inbox change are in `begb0037admin/work-inbox/HANDOVER.md`'s own new top entry and in `MODEL_POLICY.md`'s "Implementation and enforcement" section (now marked BUILT) — this entry is the short version for this repo specifically.
+
+**What changed in this repo:** `fetch_osm_report_connector.py`:
+- Imports `codex_model_policy` (new file in work-inbox, cross-repo import — same pattern already used for `run_codex_json` etc.).
+- Passes `workload_class="high"` explicitly at its one `run_codex_json()` call — classified High per MODEL_POLICY.md's precedence rule (the `microsoft_outlook_email` connector namespace is write-capable, guarded not excluded, even though this fetch itself is a narrow read-only attachment pull).
+- New distinct exit code **5** ("MODEL POLICY VIOLATION") — added so a `codex_model_policy.ModelPolicyViolation` (a deterministic code/config bug) can never be silently retried as, or mistaken for, exit 3's "connector unavailable this cycle, not a safety event." Wired at both the retry-loop level (re-raises, doesn't retry) and `main()` (maps to exit 5, distinct log message).
+- Verified: `python fetch_osm_report_connector.py --dry-run /tmp/x --selftest-guard` still passes unchanged (pure-function guard checks, unaffected by this change) — run from the local desktop clone, both repos as siblings under the same parent directory.
+
+**Model/effort actually selected:** Luna (`gpt-5.6-luna`), effort `high` — confirmed available (via `models_cache.json`) on `C:\WorkInboxAI\codex-laneb`, the FAILOVER_CODEX_HOME this script always uses (Edu has no Outlook Email connector attached, so there is no primary/failover choice for this script — same constraint work-inbox's own mail cutover already accepted).
+
+**Also closed this session:** the previous EXACT NEXT ACTION (confirm the first unattended firing) — checked live on the laptop, `Get-ScheduledTaskInfo -TaskName 'HRIS Dashboard Morning Refresh (connector)'` shows `LastRunTime 10/09/2026 09:45:00, LastTaskResult 0`, a genuine unattended firing of the task's own natural cadence. Migration fully closed, no further action.
+
+**Status at end of session:** change verified locally, pending Codex's mandatory touchpoint-3 end-to-end review (alongside the paired work-inbox change) before commit+push. See `RESUME.md`'s EXACT NEXT ACTION for the precise resume point.
 
 ---
 

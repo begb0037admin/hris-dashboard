@@ -74,6 +74,14 @@ ambiguity):
   4 = no matching OSM report email found for today (yet). Same semantics as
       fetch_osm_report.py's sys.exit on this condition -- genuinely nothing
       to fetch, not an error; retry later in the morning's cadence.
+  5 = MODEL POLICY VIOLATION (added 10 Sep 2026, Priority 4) -- the model/
+      effort selection sourced from codex_model_policy.py (constitution/
+      MODEL_POLICY.md) refused to build the codex exec call, e.g. an
+      xhigh/max ceiling breach or an unrecognised effort override. This is a
+      deterministic code/config bug, NOT connector flakiness -- deliberately
+      distinct from exit 3 so a caller does not retry it on the normal
+      cadence expecting it to self-resolve; investigate the codex_model_policy
+      usage in this script or in work-inbox/lane_b_call1.py instead.
 
 Usage:
     python fetch_osm_report_connector.py                  # real run, saves to HRIS_OSM_TARGET_DIR
@@ -110,6 +118,7 @@ if WORKINBOX_REPO_PATH not in sys.path:
     sys.path.insert(0, WORKINBOX_REPO_PATH)
 
 try:
+    import codex_model_policy  # noqa: E402 -- same sys.path, sibling module to lane_b_call1
     from lane_b_call1 import (  # noqa: E402
         run_codex_json,
         extract_tool_calls,
@@ -308,11 +317,31 @@ def fetch_osm_attachment_via_connector(today_iso: str) -> tuple[bytes, str]:
         _log(f"connector attempt {attempt}/{OSM_RETRIES} (CODEX_HOME={FAILOVER_CODEX_HOME}, "
              f"personal-account-only, same identity already proven for work-inbox mail)")
         try:
+            # workload_class="high": MODEL_POLICY.md precedence rule -- this
+            # goes through the microsoft_outlook_email connector namespace,
+            # which is write-capable (guarded by OSM_NAMESPACES/the verb
+            # regexes, not excluded from the tool surface), so it classifies
+            # High even though this specific prompt is read-only. Mirrors
+            # work-inbox/lane_b_call1.py's own call sites -- same policy,
+            # same reasoning, sourced from the same shared module.
             objs, raw = run_codex_json(
                 prompt, timeout_s=OSM_TIMEOUT_S, tag="hris_osm",
                 codex_home=FAILOVER_CODEX_HOME, max_attempts=2,
+                workload_class="high",
             )
         except ReContaminationDetected:
+            raise
+        except codex_model_policy.ModelPolicyViolation:
+            # MUST NOT be caught by the generic `except Exception` below --
+            # touchpoint-1 Codex review finding, 10 Sep 2026 (same reasoning
+            # as work-inbox/lane_b_call1.py's _fetch_domain_one_identity()):
+            # a policy violation is a deterministic code/config bug, not
+            # connector flakiness. Retrying it OSM_RETRIES times wastes the
+            # whole retry budget and would exhaust into the generic
+            # RuntimeError -> exit 3 ("not a safety event") path in main(),
+            # completely mischaracterising a real misconfiguration as
+            # ordinary headless-connector flakiness. Re-raise uncaught so
+            # main() can map it to its own distinct exit code (5) instead.
             raise
         except Exception as e:  # noqa: BLE001 -- codex run failed outright this attempt
             last_err = e
@@ -457,6 +486,24 @@ def main(argv: list[str]) -> int:
              "late, this script will be re-run automatically on the normal 08:45/09:15/09:45 "
              "cadence, or run it again once the email arrives.")
         return 4
+    except ReContaminationDetected as e:
+        # ReContaminationDetected is a RuntimeError subclass, so this must come
+        # before the generic RuntimeError branch below. A genuine write/off-scope
+        # tool call is a guard HALT (exit 1), not connector flakiness (exit 3),
+        # and the scheduled-task wrapper must disable the task rather than retry
+        # blindly on the normal cadence.
+        _log(f"GUARD HALT -- unexpected/write connector tool call observed: {e}")
+        return 1
+    except codex_model_policy.ModelPolicyViolation as e:
+        # MUST be caught here, before the generic `except RuntimeError` below,
+        # or it silently maps to exit 3 ("not a safety event") -- wrong, this
+        # is a real code/config bug that will not self-resolve on the normal
+        # retry cadence. See exit code 5's own docstring entry above.
+        _log(f"MODEL POLICY VIOLATION -- {e}")
+        _log("This is a code/config bug, NOT connector flakiness -- do not expect this "
+             "to self-resolve on the normal 08:45/09:15/09:45 cadence. Investigate "
+             "codex_model_policy.py usage in this script or in work-inbox/lane_b_call1.py.")
+        return 5
     except RuntimeError as e:
         _log(f"Connector fetch failed after retries (this cycle only, not a safety event): {e}")
         return 3

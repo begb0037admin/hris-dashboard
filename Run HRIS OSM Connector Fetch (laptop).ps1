@@ -15,6 +15,11 @@ same live mailbox the same day, and was used to manually clear that
 failure (see HANDOVER.md / RESUME.md for the exact commits).
 
 Steps:
+  0. Best-effort self-refresh: pull the current connector script and its
+     touched shared work-inbox dependencies from main with a cache-buster and
+     marker/size checks. This keeps the independent HRIS scheduled task from
+     running a stale or mismatched copy after a repo update; if the network is
+     unavailable, retain the last-known-good local copies and continue.
   1. Retry-guard: skip entirely if data\last_automated_run.json already
      shows a genuine success for TODAY (mirrors the desktop .bat's own
      "don't re-import an already-current file" discipline, and prevents 3
@@ -38,6 +43,14 @@ Steps:
      Exit code 4  -> no matching OSM report email found for today yet.
      Log, push failure status (informational, not alarming), leave the
      task enabled, cadence retries.
+     Exit code 5  -> MODEL POLICY VIOLATION (added 10 Sep 2026, Priority 4)
+     -- a codex_model_policy.ModelPolicyViolation propagated (e.g. an
+     xhigh/max ceiling breach). Deliberately distinct from 2/3: this is a
+     deterministic code/config bug, not transient flakiness -- will keep
+     failing every cycle until fixed, not self-resolving on retry. Log,
+     push failure status, leave the task enabled (not a mailbox-safety
+     issue, so no Disable-ScheduledTask), but investigate promptly rather
+     than assuming the normal cadence will clear it.
 #>
 
 $ErrorActionPreference = 'Continue'
@@ -57,6 +70,37 @@ function Log($msg) {
 
 Log "=== Run HRIS OSM Connector Fetch started ==="
 Set-Location $root
+
+# --- Step 0: refresh the connector code and its touched shared dependency ---
+# This task is independent of work-inbox's own laptop bridge task, so it cannot
+# rely on that wrapper's refresh loop having run first. Keep the three files
+# that changed in this Priority 4 implementation coherent on the production
+# laptop: the HRIS entry point, the shared Lane-B executor, and the shared
+# model-policy module it now imports. Each download is cache-busted and staged
+# through a guarded .download file; a failed/truncated/mismatched fetch leaves
+# the last-known-good local copy in place.
+$workInboxRoot = Join-Path (Split-Path -Parent $root) 'work-inbox'
+$refreshStamp = [DateTimeOffset]::UtcNow.ToUnixTimeSeconds()
+$refreshSpecs = @(
+    @{ Name = 'fetch_osm_report_connector.py'; Url = 'https://raw.githubusercontent.com/begb0037admin/hris-dashboard/main/fetch_osm_report_connector.py'; Dest = (Join-Path $root 'fetch_osm_report_connector.py'); Marker = 'def fetch_osm_attachment_via_connector' }
+    @{ Name = 'lane_b_call1.py'; Url = 'https://raw.githubusercontent.com/begb0037admin/work-inbox/main/lane_b_call1.py'; Dest = (Join-Path $workInboxRoot 'lane_b_call1.py'); Marker = 'def run_codex_json' }
+    @{ Name = 'codex_model_policy.py'; Url = 'https://raw.githubusercontent.com/begb0037admin/work-inbox/main/codex_model_policy.py'; Dest = (Join-Path $workInboxRoot 'codex_model_policy.py'); Marker = 'class ModelPolicyViolation' }
+)
+foreach ($spec in $refreshSpecs) {
+    $downloadPath = "$($spec.Dest).download"
+    try {
+        Invoke-WebRequest -UseBasicParsing "$($spec.Url)?t=$refreshStamp" -OutFile $downloadPath -TimeoutSec 30
+        if ((Get-Item -LiteralPath $downloadPath).Length -lt 1000) { throw 'downloaded file too small' }
+        if (-not (Select-String -Quiet -LiteralPath $downloadPath -Pattern $spec.Marker)) {
+            throw "downloaded file missing marker /$($spec.Marker)/"
+        }
+        Move-Item -Force -LiteralPath $downloadPath -Destination $spec.Dest
+        Log "refreshed $($spec.Name) from main (cache-busted, guarded)"
+    } catch {
+        Log "WARN: could not refresh $($spec.Name) ($($_.Exception.Message)) -- keeping local copy"
+        if (Test-Path -LiteralPath $downloadPath) { Remove-Item -LiteralPath $downloadPath -Force }
+    }
+}
 
 # --- Step 1: retry-guard -----------------------------------------------
 try {
@@ -119,6 +163,17 @@ switch ($fetchRc) {
     4 {
         Log "No matching OSM report email found for today yet. Task stays enabled; normal cadence retries."
         & $python (Join-Path $root 'push_automation_status.py') --status failure --step fetch_failed --detail "no matching OSM report email found for today yet" --attempt 1 --max-attempts 1 2>&1 | Tee-Object -FilePath $log -Append
+    }
+    5 {
+        # Added 10 Sep 2026 (Priority 4, touchpoint-3 Codex review finding):
+        # MUST be distinguished from `default` below, which the pre-existing
+        # code treats identically to exit 2/3 -- exactly the masking this
+        # exit code exists to prevent. Not a security HALT (task stays
+        # enabled, unlike exit 1), but a deterministic code/config bug in
+        # codex_model_policy usage, not connector unavailability -- will keep
+        # failing every cycle until fixed, not self-resolving like exit 3.
+        Log "MODEL POLICY VIOLATION -- a code/config bug in codex_model_policy usage (see work-inbox/codex_model_policy.py), NOT connector unavailability. Task stays enabled but this needs investigation, not just a retry."
+        & $python (Join-Path $root 'push_automation_status.py') --status failure --step model_policy_violation --detail "fetch_osm_report_connector.py MODEL POLICY VIOLATION, exit 5 -- code/config bug, not connector flakiness" --attempt 1 --max-attempts 1 2>&1 | Tee-Object -FilePath $log -Append
     }
     default {
         Log "UNEXPECTED exit code $fetchRc -- treating conservatively as a failure, task stays enabled."
