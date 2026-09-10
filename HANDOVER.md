@@ -1,7 +1,47 @@
 # HANDOVER.md — hris-dashboard
 
-Last updated: 10 September 2026, midday/afternoon (Drew) — Fallback model changed to Terra (gpt-5.6-terra), low effort, availability-only trigger semantics locked down. No code change needed in this repo. Full detail below (new top entry). Morning's Priority 4 entry preserved below for history.
-Status: Live and working. **10 Sep, follow-up to Priority 4: the shared `codex_model_policy.py` module this repo imports cross-repo from work-inbox changed its FALLBACK_MODEL from `gpt-5.5` to `gpt-5.6-terra` (low effort) and locked down availability-only trigger semantics — Kevin's explicit decision. This repo needed NO code change: `fetch_osm_report_connector.py` imports `codex_model_policy` fresh at runtime via a `sys.path` insert to the sibling `work-inbox` clone, so the change flows through automatically.** Also: the connector cutover's last open item (first unattended 08:45/09:15/09:45 firing) is CONFIRMED (see morning's entry below).
+Last updated: 10 September 2026, afternoon (Drew) — Priority 4/Terra deployment CONFIRMED LIVE via a real production run, AND a real deployment gap found and fixed: the laptop's production wrapper script had never been redeployed after Priority 4 was committed. Full detail below (new top entry). Prior entries preserved below for history.
+Status: Live and working, deployment gap now closed. See new top entry for the full story.
+
+---
+
+## Session 2026-09-10, afternoon — Priority 4/Terra live-fire confirmation + a real deployment gap found and fixed (Drew)
+
+**Instruction:** per `agent-commons/COORDINATOR_HANDOVER.md`'s outstanding Priority 4 watch item, confirm for real that a genuine scheduled run of the OSM connector fetch invokes `codex exec` with the policy-resolved args, using the actually-deployed code, not a stale local copy or just a passed self-test.
+
+**What I found: a real, concrete deployment gap, not just an observation gap.** Triggered `HRIS Dashboard Morning Refresh (connector)` off-schedule (13:17 BST, outside its 08:45/09:15/09:45 window). The run hit the retry-guard SKIP (today's cycle already had a real success at 08:48) *before even attempting the model-policy code* — but on inspection, it also skipped Step 0's refresh entirely, logging nothing between `started` and `SKIP`. Checked the actually-deployed wrapper on the laptop directly:
+
+- `Run HRIS OSM Connector Fetch (laptop).ps1` on disk: **dated 9 September 18:31, 129 lines** — the pre-Priority-4 version, with no Step 0 refresh block and no exit-code-5 handling at all.
+- `fetch_osm_report_connector.py` on disk: dated 9 September 17:14 — also pre-Priority-4, never refreshed (because the wrapper that would have refreshed it was itself the stale one).
+- Confirmed via `gh api` that `main`'s actual current wrapper (committed as part of `71a6ff0`) is 184 lines with the Step 0 refresh block and exit-5 handling — this had simply never been copied to the laptop after that commit. Unlike the Python files (which self-refresh via `Invoke-WebRequest` each run), the `.ps1` wrapper itself has no self-refresh mechanism — a deploy of a wrapper-level change has always needed a manual copy to the laptop, and that step was missed after Priority 4 shipped.
+
+**Fixed:** backed up the stale wrapper (`...ps1.stale_backup_20260910`) and deployed the current `main` version to `C:\Users\begb0037.AD-OAK\hris-dashboard\Run HRIS OSM Connector Fetch (laptop).ps1` (confirmed writable via a disposable test file first). Verified: 184 lines, LastWriteTime 13:31:15, 5 matches for `refreshSpecs`/`MODEL POLICY VIOLATION`.
+
+**Re-triggered the task after the fix** — Step 0 now genuinely self-refreshes all three files:
+```
+[2026-09-10 13:32:57] refreshed fetch_osm_report_connector.py from main (cache-busted, guarded)
+[2026-09-10 13:32:57] refreshed lane_b_call1.py from main (cache-busted, guarded)
+[2026-09-10 13:32:58] refreshed codex_model_policy.py from main (cache-busted, guarded)
+```
+(then hit the same retry-guard SKIP, as expected/correct behaviour — today's cycle already had a real success).
+
+**Confirmed the actual codex args with a direct, isolated run** — bypassed the retry-guard by invoking the now-freshly-refreshed `fetch_osm_report_connector.py --dry-run <scratch dir>` directly (not through the wrapper), against the real mailbox. Real, live, completed evidence:
+```
+[2026-09-10 13:37:33] connector attempt 1/4 (CODEX_HOME=C:\WorkInboxAI\codex-laneb, personal-account-only, ...)
+[2026-09-10 12:37:33Z] lane_b_call1: [hris_osm] codex model/effort: -m gpt-5.6-luna -c model_reasoning_effort=high (workload_class='high', luna_available=True)
+[2026-09-10 12:37:38Z] lane_b_call1: codex warm-up done in 6s
+[2026-09-10 13:39:56] fetch_attachment returned a download URL for 'All Open Tasks by Team.xls' -- downloading immediately
+[2026-09-10 13:39:59] Saved attachment 'All Open Tasks by Team.xls' (40896 bytes) -> ...\_drew_verify\All Open Tasks by Team - auto.xls
+[2026-09-10 13:39:59] fetch_osm_report_connector.py completed successfully.
+EXIT CODE: 0
+```
+Exactly the expected `-m gpt-5.6-luna -c model_reasoning_effort=high`. Full end-to-end success: real attachment fetched, correct size, exit 0 — not just the codex call in isolation. Scratch dir only, production `data/tickets.json`/`last_automated_run.json` untouched (today's real 08:48 success stands as the day's live data).
+
+**Net result: CONFIRMED, deployment gap CLOSED.** Priority 4/Terra's model-policy code is now genuinely live on the production laptop for this repo's OSM fetch — both the wrapper's own self-refresh mechanism and the underlying `codex exec` args have been proven against the real connector, not just passed locally. The gap that existed (stale wrapper, silently running pre-Priority-4 code with no self-refresh) is exactly the kind of thing this verification task was designed to catch — it would otherwise have kept running unnoticed until the next time someone manually redeployed the wrapper for an unrelated reason.
+
+**Companion entry:** `work-inbox/HANDOVER.md`'s own new top entry documents the equivalent confirmation for Lane B's mail/calendar/Teams domains, plus a real, pre-existing, recurring hang in `lane_b_cal_guard.py` unrelated to this work.
+
+**`agent-commons/COORDINATOR_HANDOVER.md`'s open watch item is now CLOSED for hris-dashboard** — see that file's own update.
 
 ---
 
