@@ -1,7 +1,23 @@
 # HANDOVER.md — hris-dashboard
 
-Last updated: 10 September 2026 (Drew) — Priority 4 (Luna/effort-level policy) implemented for the OSM connector fetch; unattended morning firing confirmed
-Status: Live and working. **10 Sep: model/effort selection for `fetch_osm_report_connector.py`'s codex exec calls now sourced from `codex_model_policy.py` (shared with work-inbox), classified High, model Luna.** Also: the connector cutover's last open item (first unattended 08:45/09:15/09:45 firing) is CONFIRMED. Full detail below (new top entry). 9 Sep entry (the connector migration itself) preserved below for history.
+Last updated: 10 September 2026, midday/afternoon (Drew) — Fallback model changed to Terra (gpt-5.6-terra), low effort, availability-only trigger semantics locked down. No code change needed in this repo. Full detail below (new top entry). Morning's Priority 4 entry preserved below for history.
+Status: Live and working. **10 Sep, follow-up to Priority 4: the shared `codex_model_policy.py` module this repo imports cross-repo from work-inbox changed its FALLBACK_MODEL from `gpt-5.5` to `gpt-5.6-terra` (low effort) and locked down availability-only trigger semantics — Kevin's explicit decision. This repo needed NO code change: `fetch_osm_report_connector.py` imports `codex_model_policy` fresh at runtime via a `sys.path` insert to the sibling `work-inbox` clone, so the change flows through automatically.** Also: the connector cutover's last open item (first unattended 08:45/09:15/09:45 firing) is CONFIRMED (see morning's entry below).
+
+---
+
+## Session 2026-09-10, midday/afternoon — Fallback model: gpt-5.5 -> gpt-5.6-terra, low effort; availability-only trigger semantics (Drew, follow-up to Priority 4)
+
+**Instruction:** Kevin, two explicit decisions confirmed 10 Sep 2026, same day Priority 4 shipped (entry below): (1) change the fallback model from `gpt-5.5` to `gpt-5.6-terra`, forced to LOW reasoning effort on the fallback path regardless of `workload_class`; (2) Terra is an availability fallback only, never a quality-based swap — full spec, in Kevin's own words, now in `constitution/MODEL_POLICY.md`'s "Fallback trigger semantics" section (`constitution@71ca17f`).
+
+**This repo needed NO code change.** `fetch_osm_report_connector.py` doesn't define or vendor a copy of `codex_model_policy.py` — it imports it fresh, cross-repo, via a `sys.path.insert(0, WORKINBOX_REPO_PATH)` pointing at the sibling `work-inbox` clone (see this file's own top-of-script comments, "REUSE, NOT REINVENTION"), and calls `run_codex_json(..., workload_class="high")` without a `luna_available` kwarg of its own — it relies entirely on `lane_b_call1.py`'s shared, module-level `CODEX_LUNA_AVAILABLE` toggle. The model swap flows through automatically the next time this script runs, with no edit needed here.
+
+**Audit finding (part of the same task, applies equally to this repo):** read `fetch_osm_attachment_via_connector()`'s full retry loop in `fetch_osm_report_connector.py`. Every retry is triggered by a technical condition — a timeout, a non-zero/failed `codex exec` run, a `ModelPolicyViolation` (re-raised, not retried), or a guard HALT (`ReContaminationDetected`, immediately terminal) — and every retry re-runs the identical, previously-resolved model/effort selection. No content/quality-based logic of any kind decides when to retry or what model to use. Nothing needed fixing.
+
+**Verification:** `python fetch_osm_report_connector.py --selftest-guard` — all 5 pre-existing checks still pass unchanged (confirms this change, which touched zero lines in this repo, genuinely didn't regress anything here). `gpt-5.6-terra` confirmed present, `supported_in_api: true`, on `C:\WorkInboxAI\codex-laneb` (this script's only CODEX_HOME — Edu has no Outlook Email connector attached) via `models_cache.json`, same live-check method used for Luna/gpt-5.5 previously.
+
+**Codex review:** covered by work-inbox's own three-touchpoint review (touchpoint 3 explicitly confirmed this file has no working-tree changes and re-read its retry logic as part of the full end-to-end pass) — see `work-inbox/HANDOVER.md`'s "T." entry for the full pass history. Not re-run separately here since there was no diff in this repo to review.
+
+**Status:** No commit needed in this repo (no code changed). `codex_model_policy.py` itself lives and is versioned in `work-inbox@0858a81`; `constitution@71ca17f` is the policy source of truth. This HANDOVER.md entry is the checkpoint for hris-dashboard's side of the change.
 
 ---
 
