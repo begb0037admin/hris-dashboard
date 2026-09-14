@@ -115,8 +115,17 @@ try {
 }
 
 # --- Step 2: connector fetch --------------------------------------------
-Log "running: python fetch_osm_report_connector.py"
-& $python (Join-Path $root 'fetch_osm_report_connector.py') 2>&1 | Tee-Object -FilePath $log -Append
+# `-u` (added 14 Sep 2026, work-inbox Bridge Briefing hang investigation --
+# same fix applied there to lane_b_cal_guard.py/lane_b_call1.py). Without it,
+# this child's own stdout -- including every run_codex_json()/`_log()` line
+# fetch_osm_report_connector.py prints while it's mid-connector-call -- is
+# block-buffered whenever it isn't a real terminal, which is true here since
+# it's already piped through Tee-Object. That buffering is exactly what makes
+# a genuinely stuck connector call indistinguishable from a normal slow one
+# in this log until the process finally exits (or never does). No behaviour
+# change beyond making existing log lines appear as they're printed.
+Log "running: python -u fetch_osm_report_connector.py"
+& $python -u (Join-Path $root 'fetch_osm_report_connector.py') 2>&1 | Tee-Object -FilePath $log -Append
 $fetchRc = $LASTEXITCODE
 Log "fetch_osm_report_connector.py exit $fetchRc"
 
