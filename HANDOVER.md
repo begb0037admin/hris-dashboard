@@ -1,7 +1,8 @@
 # HANDOVER.md — hris-dashboard
 
-Last updated: 10 September 2026, afternoon (Drew) — Priority 4/Terra deployment CONFIRMED LIVE via a real production run, AND a real deployment gap found and fixed: the laptop's production wrapper script had never been redeployed after Priority 4 was committed. Full detail below (new top entry). Prior entries preserved below for history.
-Status: Live and working, deployment gap now closed. See new top entry for the full story.
+Last updated: 14 September 2026, evening (Drew) — estate-wide Bridge Briefing hang investigation (work-inbox) broadened to this repo's own Codex M365 connector call. `Run HRIS OSM Connector Fetch (laptop).ps1` fixed: invoked `fetch_osm_report_connector.py` without `-u`, so its real-time `_log()` progress (including from the imported `run_codex_json()`) was block-buffered under `Tee-Object`, same blind spot as work-inbox's own hang. Fixed in `b7f1f2d`. Confirmed via same-day Codex review: this script's connector calls already have a real per-attempt `taskkill /T /F` tree-kill timeout (via `run_codex_json()`, no soft-retry-only gap), and it's already personal-identity-only by construction (no Edu attempt ever made, so no EDU_PARKED-equivalent fix needed). Flagged, not fixed: no single whole-run deadline across the OSM fetch's own 4x2-attempt retry loop (only per-attempt timeouts); `WI_LANE_B_CODEX_HOME_FAILOVER` could in principle override the "personal" identity with no assertion. Note: this wrapper self-refreshes `lane_b_call1.py` from work-inbox's `main` at the start of every run, so its own warm-up tree-kill fix (work-inbox `5340153`) only took effect here once that was pushed — both pushed same session, work-inbox first. Full cross-repo writeup in `work-inbox/HANDOVER.md`'s matching 14 Sep entry, including a process finding about `codex exec --sandbox read-only` not actually preventing file edits when two review dispatches run concurrently against related files.
+
+Prior entry (10 Sep, Priority 4/Terra deployment) preserved below for history.
 
 ---
 
