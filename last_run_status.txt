@@ -1,16 +1,16 @@
-﻿run=184 event=schedule utc=2026-09-14 19:02:19
+﻿run=185 event=schedule utc=2026-09-15 12:28:11
 runner_user=WORKGROUP\DESKTOP-MJDJM64$
 session_file MISSING (or runner cannot see it): C:\actions-runner\_work\hris-dashboard\hris-dashboard\session.json
 session_file OK: C:\Users\admin\Documents\Claude\Projects\HRIS-Dashboard\session.json (chars=12495, modified=06/11/2026 18:17:08)
 session_file MISSING (or runner cannot see it): C:\Users\admin\Documents\Claude\Projects\HRIS-Dashboard\hris-dashboard-local\session.json
 session_file MISSING (or runner cannot see it): C:\Users\admin\Documents\Claude\HRIS-Dashboard\session.json
 --- last 40 lines of dashboard_run.log ---
-2026-09-14 20:02:17,877  INFO     === HRIS Dashboard run started ===
-2026-09-14 20:02:17,879  INFO     Loading session from C:\Users\admin\Documents\Claude\Projects\HRIS-Dashboard\session.json ...
-2026-09-14 20:02:17,887  INFO     Got 11 session cookies for oxford.saasiteu.com
-2026-09-14 20:02:17,887  INFO     Fetching assigned tasks ...
-2026-09-14 20:02:17,888  INFO     GET tasks {'$filter': "Owner eq 'musf0100'", '$select': 'AssignmentID,Owner,OwnerTeam,Subj
-2026-09-14 20:02:18,519  ERROR    SAASIT session expired: OData auth error 401: {
+2026-09-15 13:28:10,335  INFO     === HRIS Dashboard run started ===
+2026-09-15 13:28:10,335  INFO     Loading session from C:\Users\admin\Documents\Claude\Projects\HRIS-Dashboard\session.json ...
+2026-09-15 13:28:10,344  INFO     Got 11 session cookies for oxford.saasiteu.com
+2026-09-15 13:28:10,344  INFO     Fetching assigned tasks ...
+2026-09-15 13:28:10,344  INFO     GET tasks {'$filter': "Owner eq 'musf0100'", '$select': 'AssignmentID,Owner,OwnerTeam,Subj
+2026-09-15 13:28:10,933  ERROR    SAASIT session expired: OData auth error 401: {
 
   "code": "ISM_4001",
 
@@ -21,5 +21,5 @@ session_file MISSING (or runner cannot see it): C:\Users\admin\Documents\Claude\
   "help": ""
 
 }
-2026-09-14 20:02:18,520  ERROR    Dashboard NOT updated â€” the previous data stays live.
+2026-09-15 13:28:10,933  ERROR    Dashboard NOT updated â€” the previous data stays live.
 Fix: run 'Refresh Session.bat' (python login.py) and log in via Oxford SSO to refresh the SAASIT_SESSION secret.
