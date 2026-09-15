@@ -1,11 +1,11 @@
 {
-  "updated": "2026-09-15T08:47:16",
-  "updated_display": "Tuesday 15 September 2026 at 08:47",
-  "report_file": "All Open Tasks by Team - auto.xls",
+  "updated": "2026-09-15T10:35:05",
+  "updated_display": "Tuesday 15 September 2026 at 10:35",
+  "report_file": "All Open Tasks by Team (2).xlsx",
   "summary": {
-    "total": 30,
-    "assigned": 24,
-    "unassigned": 6,
+    "total": 21,
+    "assigned": 20,
+    "unassigned": 1,
     "stale": 6,
     "oldest_days": 208
   },
@@ -40,7 +40,7 @@
     },
     {
       "name": "Asta Palmer",
-      "ticket_count": 12,
+      "ticket_count": 9,
       "tickets": [
         {
           "task_num": "50977943",
@@ -61,95 +61,7 @@
           "analyst": "Asta Palmer",
           "category": "",
           "created": "11 Sep 2026",
-          "days": 3,
-          "team": "HRIS Sys Admin"
-        },
-        {
-          "task_num": "50985340",
-          "summary": "HR User Access New - Hannah Rackauskas",
-          "status": "Accepted",
-          "priority": "5",
-          "analyst": "Asta Palmer",
-          "category": "",
-          "created": "14 Sep 2026",
-          "days": 0,
-          "team": "HRIS Sys Admin"
-        },
-        {
-          "task_num": "50985455",
-          "summary": "Manager Self Service Change - Larissa Voltolini Nunes",
-          "status": "Accepted",
-          "priority": "3",
-          "analyst": "Asta Palmer",
-          "category": "",
-          "created": "14 Sep 2026",
-          "days": 0,
-          "team": "HRIS Sys Admin"
-        },
-        {
-          "task_num": "50985457",
-          "summary": "Manager Self Service Change - Dermot O'Hare",
-          "status": "Accepted",
-          "priority": "3",
-          "analyst": "Asta Palmer",
-          "category": "",
-          "created": "14 Sep 2026",
-          "days": 0,
-          "team": "HRIS Sys Admin"
-        },
-        {
-          "task_num": "50985508",
-          "summary": "Manager Self Service Add - Angela Russell",
-          "status": "Accepted",
-          "priority": "3",
-          "analyst": "Asta Palmer",
-          "category": "",
-          "created": "14 Sep 2026",
-          "days": 0,
-          "team": "HRIS Sys Admin"
-        },
-        {
-          "task_num": "50985509",
-          "summary": "Manager Self Service Remove - Edward Anderson",
-          "status": "Accepted",
-          "priority": "3",
-          "analyst": "Asta Palmer",
-          "category": "",
-          "created": "14 Sep 2026",
-          "days": 0,
-          "team": "HRIS Sys Admin"
-        },
-        {
-          "task_num": "50985518",
-          "summary": "Manager Self Service Add - Graham Blackman",
-          "status": "Accepted",
-          "priority": "3",
-          "analyst": "Asta Palmer",
-          "category": "",
-          "created": "14 Sep 2026",
-          "days": 0,
-          "team": "HRIS Sys Admin"
-        },
-        {
-          "task_num": "50985519",
-          "summary": "Manager Self Service Add - Una Rennard",
-          "status": "Accepted",
-          "priority": "3",
-          "analyst": "Asta Palmer",
-          "category": "",
-          "created": "14 Sep 2026",
-          "days": 0,
-          "team": "HRIS Sys Admin"
-        },
-        {
-          "task_num": "50985520",
-          "summary": "Manager Self Service Add - Louise Dalton",
-          "status": "Accepted",
-          "priority": "3",
-          "analyst": "Asta Palmer",
-          "category": "",
-          "created": "14 Sep 2026",
-          "days": 0,
+          "days": 4,
           "team": "HRIS Sys Admin"
         },
         {
@@ -164,13 +76,68 @@
           "team": "HRIS Sys Admin"
         },
         {
-          "task_num": "50985615",
-          "summary": "HR User Change Access - Sarah Willcox-Jones",
+          "task_num": "50985649",
+          "summary": "Rename Work Group - Rebecca Fitzek",
+          "status": "Accepted",
+          "priority": "3",
+          "analyst": "Asta Palmer",
+          "category": "",
+          "created": "14 Sep 2026",
+          "days": 0,
+          "team": "HRIS Sys Admin"
+        },
+        {
+          "task_num": "50985652",
+          "summary": "Rename Work Group - Rebecca Fitzek",
+          "status": "Accepted",
+          "priority": "3",
+          "analyst": "Asta Palmer",
+          "category": "",
+          "created": "14 Sep 2026",
+          "days": 0,
+          "team": "HRIS Sys Admin"
+        },
+        {
+          "task_num": "50985658",
+          "summary": "Rename Work Group - Rebecca Fitzek",
+          "status": "Accepted",
+          "priority": "3",
+          "analyst": "Asta Palmer",
+          "category": "",
+          "created": "14 Sep 2026",
+          "days": 0,
+          "team": "HRIS Sys Admin"
+        },
+        {
+          "task_num": "50985721",
+          "summary": "Manager Self Service Add - Ruta Buivydaite",
+          "status": "Accepted",
+          "priority": "3",
+          "analyst": "Asta Palmer",
+          "category": "",
+          "created": "15 Sep 2026",
+          "days": 0,
+          "team": "HRIS Sys Admin"
+        },
+        {
+          "task_num": "50985722",
+          "summary": "Manager Self Service Add - Michelle Degli Esposti",
+          "status": "Accepted",
+          "priority": "3",
+          "analyst": "Asta Palmer",
+          "category": "",
+          "created": "15 Sep 2026",
+          "days": 0,
+          "team": "HRIS Sys Admin"
+        },
+        {
+          "task_num": "50985734",
+          "summary": "HR User Change Access - Anna Schneiderova",
           "status": "Accepted",
           "priority": "5",
           "analyst": "Asta Palmer",
           "category": "",
-          "created": "14 Sep 2026",
+          "created": "15 Sep 2026",
           "days": 0,
           "team": "HRIS Sys Admin"
         }
@@ -188,7 +155,7 @@
           "analyst": "Michael O'Sullivan",
           "category": "",
           "created": "12 Jun 2026",
-          "days": 94,
+          "days": 95,
           "team": "HRIS Analysis"
         },
         {
@@ -271,30 +238,19 @@
           "analyst": "Simon Burford",
           "category": "Recruitment",
           "created": "23 Apr 2026",
-          "days": 144,
+          "days": 145,
           "team": "HRIS Analysis"
         }
       ]
     },
     {
       "name": "Kevin Lelitte",
-      "ticket_count": 2,
+      "ticket_count": 1,
       "tickets": [
-        {
-          "task_num": "50981420",
-          "summary": "Error message accessing PXD reporting",
-          "status": "Waiting",
-          "priority": "5",
-          "analyst": "Kevin Lelitte",
-          "category": "HR Reporting",
-          "created": "01 Sep 2026",
-          "days": 13,
-          "team": "HRIS Analysis"
-        },
         {
           "task_num": "50985406",
           "summary": "short url for vacancies not working for external users",
-          "status": "Assigned",
+          "status": "Waiting",
           "priority": "5",
           "analyst": "Kevin Lelitte",
           "category": "Recruitment",
@@ -307,17 +263,6 @@
   ],
   "unassigned": [
     {
-      "task_num": "50985099",
-      "summary": "IRIS",
-      "status": "Logged",
-      "priority": "5",
-      "analyst": "",
-      "category": "IRIS - Health and Safety Incident Reporting and Investigatio",
-      "created": "11 Sep 2026",
-      "days": 3,
-      "team": "Health and Safety 2nd Line"
-    },
-    {
       "task_num": "50985462",
       "summary": "Cority deletion request",
       "status": "Logged",
@@ -327,50 +272,6 @@
       "created": "14 Sep 2026",
       "days": 0,
       "team": "Health and Safety 2nd Line"
-    },
-    {
-      "task_num": "50985649",
-      "summary": "Rename Work Group - Rebecca Fitzek",
-      "status": "Logged",
-      "priority": "3",
-      "analyst": "",
-      "category": "",
-      "created": "14 Sep 2026",
-      "days": 0,
-      "team": "HRIS Sys Admin"
-    },
-    {
-      "task_num": "50985652",
-      "summary": "Rename Work Group - Rebecca Fitzek",
-      "status": "Logged",
-      "priority": "3",
-      "analyst": "",
-      "category": "",
-      "created": "14 Sep 2026",
-      "days": 0,
-      "team": "HRIS Sys Admin"
-    },
-    {
-      "task_num": "50985658",
-      "summary": "Rename Work Group - Rebecca Fitzek",
-      "status": "Logged",
-      "priority": "3",
-      "analyst": "",
-      "category": "",
-      "created": "14 Sep 2026",
-      "days": 0,
-      "team": "HRIS Sys Admin"
-    },
-    {
-      "task_num": "50985687",
-      "summary": "ESS X 9",
-      "status": "Logged",
-      "priority": "5",
-      "analyst": "",
-      "category": "",
-      "created": "15 Sep 2026",
-      "days": 0,
-      "team": "HRIS Sys Admin"
     }
   ]
 }
