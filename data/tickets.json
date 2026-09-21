@@ -1,13 +1,13 @@
 {
-  "updated": "2026-09-21T08:47:09",
-  "updated_display": "Monday 21 September 2026 at 08:47",
-  "report_file": "All Open Tasks by Team - auto.xls",
+  "updated": "2026-09-21T13:29:41",
+  "updated_display": "Monday 21 September 2026 at 13:29",
+  "report_file": "All Open Tasks by Team (3).xlsx",
   "summary": {
-    "total": 23,
-    "assigned": 20,
-    "unassigned": 3,
+    "total": 30,
+    "assigned": 25,
+    "unassigned": 5,
     "stale": 6,
-    "oldest_days": 214
+    "oldest_days": 215
   },
   "analysts": [
     {
@@ -22,7 +22,7 @@
           "analyst": "James Salas Guillen",
           "category": "Odyssey",
           "created": "18 Feb 2026",
-          "days": 214,
+          "days": 215,
           "team": "Health and Safety 2nd Line"
         },
         {
@@ -40,7 +40,7 @@
     },
     {
       "name": "Asta Palmer",
-      "ticket_count": 9,
+      "ticket_count": 12,
       "tickets": [
         {
           "task_num": "50977943",
@@ -54,19 +54,8 @@
           "team": "HRIS Analysis"
         },
         {
-          "task_num": "50986131",
-          "summary": "Bulk update - Chem HR approver access",
-          "status": "Accepted",
-          "priority": "5",
-          "analyst": "Asta Palmer",
-          "category": "",
-          "created": "16 Sep 2026",
-          "days": 4,
-          "team": "HRIS Sys Admin"
-        },
-        {
           "task_num": "50986918",
-          "summary": "Add Shift Type x 23  - Jo Cousin",
+          "summary": "[waiting] Add Shift Type x 23  - Jo Cousin",
           "status": "Accepted",
           "priority": "3",
           "analyst": "Asta Palmer",
@@ -94,7 +83,7 @@
           "analyst": "Asta Palmer",
           "category": "People Management",
           "created": "18 Sep 2026",
-          "days": 2,
+          "days": 3,
           "team": "HRIS Sys Admin"
         },
         {
@@ -105,7 +94,7 @@
           "analyst": "Asta Palmer",
           "category": "",
           "created": "18 Sep 2026",
-          "days": 2,
+          "days": 3,
           "team": "HRIS Sys Admin"
         },
         {
@@ -140,6 +129,50 @@
           "created": "18 Sep 2026",
           "days": 2,
           "team": "HRIS Sys Admin"
+        },
+        {
+          "task_num": "50987492",
+          "summary": "Manager Self Service Add - Kok Wan",
+          "status": "Accepted",
+          "priority": "3",
+          "analyst": "Asta Palmer",
+          "category": "",
+          "created": "21 Sep 2026",
+          "days": 0,
+          "team": "HRIS Sys Admin"
+        },
+        {
+          "task_num": "50987505",
+          "summary": "Add Shift Type - Megan Ford",
+          "status": "Accepted",
+          "priority": "3",
+          "analyst": "Asta Palmer",
+          "category": "",
+          "created": "21 Sep 2026",
+          "days": 0,
+          "team": "HRIS Sys Admin"
+        },
+        {
+          "task_num": "50987548",
+          "summary": "ESS set up WIKTOR JASNIAK (2411518) sedm6599",
+          "status": "Accepted",
+          "priority": "5",
+          "analyst": "Asta Palmer",
+          "category": "HR Self-Service",
+          "created": "21 Sep 2026",
+          "days": 0,
+          "team": "HRIS Sys Admin"
+        },
+        {
+          "task_num": "50987652",
+          "summary": "HR User Access New - Jade Keen",
+          "status": "Accepted",
+          "priority": "5",
+          "analyst": "Asta Palmer",
+          "category": "",
+          "created": "21 Sep 2026",
+          "days": 0,
+          "team": "HRIS Sys Admin"
         }
       ]
     },
@@ -155,7 +188,7 @@
           "analyst": "Michael O'Sullivan",
           "category": "",
           "created": "12 Jun 2026",
-          "days": 100,
+          "days": 101,
           "team": "HRIS Analysis"
         },
         {
@@ -188,7 +221,7 @@
           "analyst": "Michael O'Sullivan",
           "category": "Time and Attendance",
           "created": "24 Aug 2026",
-          "days": 27,
+          "days": 28,
           "team": "HRIS Analysis"
         },
         {
@@ -227,14 +260,14 @@
           "analyst": "Simon Burford",
           "category": "Recruitment",
           "created": "23 Apr 2026",
-          "days": 150,
+          "days": 151,
           "team": "HRIS Analysis"
         }
       ]
     },
     {
       "name": "Kevin Lelitte",
-      "ticket_count": 2,
+      "ticket_count": 4,
       "tickets": [
         {
           "task_num": "50985406",
@@ -244,18 +277,40 @@
           "analyst": "Kevin Lelitte",
           "category": "Recruitment",
           "created": "14 Sep 2026",
-          "days": 6,
+          "days": 7,
           "team": "HRIS Analysis"
         },
         {
-          "task_num": "50986602",
-          "summary": "URGENT - REF29 UDF Upload to UOXP by Friday 18th September",
-          "status": "Assigned",
+          "task_num": "50987243",
+          "summary": "PRIVATE AND CONFIDENTIAL: Subject Access Request (ref. DPA/20260917/245)",
+          "status": "Accepted",
           "priority": "5",
           "analyst": "Kevin Lelitte",
-          "category": "People Management",
-          "created": "17 Sep 2026",
+          "category": "Data Protection Request",
+          "created": "18 Sep 2026",
           "days": 3,
+          "team": "HRIS Analysis"
+        },
+        {
+          "task_num": "50987593",
+          "summary": "Payroll - session expired issue",
+          "status": "Accepted",
+          "priority": "5",
+          "analyst": "Kevin Lelitte",
+          "category": "Payroll",
+          "created": "21 Sep 2026",
+          "days": 0,
+          "team": "HRIS Analysis"
+        },
+        {
+          "task_num": "50987608",
+          "summary": "FOI/202609/1014 - Recruitment records 2021-2023",
+          "status": "Accepted",
+          "priority": "5",
+          "analyst": "Kevin Lelitte",
+          "category": "Data Protection Request",
+          "created": "21 Sep 2026",
+          "days": 0,
           "team": "HRIS Analysis"
         }
       ]
@@ -274,26 +329,48 @@
       "team": "Health and Safety 2nd Line"
     },
     {
-      "task_num": "50987243",
-      "summary": "PRIVATE AND CONFIDENTIAL: Subject Access Request (ref. DPA/20260917/245)",
+      "task_num": "50987693",
+      "summary": "Manager Self Service Add - Cristina McKean",
       "status": "Logged",
-      "priority": "5",
+      "priority": "3",
       "analyst": "",
-      "category": "Data Protection Request",
-      "created": "18 Sep 2026",
-      "days": 2,
-      "team": "HRIS Analysis"
+      "category": "",
+      "created": "21 Sep 2026",
+      "days": 0,
+      "team": "HRIS Sys Admin"
     },
     {
-      "task_num": "50986203",
-      "summary": "HR Reporting Email - Alix de Calignon",
+      "task_num": "50987701",
+      "summary": "Create Work Group - Florian Groelly",
+      "status": "Logged",
+      "priority": "3",
+      "analyst": "",
+      "category": "",
+      "created": "21 Sep 2026",
+      "days": 0,
+      "team": "HRIS Sys Admin"
+    },
+    {
+      "task_num": "50987712",
+      "summary": "HR User Change Access - Hayley Morris",
       "status": "Logged",
       "priority": "5",
       "analyst": "",
       "category": "",
-      "created": "16 Sep 2026",
-      "days": 4,
-      "team": "HRIS Service Desk"
+      "created": "21 Sep 2026",
+      "days": 0,
+      "team": "HRIS Sys Admin"
+    },
+    {
+      "task_num": "50987718",
+      "summary": "Add Shift Type - Evie Winchester",
+      "status": "Logged",
+      "priority": "3",
+      "analyst": "",
+      "category": "",
+      "created": "21 Sep 2026",
+      "days": 0,
+      "team": "HRIS Sys Admin"
     }
   ]
 }
