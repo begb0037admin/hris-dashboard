@@ -1,10 +1,10 @@
 {
-  "timestamp": "2026-09-24T14:23:25",
-  "timestamp_display": "Thursday 24 September 2026 at 14:23",
+  "timestamp": "2026-09-24T14:29:01",
+  "timestamp_display": "Thursday 24 September 2026 at 14:29",
   "status": "failure",
-  "step": "fetch_failed",
-  "detail": "fetch_osm_report.py exited 1 - see osm_auto_refresh_last_run.log",
+  "step": "connector_unavailable",
+  "detail": "fetch_osm_report_connector.py connector unavailable this cycle, exit 3",
   "trigger": "automated",
-  "attempt": 3,
-  "max_attempts": 3
+  "attempt": 1,
+  "max_attempts": 1
 }
