@@ -189,33 +189,40 @@ OSM_M365_ACCOUNT = "kevin.lelitte@admin.ox.ac.uk"
 # Edu -- Edu cannot run the Outlook connector headless: two 180s timeouts, no tool
 # calls). codex-lanec = kevin@lelitte.com (Plus), live-verified working 5 Oct 2026.
 _ENV_HOME = os.environ.get("HRIS_CODEX_HOME", "").strip()
-# Kevin's policy (1 Oct 2026): begb0037@ox.ac.uk (Edu) DEFAULT -> kevin@lelitte.co.uk
-# -> kevin@lelitte.com. Homes without an auth.json are skipped. HRIS_CODEX_HOME,
-# if set, overrides the ring with that single home. Edu (codex-laneb) does NOT
-# offer gpt-5.6-luna, so the model is the first of MODEL_PREFERENCE present in
-# that home's own models_cache.json (applied via lane_b_call1.CODEX_MODEL, the
-# existing -m override; effort stays policy-locked high).
-MODEL_PREFERENCE = ["gpt-5.6-luna", "gpt-5.6-sol", "gpt-5.6-terra", "gpt-5.5"]
+# Kevin's policy (1 Oct 2026): begb0037@ox.ac.uk DEFAULT -> kevin@lelitte.co.uk ->
+# kevin@lelitte.com. Homes without an auth.json are skipped. HRIS_CODEX_HOME, if
+# set, overrides the ring with that single home. MODELS (Kevin, 5 Oct 2026), always
+# with -c model_reasoning_effort=high and no fallback substitution:
+#   begb (Edu): gpt-6-luna -- the slug the Codex desktop app shows ("GPT-6 Luna High").
+#     Headless codex-cli 0.151.0 (npm) rejects it ("Model metadata not found" / 400),
+#     but the app-bundled codex.exe (0.159.2) accepts it -- live-verified 5 Oct 2026.
+#     So begb runs through the app's bundled binary (newest
+#     %LOCALAPPDATA%\OpenAI\Codex\bin\<hash>\codex.exe; override HRIS_CODEX_APP_BIN).
+#   lelitte.* (Plus): gpt-5.6-luna via the normal `codex` CLI (policy default).
+# A 400 "model not supported" advances the ring immediately (no retry, no wait).
 ACCOUNT_RING = [
-    {"label": "begb0037@ox.ac.uk", "home": r"C:\WorkInboxAI\codex-laneb", "timeout": 420, "retries": 1},
-    {"label": "kevin@lelitte.co.uk", "home": os.environ.get("HRIS_CODEX_HOME_LELITTE_CO_UK", r"C:\WorkInboxAI\codex-lelitte-couk"), "timeout": 420, "retries": 1},
-    {"label": "kevin@lelitte.com", "home": r"C:\WorkInboxAI\codex-lanec", "timeout": None, "retries": None},
+    {"label": "begb0037@ox.ac.uk", "home": r"C:\WorkInboxAI\codex-laneb", "timeout": 420, "retries": 1,
+     "model": "gpt-6-luna", "bin": "app"},
+    {"label": "kevin@lelitte.co.uk", "home": os.environ.get("HRIS_CODEX_HOME_LELITTE_CO_UK", r"C:\WorkInboxAI\codex-lelitte-couk"),
+     "timeout": 420, "retries": 1, "model": "", "bin": None},
+    {"label": "kevin@lelitte.com", "home": r"C:\WorkInboxAI\codex-lanec", "timeout": None, "retries": None,
+     "model": "", "bin": None},
 ]
+_ENV_HOME = os.environ.get("HRIS_CODEX_HOME", "").strip()
 if _ENV_HOME:
-    ACCOUNT_RING = [{"label": "HRIS_CODEX_HOME", "home": _ENV_HOME, "timeout": None, "retries": None}]
+    ACCOUNT_RING = [{"label": "HRIS_CODEX_HOME", "home": _ENV_HOME, "timeout": None, "retries": None,
+                     "model": "", "bin": None}]
 
 
-def _home_model(home: str) -> str:
-    try:
-        import json as _json
-        have = {m.get("slug") for m in _json.loads(
-            (Path(home) / "models_cache.json").read_text(encoding="utf-8")).get("models", [])}
-        for m in MODEL_PREFERENCE:
-            if m in have:
-                return m
-    except Exception:  # noqa: BLE001
-        pass
-    return MODEL_PREFERENCE[0]
+def _app_codex_bin():
+    import glob
+    ov = os.environ.get("HRIS_CODEX_APP_BIN", "").strip()
+    if ov and os.path.isfile(ov):
+        return ov
+    base = os.path.join(os.environ.get("LOCALAPPDATA", r"C:\Users\begb0037.AD-OAK\AppData\Local"),
+                        "OpenAI", "Codex", "bin", "*", "codex.exe")
+    found = sorted(glob.glob(base), key=os.path.getmtime, reverse=True)
+    return found[0] if found else None
 
 
 _URL_RE = re.compile(r"^https?://", re.IGNORECASE)
@@ -356,6 +363,10 @@ def _find_attachment_filename(tool_calls: list[dict]) -> str:
     return ""
 
 
+class ModelUnsupported(RuntimeError):
+    """400 model-not-supported: advance the ring immediately, never retry."""
+
+
 class OsmEmailNotFoundToday(RuntimeError):
     """Raised when the connector session ran cleanly (no guard issue) but
     found no matching email for today -- maps to exit 4, distinct from a
@@ -368,22 +379,34 @@ def fetch_osm_attachment_via_connector(today_iso: str) -> tuple[bytes, str]:
     """Walk ACCOUNT_RING; guard HALT / policy violation / email-not-found are
     terminal (propagate); a RuntimeError (auth/timeout/no tools) advances."""
     import lane_b_call1 as _lb
+    _ORIG_CODEX_BIN = _lb.CODEX_BIN
     errs = []
+    notfound = None
     for acct in ACCOUNT_RING:
         home = acct["home"]
         if not (Path(home) / "auth.json").is_file():
             _log(f"[ring] skipping {acct['label']}: no auth.json in {home} (needs `codex login` into that CODEX_HOME)")
             errs.append(f"{acct['label']}: skipped")
             continue
-        _lb.CODEX_MODEL = _home_model(home)
-        _log(f"[ring] trying {acct['label']} (CODEX_HOME={home}, model={_lb.CODEX_MODEL})")
+        _lb.CODEX_MODEL = acct.get("model") or ""  # "" = codex_model_policy default (gpt-5.6-luna, effort high)
+        _lb.CODEX_BIN = (_app_codex_bin() or _ORIG_CODEX_BIN) if acct.get("bin") == "app" else _ORIG_CODEX_BIN
+        _log(f"[ring] trying {acct['label']} (CODEX_HOME={home}, model={_lb.CODEX_MODEL or 'gpt-5.6-luna'}/high bin={_lb.CODEX_BIN})")
         try:
             return _fetch_from_home(today_iso, home, acct["timeout"] or OSM_TIMEOUT_S, acct["retries"] or OSM_RETRIES)
+        except OsmEmailNotFoundToday as e:
+            # A "not found" from one account is NOT authoritative (gpt-6-luna on begb
+            # returned a false negative 5 Oct 2026) -- try the next account; only
+            # raise it if no account fetched anything.
+            _log(f"[ring] {acct['label']} reported no email for today ({str(e)[:80]!r}) -- advancing to confirm")
+            notfound = e
+            errs.append(f"{acct['label']}: not found")
         except RuntimeError as e:
-            if isinstance(e, (ReContaminationDetected, OsmEmailNotFoundToday)):
+            if isinstance(e, ReContaminationDetected):
                 raise
             _log(f"[ring] {acct['label']} failed ({e}) -- advancing")
             errs.append(f"{acct['label']}: {e}")
+    if notfound is not None:
+        raise notfound
     raise RuntimeError("all accounts in the ring failed: " + "; ".join(errs))
 
 
@@ -433,6 +456,10 @@ def _fetch_from_home(today_iso: str, home: str, timeout_s: int, retries: int) ->
                 time.sleep(wait)
             continue
 
+        _errtxt = " ".join(str(o) for o in objs if isinstance(o, dict)
+                            and str(o.get("type", "")).lower() in ("error", "turn.failed")).lower()
+        if "not supported" in _errtxt and "model" in _errtxt:
+            raise ModelUnsupported(f"model not supported on {home} (HTTP 400) -- failing fast, advancing ring")
         # Persist the raw transcript for auditability -- same convention as
         # lane_b_call1.py's own <ts>_call1_<domain>_<identity>_a<n>.jsonl files.
         try:
@@ -449,7 +476,7 @@ def _fetch_from_home(today_iso: str, home: str, timeout_s: int, retries: int) ->
                 f"[hris_osm] unexpected tool call(s): {sorted(set(unexpected))} (seen: {sorted(set(seen))})"
             )
 
-        did_search = any(tc["tool"].split(".")[-1] == "search_messages" for tc in tool_calls)
+        did_search = any(tc["tool"].split(".")[-1] in ("search_messages", "list_messages") for tc in tool_calls)
         did_fetch = any(tc["tool"].split(".")[-1] == "fetch_attachment" for tc in tool_calls)
 
         if did_fetch:
