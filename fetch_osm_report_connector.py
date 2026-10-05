@@ -41,16 +41,15 @@ This script imports its connector primitives directly from work-inbox's
 lane_b_call1.py (same machine, same account, same already-proven code):
 run_codex_json (subprocess invocation + retry/backoff/tree-kill), the JSONL
 parser, extract_tool_calls, ReContaminationDetected, READ_VERB_RE/
-WRITE_VERB_RE (the verb classification the guard is built on), and
-FAILOVER_CODEX_HOME (the personal-account CODEX_HOME already logged into
-and proven working for mail). It does NOT import guard_recontamination()
-itself or LANE_B_NAMESPACES -- those are scoped to work-inbox's own
-calendar/teams/mail domains. Instead this script runs its own narrower
-danger-scan restricted to exactly {"microsoft_outlook_email"} (this script
-has no legitimate reason to ever touch calendar or Teams tools, so it does
-not inherit that trust surface) built on the SAME imported verb regexes, so
-verb classification can never drift from work-inbox's own definition even
-though the namespace allowlist here is deliberately narrower.
+WRITE_VERB_RE (the verb classification the guard is built on), and the
+shared safety rule and timestamp helper. It does NOT import
+guard_recontamination() itself or LANE_B_NAMESPACES -- those are scoped to
+work-inbox's own calendar/teams/mail domains. Instead this script runs its
+own narrower danger-scan restricted to exactly {"microsoft_outlook_email"}
+(this script has no legitimate reason to ever touch calendar or Teams tools,
+so it does not inherit that trust surface) built on the SAME imported verb
+regexes, so verb classification can never drift from work-inbox's own
+definition even though the namespace allowlist here is deliberately narrower.
 
 KNOWN COUPLING, DISCLOSED NOT HIDDEN: this script has a hard runtime
 dependency on work-inbox's lane_b_call1.py existing at WORKINBOX_REPO_PATH
@@ -165,62 +164,69 @@ OSM_RETRIES = max(1, int(os.environ.get("HRIS_OSM_RETRIES", "4")))
 OSM_RETRY_BACKOFF_S = [10, 25, 45, 60]
 OSM_TIMEOUT_S = int(os.environ.get("HRIS_OSM_TIMEOUT", str(CALL1_TIMEOUT_S)))
 
-# Added 5 Oct 2026 (Drew) -- root-cause fix for an 11-day (24 Sep - 5 Oct)
-# 100%-failure streak, root-caused via a live reproduction on this machine
-# (every attempt: "connector tools never fired", not an auth/reauth error).
-# work-inbox's 24-25 Sep 2026 "three-identity connector failover ring" work
-# (lane_b_call1.py commits 75eea0ba/2675afa7) connected the SAME FAILOVER
-# identity (C:\WorkInboxAI\codex-laneb, kevin@lelitte.co.uk) to MULTIPLE M365
-# accounts (an Oxford mailbox alongside the personal one). Once the connector
-# account-picker became model-mediated, an unqualified "my Inbox" prompt
-# stopped reliably producing a tool call at all -- the model has no
-# deterministic way to choose an account, so some runs silently issue zero
-# tool calls. work-inbox's own fix (`_prompt_for_identity()`) is to name the
-# target mailbox explicitly as a single short leading sentence. This script
-# was never updated to match when that fix shipped -- it's a narrower,
-# single-identity caller that doesn't go through work-inbox's ring/
-# _prompt_for_identity() machinery, so it needs the same sentence inlined
-# here. Account value matches lane_b_identities.json's "personal-uk" entry
-# (same CODEX_HOME this script already hardcodes via FAILOVER_CODEX_HOME).
+# Account order is fixed: begb0037@ox.ac.uk, then kevin@lelitte.co.uk, then
+# kevin@lelitte.com. Each tier uses gpt-6-luna with high reasoning effort.
+# Plain `codex` is the normal executable. The desktop app's codex.exe is used
+# only once as a same-tier fallback when plain codex reports that the model is
+# unsupported. HRIS_CODEX_HOME replaces the ring with one home but keeps the
+# same model and execution rules.
+ACCOUNT_RING = [
+    {
+        "label": "begb0037@ox.ac.uk",
+        "home": r"C:\WorkInboxAI\codex-laneb",
+        "timeout": 420,
+        "retries": 1,
+    },
+    {
+        "label": "kevin@lelitte.co.uk",
+        "home": os.environ.get(
+            "HRIS_CODEX_HOME_LELITTE_CO_UK",
+            r"C:\WorkInboxAI\codex-lelitte-couk",
+        ),
+        "timeout": 420,
+        "retries": 1,
+    },
+    {
+        "label": "kevin@lelitte.com",
+        "home": r"C:\WorkInboxAI\codex-lanec",
+        "timeout": None,
+        "retries": None,
+    },
+]
+
+# M365 account used by the OSM report prompt.
 OSM_M365_ACCOUNT = "kevin.lelitte@admin.ox.ac.uk"
 
-# 5 Oct 2026: pinned explicitly instead of importing lane_b_call1.FAILOVER_CODEX_HOME
-# (ring slot 1 of work-inbox's lane_b_identities.json, which became begb0037@ox.ac.uk
-# Edu -- Edu cannot run the Outlook connector headless: two 180s timeouts, no tool
-# calls). codex-lanec = kevin@lelitte.com (Plus), live-verified working 5 Oct 2026.
-_ENV_HOME = os.environ.get("HRIS_CODEX_HOME", "").strip()
-# Kevin's policy (1 Oct 2026): begb0037@ox.ac.uk DEFAULT -> kevin@lelitte.co.uk ->
-# kevin@lelitte.com. Homes without an auth.json are skipped. HRIS_CODEX_HOME, if
-# set, overrides the ring with that single home. MODELS (Kevin, 5 Oct 2026), always
-# with -c model_reasoning_effort=high and no fallback substitution:
-#   begb (Edu): gpt-6-luna -- the slug the Codex desktop app shows ("GPT-6 Luna High").
-#     Headless codex-cli 0.151.0 (npm) rejects it ("Model metadata not found" / 400),
-#     but the app-bundled codex.exe (0.159.2) accepts it -- live-verified 5 Oct 2026.
-#     So begb runs through the app's bundled binary (newest
-#     %LOCALAPPDATA%\OpenAI\Codex\bin\<hash>\codex.exe; override HRIS_CODEX_APP_BIN).
-#   lelitte.* (Plus): gpt-5.6-luna via the normal `codex` CLI (policy default).
-# A 400 "model not supported" advances the ring immediately (no retry, no wait).
-ACCOUNT_RING = [
-    {"label": "begb0037@ox.ac.uk", "home": r"C:\WorkInboxAI\codex-laneb", "timeout": 420, "retries": 1,
-     "model": "gpt-6-luna", "bin": "app"},
-    {"label": "kevin@lelitte.co.uk", "home": os.environ.get("HRIS_CODEX_HOME_LELITTE_CO_UK", r"C:\WorkInboxAI\codex-lelitte-couk"),
-     "timeout": 420, "retries": 1, "model": "", "bin": None},
-    {"label": "kevin@lelitte.com", "home": r"C:\WorkInboxAI\codex-lanec", "timeout": None, "retries": None,
-     "model": "", "bin": None},
-]
 _ENV_HOME = os.environ.get("HRIS_CODEX_HOME", "").strip()
 if _ENV_HOME:
-    ACCOUNT_RING = [{"label": "HRIS_CODEX_HOME", "home": _ENV_HOME, "timeout": None, "retries": None,
-                     "model": "", "bin": None}]
+    ACCOUNT_RING = [
+        {
+            "label": "HRIS_CODEX_HOME",
+            "home": _ENV_HOME,
+            "timeout": None,
+            "retries": None,
+        }
+    ]
 
 
 def _app_codex_bin():
+    """Return the desktop app's codex.exe path, if one is available."""
     import glob
-    ov = os.environ.get("HRIS_CODEX_APP_BIN", "").strip()
-    if ov and os.path.isfile(ov):
-        return ov
-    base = os.path.join(os.environ.get("LOCALAPPDATA", r"C:\Users\begb0037.AD-OAK\AppData\Local"),
-                        "OpenAI", "Codex", "bin", "*", "codex.exe")
+
+    override = os.environ.get("HRIS_CODEX_APP_BIN", "").strip()
+    if override and os.path.isfile(override):
+        return override
+    base = os.path.join(
+        os.environ.get(
+            "LOCALAPPDATA",
+            r"C:\Users\begb0037.AD-OAK\AppData\Local",
+        ),
+        "OpenAI",
+        "Codex",
+        "bin",
+        "*",
+        "codex.exe",
+    )
     found = sorted(glob.glob(base), key=os.path.getmtime, reverse=True)
     return found[0] if found else None
 
@@ -364,7 +370,7 @@ def _find_attachment_filename(tool_calls: list[dict]) -> str:
 
 
 class ModelUnsupported(RuntimeError):
-    """400 model-not-supported: advance the ring immediately, never retry."""
+    """400 model-not-supported: try the app binary once, then advance."""
 
 
 class OsmEmailNotFoundToday(RuntimeError):
@@ -376,35 +382,83 @@ class OsmEmailNotFoundToday(RuntimeError):
 
 
 def fetch_osm_attachment_via_connector(today_iso: str) -> tuple[bytes, str]:
-    """Walk ACCOUNT_RING; guard HALT / policy violation / email-not-found are
-    terminal (propagate); a RuntimeError (auth/timeout/no tools) advances."""
+    """Walk ACCOUNT_RING; guard HALT and policy violation are terminal.
+    Model-unsupported errors get one same-tier app-binary fallback when
+    available. A no-email result advances unless no tier fetches the file."""
     import lane_b_call1 as _lb
-    _ORIG_CODEX_BIN = _lb.CODEX_BIN
+
+    original_codex_bin = _lb.CODEX_BIN
     errs = []
     notfound = None
+
     for acct in ACCOUNT_RING:
         home = acct["home"]
         if not (Path(home) / "auth.json").is_file():
-            _log(f"[ring] skipping {acct['label']}: no auth.json in {home} (needs `codex login` into that CODEX_HOME)")
+            _log(
+                f"[ring] skipping {acct['label']}: no auth.json in {home} "
+                "(needs `codex login` into that CODEX_HOME)"
+            )
             errs.append(f"{acct['label']}: skipped")
             continue
-        _lb.CODEX_MODEL = acct.get("model") or ""  # "" = codex_model_policy default (gpt-5.6-luna, effort high)
-        _lb.CODEX_BIN = (_app_codex_bin() or _ORIG_CODEX_BIN) if acct.get("bin") == "app" else _ORIG_CODEX_BIN
-        _log(f"[ring] trying {acct['label']} (CODEX_HOME={home}, model={_lb.CODEX_MODEL or 'gpt-5.6-luna'}/high bin={_lb.CODEX_BIN})")
+
+        timeout_s = acct["timeout"] or OSM_TIMEOUT_S
+        retries = acct["retries"] or OSM_RETRIES
+        _lb.CODEX_MODEL = "gpt-6-luna"
+        _lb.CODEX_BIN = original_codex_bin
+        _log(
+            f"[ring] trying {acct['label']} (CODEX_HOME={home}, "
+            f"model=gpt-6-luna/high bin={_lb.CODEX_BIN})"
+        )
+
         try:
-            return _fetch_from_home(today_iso, home, acct["timeout"] or OSM_TIMEOUT_S, acct["retries"] or OSM_RETRIES)
+            try:
+                return _fetch_from_home(today_iso, home, timeout_s, retries)
+            except ModelUnsupported as plain_error:
+                app_bin = _app_codex_bin()
+                if not app_bin:
+                    _log(
+                        f"[ring] {acct['label']} plain codex reported an unsupported "
+                        f"model and no app binary is available ({plain_error})"
+                    )
+                    raise
+
+                _log(
+                    f"[ring] {acct['label']} plain codex reported an unsupported "
+                    f"model; retrying this tier once with app binary {app_bin}"
+                )
+                _lb.CODEX_BIN = app_bin
+                try:
+                    return _fetch_from_home(today_iso, home, timeout_s, retries)
+                except ModelUnsupported as app_error:
+                    _log(
+                        f"[ring] {acct['label']} app binary also reported an "
+                        f"unsupported model ({app_error}) -- advancing"
+                    )
+                    errs.append(f"{acct['label']}: model unsupported")
         except OsmEmailNotFoundToday as e:
-            # A "not found" from one account is NOT authoritative (gpt-6-luna on begb
-            # returned a false negative 5 Oct 2026) -- try the next account; only
-            # raise it if no account fetched anything.
-            _log(f"[ring] {acct['label']} reported no email for today ({str(e)[:80]!r}) -- advancing to confirm")
+            # A "not found" from one account is NOT authoritative -- try the
+            # next account; only raise it if no account fetched anything.
+            _log(
+                f"[ring] {acct['label']} reported no email for today "
+                f"({str(e)[:80]!r}) -- advancing to confirm"
+            )
             notfound = e
             errs.append(f"{acct['label']}: not found")
+        except ReContaminationDetected:
+            raise
+        except codex_model_policy.ModelPolicyViolation:
+            # A policy violation is deterministic and terminal, not a tier
+            # failure or connector flakiness.
+            raise
         except RuntimeError as e:
             if isinstance(e, ReContaminationDetected):
                 raise
             _log(f"[ring] {acct['label']} failed ({e}) -- advancing")
             errs.append(f"{acct['label']}: {e}")
+        finally:
+            # A tier's executable choice must never leak into the next tier.
+            _lb.CODEX_BIN = original_codex_bin
+
     if notfound is not None:
         raise notfound
     raise RuntimeError("all accounts in the ring failed: " + "; ".join(errs))
@@ -412,14 +466,15 @@ def fetch_osm_attachment_via_connector(today_iso: str) -> tuple[bytes, str]:
 
 def _fetch_from_home(today_iso: str, home: str, timeout_s: int, retries: int) -> tuple[bytes, str]:
     """Returns (attachment_bytes, filename). Raises ReContaminationDetected on
-    a guard HALT, OsmEmailNotFoundToday if genuinely absent, or RuntimeError
-    after retries are exhausted (connector unavailable this cycle)."""
+    a guard HALT, OsmEmailNotFoundToday if genuinely absent, ModelUnsupported
+    for an unsupported-model response, or RuntimeError after retries are
+    exhausted (connector unavailable this cycle)."""
     prompt = build_osm_report_prompt(today_iso)
     last_err: Exception | None = None
 
     for attempt in range(1, retries + 1):
         _log(f"connector attempt {attempt}/{retries} (CODEX_HOME={home}, "
-             f"personal-account-only, same identity already proven for work-inbox mail)")
+             f"model=gpt-6-luna/high, plain codex unless using the model-error fallback)")
         try:
             # workload_class="high": MODEL_POLICY.md precedence rule -- this
             # goes through the microsoft_outlook_email connector namespace,
@@ -437,15 +492,8 @@ def _fetch_from_home(today_iso: str, home: str, timeout_s: int, retries: int) ->
             raise
         except codex_model_policy.ModelPolicyViolation:
             # MUST NOT be caught by the generic `except Exception` below --
-            # touchpoint-1 Codex review finding, 10 Sep 2026 (same reasoning
-            # as work-inbox/lane_b_call1.py's _fetch_domain_one_identity()):
             # a policy violation is a deterministic code/config bug, not
-            # connector flakiness. Retrying it retries times wastes the
-            # whole retry budget and would exhaust into the generic
-            # RuntimeError -> exit 3 ("not a safety event") path in main(),
-            # completely mischaracterising a real misconfiguration as
-            # ordinary headless-connector flakiness. Re-raise uncaught so
-            # main() can map it to its own distinct exit code (5) instead.
+            # connector flakiness. Re-raise so main() can map it to exit 5.
             raise
         except Exception as e:  # noqa: BLE001 -- codex run failed outright this attempt
             last_err = e
@@ -456,10 +504,20 @@ def _fetch_from_home(today_iso: str, home: str, timeout_s: int, retries: int) ->
                 time.sleep(wait)
             continue
 
-        _errtxt = " ".join(str(o) for o in objs if isinstance(o, dict)
-                            and str(o.get("type", "")).lower() in ("error", "turn.failed")).lower()
-        if "not supported" in _errtxt and "model" in _errtxt:
-            raise ModelUnsupported(f"model not supported on {home} (HTTP 400) -- failing fast, advancing ring")
+        _errtxt = " ".join(
+            str(o) for o in objs
+            if isinstance(o, dict)
+            and str(o.get("type", "")).lower() in ("error", "turn.failed")
+        ).lower()
+        model_unsupported = (
+            ("not supported" in _errtxt and "model" in _errtxt)
+            or ("model metadata" in _errtxt and "not found" in _errtxt)
+        )
+        if model_unsupported:
+            raise ModelUnsupported(
+                f"model not supported on {home} (HTTP 400) -- failing fast, advancing ring"
+            )
+
         # Persist the raw transcript for auditability -- same convention as
         # lane_b_call1.py's own <ts>_call1_<domain>_<identity>_a<n>.jsonl files.
         try:
@@ -496,8 +554,8 @@ def _fetch_from_home(today_iso: str, home: str, timeout_s: int, retries: int) ->
                  f"result -- treating as unavailable this attempt (see saved transcript for the "
                  f"real shape; this needs a one-time field-name fix once seen live)")
         elif did_search:
-            # search ran, but the model stopped before list_attachments/fetch_attachment --
-            # per the prompt, this means step 1 found nothing for today.
+            # Search ran, but the model stopped before list_attachments/fetch_attachment.
+            # Per the prompt, this means step 1 found nothing for today.
             text = final_assistant_text(objs).strip()
             _log(f"attempt {attempt}: search_messages ran but no attachment was fetched -- "
                  f"reading as 'no matching email found for today'. Model's own words: {text[:300]!r}")
