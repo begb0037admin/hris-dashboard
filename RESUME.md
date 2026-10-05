@@ -12,7 +12,13 @@ scope by Kevin same day. Drew was not this repo's "usual" agent before
 (GitHub Actions schedule-trigger fix).
 
 
-## One-line resume (latest -- 5 Oct 2026, ~09:45 BST)
+## One-line resume (latest -- 5 Oct 2026, ~11:00 BST)
+
+**Outage fix: `fetch_osm_report_connector.py` now pins `HRIS_CODEX_HOME` (env override, default `C:\WorkInboxAI\codex-lanec` = kevin@lelitte.com, Plus) instead of importing work-inbox's `FAILOVER_CODEX_HOME`.** That constant is ring slot 1 of `lane_b_identities.json`, which on 29 Sep became `codex-laneb`; Kevin has since logged `codex-laneb` into begb0037@ox.ac.uk (Edu). Live-verified 5 Oct: Edu cannot run the Outlook connector headless (gpt-5.6-sol accepted but two 180s timeouts, no tool calls; luna unsupported on Edu) -- so the Oxford-default/failover-ring policy cannot be met for this fetch. `codex-lanec` dry-run succeeded (40,896-byte .xls). No work-inbox changes; the shared Luna lock is untouched. kevin@lelitte.co.uk has no codex home on this laptop; to add as fallback needs a `codex login` into a new CODEX_HOME. SAASIT Playwright run #213 still fails (session expired) and is untouched.
+
+---
+
+## One-line resume (earlier -- 5 Oct 2026, ~09:45 BST)
 
 **Kevin reported the dashboard had stopped updating (again). Root-caused with direct, live, reproduced evidence -- NOT the SAASIT-session-expiry pattern this time, a different and previously undocumented failure mode. One hardening fix pushed; the actual blocker needs Kevin's action.**
 

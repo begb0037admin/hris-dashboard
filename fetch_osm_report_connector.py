@@ -126,7 +126,6 @@ try:
         ReContaminationDetected,
         READ_VERB_RE,
         WRITE_VERB_RE,
-        FAILOVER_CODEX_HOME,
         SAFETY_RULE,
         CALL1_TIMEOUT_S,
         _utcstamp,
@@ -184,6 +183,12 @@ OSM_TIMEOUT_S = int(os.environ.get("HRIS_OSM_TIMEOUT", str(CALL1_TIMEOUT_S)))
 # here. Account value matches lane_b_identities.json's "personal-uk" entry
 # (same CODEX_HOME this script already hardcodes via FAILOVER_CODEX_HOME).
 OSM_M365_ACCOUNT = "kevin.lelitte@admin.ox.ac.uk"
+
+# 5 Oct 2026: pinned explicitly instead of importing lane_b_call1.FAILOVER_CODEX_HOME
+# (ring slot 1 of work-inbox's lane_b_identities.json, which became begb0037@ox.ac.uk
+# Edu -- Edu cannot run the Outlook connector headless: two 180s timeouts, no tool
+# calls). codex-lanec = kevin@lelitte.com (Plus), live-verified working 5 Oct 2026.
+HRIS_CODEX_HOME = os.environ.get("HRIS_CODEX_HOME", r"C:\WorkInboxAI\codex-lanec")
 
 _URL_RE = re.compile(r"^https?://", re.IGNORECASE)
 
@@ -339,7 +344,7 @@ def fetch_osm_attachment_via_connector(today_iso: str) -> tuple[bytes, str]:
     last_err: Exception | None = None
 
     for attempt in range(1, OSM_RETRIES + 1):
-        _log(f"connector attempt {attempt}/{OSM_RETRIES} (CODEX_HOME={FAILOVER_CODEX_HOME}, "
+        _log(f"connector attempt {attempt}/{OSM_RETRIES} (CODEX_HOME={HRIS_CODEX_HOME}, "
              f"personal-account-only, same identity already proven for work-inbox mail)")
         try:
             # workload_class="high": MODEL_POLICY.md precedence rule -- this
@@ -351,7 +356,7 @@ def fetch_osm_attachment_via_connector(today_iso: str) -> tuple[bytes, str]:
             # same reasoning, sourced from the same shared module.
             objs, raw = run_codex_json(
                 prompt, timeout_s=OSM_TIMEOUT_S, tag="hris_osm",
-                codex_home=FAILOVER_CODEX_HOME, max_attempts=2,
+                codex_home=HRIS_CODEX_HOME, max_attempts=2,
                 workload_class="high",
             )
         except ReContaminationDetected:
