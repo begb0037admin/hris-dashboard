@@ -12,6 +12,28 @@ scope by Kevin same day. Drew was not this repo's "usual" agent before
 (GitHub Actions schedule-trigger fix).
 
 
+## One-line resume (latest -- 5 Oct 2026, ~09:45 BST)
+
+**Kevin reported the dashboard had stopped updating (again). Root-caused with direct, live, reproduced evidence -- NOT the SAASIT-session-expiry pattern this time, a different and previously undocumented failure mode. One hardening fix pushed; the actual blocker needs Kevin's action.**
+
+**Confirmed facts (git history + a live local reproduction on DESKTOP-MJDJM64, not inferred):**
+- `data/tickets.json` last genuinely changed 2026-09-24T13:25:10Z (commit `5154e50a`). Every single automated run since -- 3x/weekday, every day through today -- has failed identically: `status: failure, step: connector_unavailable, detail: "fetch_osm_report_connector.py connector unavailable this cycle, exit 3"`.
+- The "HRIS Dashboard Morning Refresh (connector)" scheduled task on the laptop IS firing correctly on its normal cadence (confirmed via the `data/last_automated_run.json` commit timestamps, 3/day, never missing) -- this is NOT a cron/Task-Scheduler problem.
+- The separate, already-known-broken GitHub Actions SAASIT Playwright scrape (`generate_dashboard.py`) is unrelated and untouched -- `last_run_status.txt` (run #212, 2 Oct) confirms it is still failing `ISM_4001 session expired`, needs Kevin's interactive Oxford SSO+MFA re-login via `Refresh Session.bat`. Not touched this session, per standing policy.
+- GitHub Pages build/deploy itself is healthy -- confirmed by pushing today's fix commit and watching its Pages build reach `status: built`, then confirming the live site correctly serves exactly what's in `main` (still the stale 24 Sep data, as expected since no new data was pushed). Rules out a Pages-side cause.
+- `Update HRIS Dashboard.bat`'s `SCRIPT_SHA` pin (`bd9328521e52123f419ee573b149027fdadc0215`) is NOT stale -- `git diff`/`git log` confirm zero commits to `import_osm_report.py` since that SHA. Pin is current, not a contributing cause.
+
+**Live-reproduced root cause (ran `fetch_osm_report_connector.py --dry-run` directly on this machine, then isolated further with a raw `codex exec` call against the exact same CODEX_HOME):** `C:\WorkInboxAI\codex-laneb` (the FAILOVER_CODEX_HOME / personal-uk identity, `kevin@lelitte.co.uk`) -- the ONLY identity this script uses, it has no ring/failover of its own -- has an **expired refresh token**. Raw `codex exec` stderr: `ERROR codex_login::auth::manager: Failed to refresh token: Your access token could not be refreshed because your refresh token has expired. Please log out and sign in again.` The connector call fails at the transport/auth layer (`workspace routing discovery unauthorized (401)`) before any tool call can even be attempted -- which is exactly why the script's generic retry logging ("connector tools never fired") never surfaced the real 401, and why every attempt for 11 straight days failed identically.
+
+**Why work-inbox's own connector calls kept succeeding on this same laptop throughout this window (which is what made this look like a hris-dashboard-specific bug at first):** work-inbox's 24-25 Sep 2026 "three-identity connector failover ring" (`lane_b_call1.py`) now tries `personal-com` (`C:\WorkInboxAI\codex-lanec`, a separately-logged-in identity) FIRST, and only falls back to `codex-laneb` if that fails -- so work-inbox has not actually needed the broken identity since the ring went live. `fetch_osm_report_connector.py` was written 9-10 Sep, before the ring existed, and still hardcodes the single `codex-laneb` identity with no fallback.
+
+**One hardening fix pushed (commit `e24a9f6e`), explicitly NOT a fix for the outage:** `build_osm_report_prompt()` now leads with `"Use only the Oxford Microsoft 365 mailbox kevin.lelitte@admin.ox.ac.uk, not Personal."`, mirroring work-inbox's own proven `_prompt_for_identity()` wording (its fix for a related-but-distinct issue: once a CODEX_HOME has more than one M365 account attached, an unqualified "my Inbox" prompt can leave the account picker unresolved and zero tool calls get issued). This is real, zero-risk, pattern-matched hardening for whenever the identity IS reauthenticated and may have multiple accounts attached -- but it was verified NOT sufficient on its own: a second live dry-run with this fix in place against the still-broken identity failed identically (confirming the 401/expired-refresh-token is the actual, sole blocker right now).
+
+### EXACT NEXT ACTION -- blocked on Kevin, no agent-side path exists
+Kevin needs to run `codex login` interactively in `C:\WorkInboxAI\codex-laneb` on the Oxford laptop (`101L-DE013193`) to re-establish the OAuth session for that identity (same category of fix as the 13 Sep 2026 `TRIGGER_REAUTHENTICATION` incident -- see `begb0037admin/drew/memory/codex-m365-connector-oauth-reauth-required-13sept.md`). Per standing zero-manual-steps/OAuth policy this is the one legitimate manual step (a one-time sign-in only the account owner can make) -- no workaround was attempted and none should be. Once reauthenticated, the next scheduled run (08:45/09:15/09:45 weekday cadence) should recover automatically with no further code change needed; if it still fails after reauth, re-check the account-mismatch hardening pushed today actually resolves cleanly against a live multi-account connector session.
+
+---
+
 ## One-line resume (latest — 10 Sep 2026, ~11:15 BST)
 
 **Priority 4 (Luna/effort-level pilot) implemented for this repo's OSM
