@@ -1,10 +1,10 @@
 {
-  "timestamp": "2026-10-05T11:05:35",
-  "timestamp_display": "Monday 05 October 2026 at 11:05",
-  "status": "failure",
-  "step": "fetch_failed",
-  "detail": "fetch_osm_report.py exited 1 - see osm_auto_refresh_last_run.log",
+  "timestamp": "2026-10-05T11:06:02",
+  "timestamp_display": "Monday 05 October 2026 at 11:06",
+  "status": "success",
+  "step": "dashboard_update_ok",
+  "detail": "connector-based fetch (fetch_osm_report_connector.py)",
   "trigger": "automated",
-  "attempt": 3,
-  "max_attempts": 3
+  "attempt": 1,
+  "max_attempts": 1
 }
