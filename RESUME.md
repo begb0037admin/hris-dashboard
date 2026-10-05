@@ -12,7 +12,13 @@ scope by Kevin same day. Drew was not this repo's "usual" agent before
 (GitHub Actions schedule-trigger fix).
 
 
-## One-line resume (latest -- 5 Oct 2026, ~11:00 BST)
+## One-line resume (latest -- 5 Oct 2026, ~13:00 BST)
+
+**Superseded: begb-default ring restored in `fetch_osm_report_connector.py` (Kevin's 1 Oct policy).** My earlier "Edu cannot run the connector headless" conclusion was WRONG (inferred from two timeouts). Live evidence: `codex-laneb` (begb0037@ox.ac.uk, Edu) DOES reach the Outlook connector (tools list_messages/list_attachments/fetch_attachment; the old `-m gpt-5.6-luna` pin was the only hard failure -- Edu lacks luna). It is just slow (~4 min with gpt-5.6-sol or terra) and flaky (2 of 4 dry-runs succeeded; the others returned no fetch result). Fix: script walks a ring begb (codex-laneb, model = first of luna/sol/terra/5.5 in that home's models_cache.json, timeout 420s, 1 attempt) -> kevin@lelitte.co.uk (`C:\WorkInboxAI\codex-lelitte-couk`, skipped if no auth.json -- no such login exists yet) -> kevin@lelitte.com (codex-lanec, luna). `HRIS_CODEX_HOME` env still overrides with a single home. Guard HALT / email-not-found are terminal; auth/timeout/no-result advances the ring. Dry-run of the ring: begb failed fast, lelitte.com served (40,896-byte .xls). work-inbox and its lane_b_identities.json were NOT touched (its Edu exclusion there is a separate Lane B decision). Remaining: a `codex login` into `codex-lelitte-couk` for the .co.uk tier.
+
+---
+
+## One-line resume (earlier -- 5 Oct 2026, ~11:00 BST)
 
 **Outage fix: `fetch_osm_report_connector.py` now pins `HRIS_CODEX_HOME` (env override, default `C:\WorkInboxAI\codex-lanec` = kevin@lelitte.com, Plus) instead of importing work-inbox's `FAILOVER_CODEX_HOME`.** That constant is ring slot 1 of `lane_b_identities.json`, which on 29 Sep became `codex-laneb`; Kevin has since logged `codex-laneb` into begb0037@ox.ac.uk (Edu). Live-verified 5 Oct: Edu cannot run the Outlook connector headless (gpt-5.6-sol accepted but two 180s timeouts, no tool calls; luna unsupported on Edu) -- so the Oxford-default/failover-ring policy cannot be met for this fetch. `codex-lanec` dry-run succeeded (40,896-byte .xls). No work-inbox changes; the shared Luna lock is untouched. kevin@lelitte.co.uk has no codex home on this laptop; to add as fallback needs a `codex login` into a new CODEX_HOME. SAASIT Playwright run #213 still fails (session expired) and is untouched.
 

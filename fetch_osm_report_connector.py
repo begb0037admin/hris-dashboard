@@ -188,7 +188,35 @@ OSM_M365_ACCOUNT = "kevin.lelitte@admin.ox.ac.uk"
 # (ring slot 1 of work-inbox's lane_b_identities.json, which became begb0037@ox.ac.uk
 # Edu -- Edu cannot run the Outlook connector headless: two 180s timeouts, no tool
 # calls). codex-lanec = kevin@lelitte.com (Plus), live-verified working 5 Oct 2026.
-HRIS_CODEX_HOME = os.environ.get("HRIS_CODEX_HOME", r"C:\WorkInboxAI\codex-lanec")
+_ENV_HOME = os.environ.get("HRIS_CODEX_HOME", "").strip()
+# Kevin's policy (1 Oct 2026): begb0037@ox.ac.uk (Edu) DEFAULT -> kevin@lelitte.co.uk
+# -> kevin@lelitte.com. Homes without an auth.json are skipped. HRIS_CODEX_HOME,
+# if set, overrides the ring with that single home. Edu (codex-laneb) does NOT
+# offer gpt-5.6-luna, so the model is the first of MODEL_PREFERENCE present in
+# that home's own models_cache.json (applied via lane_b_call1.CODEX_MODEL, the
+# existing -m override; effort stays policy-locked high).
+MODEL_PREFERENCE = ["gpt-5.6-luna", "gpt-5.6-sol", "gpt-5.6-terra", "gpt-5.5"]
+ACCOUNT_RING = [
+    {"label": "begb0037@ox.ac.uk", "home": r"C:\WorkInboxAI\codex-laneb", "timeout": 420, "retries": 1},
+    {"label": "kevin@lelitte.co.uk", "home": os.environ.get("HRIS_CODEX_HOME_LELITTE_CO_UK", r"C:\WorkInboxAI\codex-lelitte-couk"), "timeout": 420, "retries": 1},
+    {"label": "kevin@lelitte.com", "home": r"C:\WorkInboxAI\codex-lanec", "timeout": None, "retries": None},
+]
+if _ENV_HOME:
+    ACCOUNT_RING = [{"label": "HRIS_CODEX_HOME", "home": _ENV_HOME, "timeout": None, "retries": None}]
+
+
+def _home_model(home: str) -> str:
+    try:
+        import json as _json
+        have = {m.get("slug") for m in _json.loads(
+            (Path(home) / "models_cache.json").read_text(encoding="utf-8")).get("models", [])}
+        for m in MODEL_PREFERENCE:
+            if m in have:
+                return m
+    except Exception:  # noqa: BLE001
+        pass
+    return MODEL_PREFERENCE[0]
+
 
 _URL_RE = re.compile(r"^https?://", re.IGNORECASE)
 
@@ -337,14 +365,37 @@ class OsmEmailNotFoundToday(RuntimeError):
 
 
 def fetch_osm_attachment_via_connector(today_iso: str) -> tuple[bytes, str]:
+    """Walk ACCOUNT_RING; guard HALT / policy violation / email-not-found are
+    terminal (propagate); a RuntimeError (auth/timeout/no tools) advances."""
+    import lane_b_call1 as _lb
+    errs = []
+    for acct in ACCOUNT_RING:
+        home = acct["home"]
+        if not (Path(home) / "auth.json").is_file():
+            _log(f"[ring] skipping {acct['label']}: no auth.json in {home} (needs `codex login` into that CODEX_HOME)")
+            errs.append(f"{acct['label']}: skipped")
+            continue
+        _lb.CODEX_MODEL = _home_model(home)
+        _log(f"[ring] trying {acct['label']} (CODEX_HOME={home}, model={_lb.CODEX_MODEL})")
+        try:
+            return _fetch_from_home(today_iso, home, acct["timeout"] or OSM_TIMEOUT_S, acct["retries"] or OSM_RETRIES)
+        except RuntimeError as e:
+            if isinstance(e, (ReContaminationDetected, OsmEmailNotFoundToday)):
+                raise
+            _log(f"[ring] {acct['label']} failed ({e}) -- advancing")
+            errs.append(f"{acct['label']}: {e}")
+    raise RuntimeError("all accounts in the ring failed: " + "; ".join(errs))
+
+
+def _fetch_from_home(today_iso: str, home: str, timeout_s: int, retries: int) -> tuple[bytes, str]:
     """Returns (attachment_bytes, filename). Raises ReContaminationDetected on
     a guard HALT, OsmEmailNotFoundToday if genuinely absent, or RuntimeError
     after retries are exhausted (connector unavailable this cycle)."""
     prompt = build_osm_report_prompt(today_iso)
     last_err: Exception | None = None
 
-    for attempt in range(1, OSM_RETRIES + 1):
-        _log(f"connector attempt {attempt}/{OSM_RETRIES} (CODEX_HOME={HRIS_CODEX_HOME}, "
+    for attempt in range(1, retries + 1):
+        _log(f"connector attempt {attempt}/{retries} (CODEX_HOME={home}, "
              f"personal-account-only, same identity already proven for work-inbox mail)")
         try:
             # workload_class="high": MODEL_POLICY.md precedence rule -- this
@@ -355,8 +406,8 @@ def fetch_osm_attachment_via_connector(today_iso: str) -> tuple[bytes, str]:
             # work-inbox/lane_b_call1.py's own call sites -- same policy,
             # same reasoning, sourced from the same shared module.
             objs, raw = run_codex_json(
-                prompt, timeout_s=OSM_TIMEOUT_S, tag="hris_osm",
-                codex_home=HRIS_CODEX_HOME, max_attempts=2,
+                prompt, timeout_s=timeout_s, tag="hris_osm",
+                codex_home=home, max_attempts=2,
                 workload_class="high",
             )
         except ReContaminationDetected:
@@ -366,7 +417,7 @@ def fetch_osm_attachment_via_connector(today_iso: str) -> tuple[bytes, str]:
             # touchpoint-1 Codex review finding, 10 Sep 2026 (same reasoning
             # as work-inbox/lane_b_call1.py's _fetch_domain_one_identity()):
             # a policy violation is a deterministic code/config bug, not
-            # connector flakiness. Retrying it OSM_RETRIES times wastes the
+            # connector flakiness. Retrying it retries times wastes the
             # whole retry budget and would exhaust into the generic
             # RuntimeError -> exit 3 ("not a safety event") path in main(),
             # completely mischaracterising a real misconfiguration as
@@ -376,7 +427,7 @@ def fetch_osm_attachment_via_connector(today_iso: str) -> tuple[bytes, str]:
         except Exception as e:  # noqa: BLE001 -- codex run failed outright this attempt
             last_err = e
             _log(f"attempt {attempt} failed ({e})")
-            if attempt < OSM_RETRIES:
+            if attempt < retries:
                 wait = OSM_RETRY_BACKOFF_S[min(attempt - 1, len(OSM_RETRY_BACKOFF_S) - 1)]
                 _log(f"backing off {wait}s before retrying")
                 time.sleep(wait)
@@ -428,13 +479,13 @@ def fetch_osm_attachment_via_connector(today_iso: str) -> tuple[bytes, str]:
             _log(f"attempt {attempt}: connector tools never fired (availability flakiness, "
                  f"documented and expected some cycles) -- treating as unavailable this attempt")
 
-        if attempt < OSM_RETRIES:
+        if attempt < retries:
             wait = OSM_RETRY_BACKOFF_S[min(attempt - 1, len(OSM_RETRY_BACKOFF_S) - 1)]
             _log(f"backing off {wait}s before retrying")
             time.sleep(wait)
 
     raise RuntimeError(
-        f"connector produced no usable fetch_attachment result after {OSM_RETRIES} attempts"
+        f"connector produced no usable fetch_attachment result after {retries} attempts"
         + (f" (last error: {last_err})" if last_err else "")
     )
 
