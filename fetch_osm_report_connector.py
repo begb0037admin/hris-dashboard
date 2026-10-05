@@ -166,6 +166,25 @@ OSM_RETRIES = max(1, int(os.environ.get("HRIS_OSM_RETRIES", "4")))
 OSM_RETRY_BACKOFF_S = [10, 25, 45, 60]
 OSM_TIMEOUT_S = int(os.environ.get("HRIS_OSM_TIMEOUT", str(CALL1_TIMEOUT_S)))
 
+# Added 5 Oct 2026 (Drew) -- root-cause fix for an 11-day (24 Sep - 5 Oct)
+# 100%-failure streak, root-caused via a live reproduction on this machine
+# (every attempt: "connector tools never fired", not an auth/reauth error).
+# work-inbox's 24-25 Sep 2026 "three-identity connector failover ring" work
+# (lane_b_call1.py commits 75eea0ba/2675afa7) connected the SAME FAILOVER
+# identity (C:\WorkInboxAI\codex-laneb, kevin@lelitte.co.uk) to MULTIPLE M365
+# accounts (an Oxford mailbox alongside the personal one). Once the connector
+# account-picker became model-mediated, an unqualified "my Inbox" prompt
+# stopped reliably producing a tool call at all -- the model has no
+# deterministic way to choose an account, so some runs silently issue zero
+# tool calls. work-inbox's own fix (`_prompt_for_identity()`) is to name the
+# target mailbox explicitly as a single short leading sentence. This script
+# was never updated to match when that fix shipped -- it's a narrower,
+# single-identity caller that doesn't go through work-inbox's ring/
+# _prompt_for_identity() machinery, so it needs the same sentence inlined
+# here. Account value matches lane_b_identities.json's "personal-uk" entry
+# (same CODEX_HOME this script already hardcodes via FAILOVER_CODEX_HOME).
+OSM_M365_ACCOUNT = "kevin.lelitte@admin.ox.ac.uk"
+
 _URL_RE = re.compile(r"^https?://", re.IGNORECASE)
 
 
@@ -177,10 +196,16 @@ _URL_RE = re.compile(r"^https?://", re.IGNORECASE)
 # end 8 Sep 2026 against this exact mailbox (search_messages ->
 # list_attachments -> fetch_attachment -> curl the presigned URL, sha256
 # byte-identical to the COM-fetched file) -- this prompt reproduces that
-# proven three-step chain as a single connector session.
+# proven three-step chain as a single connector session. 5 Oct 2026: leading
+# account-targeting sentence added (see OSM_M365_ACCOUNT comment above) --
+# wording deliberately mirrors work-inbox's own `_prompt_for_identity()`
+# verbatim ("Use only the Oxford Microsoft 365 mailbox {account}, not
+# Personal.") since that exact wording is the one already proven live to
+# resolve the account-picker ambiguity in work-inbox's own ring.
 # ---------------------------------------------------------------------------
 def build_osm_report_prompt(today_iso: str) -> str:
     return (
+        f"Use only the Oxford Microsoft 365 mailbox {OSM_M365_ACCOUNT}, not Personal. "
         "Using the Microsoft Outlook Email app connector, in READ-ONLY mode, do the "
         f"following three steps in order. Step 1: search my Inbox for the newest email "
         f"from {OSM_SENDER_EMAIL} with subject exactly '{OSM_SUBJECT}' received on "
