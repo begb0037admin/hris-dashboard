@@ -93,7 +93,9 @@ Requires: pip install requests  (already confirmed present on the laptop, 9 Sep 
 from __future__ import annotations
 
 import argparse
+import base64
 import datetime as _dt
+import json
 import os
 import re
 import sys
@@ -166,29 +168,41 @@ OSM_TIMEOUT_S = int(os.environ.get("HRIS_OSM_TIMEOUT", str(CALL1_TIMEOUT_S)))
 
 # Account order is fixed: begb0037@ox.ac.uk, then kevin@lelitte.co.uk, then
 # kevin@lelitte.com. Each tier uses gpt-6-luna with high reasoning effort.
+# The first home is the Edu .codex home; the second is codex-laneb, Kevin's
+# .co.uk home. codex-laneb was overwritten with the begb login on 5 Oct 2026,
+# so Kevin must re-login there with `codex login`. The third home is
+# codex-lanec, Kevin's .com home.
 # Plain `codex` is the normal executable. The desktop app's codex.exe is used
 # only once as a same-tier fallback when plain codex reports that the model is
 # unsupported. HRIS_CODEX_HOME replaces the ring with one home but keeps the
-# same model and execution rules.
+# same model and execution rules; the identity guard is disabled for that
+# single-home override.
 ACCOUNT_RING = [
     {
         "label": "begb0037@ox.ac.uk",
-        "home": r"C:\WorkInboxAI\codex-laneb",
-        "timeout": 420,
+        "home": os.environ.get(
+            "HRIS_CODEX_HOME_BEGB",
+            os.path.join(os.path.expanduser("~"), ".codex")
+            or r"C:\Users\begb0037.AD-OAK\.codex",
+        ),
+        "expected_email": "begb0037@ox.ac.uk",
+        "timeout": 240,
         "retries": 1,
     },
     {
         "label": "kevin@lelitte.co.uk",
         "home": os.environ.get(
             "HRIS_CODEX_HOME_LELITTE_CO_UK",
-            r"C:\WorkInboxAI\codex-lelitte-couk",
+            r"C:\WorkInboxAI\codex-laneb",
         ),
-        "timeout": 420,
+        "expected_email": "kevin@lelitte.co.uk",
+        "timeout": 240,
         "retries": 1,
     },
     {
         "label": "kevin@lelitte.com",
         "home": r"C:\WorkInboxAI\codex-lanec",
+        "expected_email": "kevin@lelitte.com",
         "timeout": None,
         "retries": None,
     },
@@ -207,6 +221,24 @@ if _ENV_HOME:
             "retries": None,
         }
     ]
+
+
+def _auth_email(home: str) -> str | None:
+    """Read only the email claim from auth.json's id_token payload."""
+    try:
+        with open(Path(home) / "auth.json", "r", encoding="utf-8") as fh:
+            auth = json.load(fh)
+        token = auth["tokens"]["id_token"]
+        payload_segment = token.split(".")[1]
+        payload_segment += "=" * (-len(payload_segment) % 4)
+        payload = json.loads(base64.urlsafe_b64decode(payload_segment).decode("utf-8"))
+        email = payload.get("email")
+        if not isinstance(email, str) or not email:
+            raise ValueError("id_token has no readable email claim")
+        return email
+    except Exception as e:  # noqa: BLE001 -- unreadable identity should proceed with a warning
+        _log(f"WARNING: unable to read email claim from {home}\\auth.json ({e}); proceeding")
+        return None
 
 
 def _app_codex_bin():
@@ -401,6 +433,16 @@ def fetch_osm_attachment_via_connector(today_iso: str) -> tuple[bytes, str]:
             errs.append(f"{acct['label']}: skipped")
             continue
 
+        if "expected_email" in acct:
+            actual_email = _auth_email(home)
+            if actual_email is not None and actual_email.casefold() != acct["expected_email"].casefold():
+                _log(
+                    f"[ring] skipping {acct['label']}: home {home} is logged in as "
+                    f"{actual_email}, expected {acct['expected_email']}"
+                )
+                errs.append(f"{acct['label']}: identity mismatch")
+                continue
+
         timeout_s = acct["timeout"] or OSM_TIMEOUT_S
         retries = acct["retries"] or OSM_RETRIES
         _lb.CODEX_MODEL = "gpt-6-luna"
@@ -412,7 +454,9 @@ def fetch_osm_attachment_via_connector(today_iso: str) -> tuple[bytes, str]:
 
         try:
             try:
-                return _fetch_from_home(today_iso, home, timeout_s, retries)
+                result = _fetch_from_home(today_iso, home, timeout_s, retries)
+                _log(f"[ring] served by {acct['label']}")
+                return result
             except ModelUnsupported as plain_error:
                 app_bin = _app_codex_bin()
                 if not app_bin:
@@ -428,7 +472,9 @@ def fetch_osm_attachment_via_connector(today_iso: str) -> tuple[bytes, str]:
                 )
                 _lb.CODEX_BIN = app_bin
                 try:
-                    return _fetch_from_home(today_iso, home, timeout_s, retries)
+                    result = _fetch_from_home(today_iso, home, timeout_s, retries)
+                    _log(f"[ring] served by {acct['label']}")
+                    return result
                 except ModelUnsupported as app_error:
                     _log(
                         f"[ring] {acct['label']} app binary also reported an "
