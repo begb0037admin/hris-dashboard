@@ -1,13 +1,13 @@
 {
-  "updated": "2026-10-06T08:49:27",
-  "updated_display": "Tuesday 06 October 2026 at 08:49",
+  "updated": "2026-10-07T08:49:41",
+  "updated_display": "Wednesday 07 October 2026 at 08:49",
   "report_file": "All Open Tasks by Team - auto.xls",
   "summary": {
-    "total": 55,
-    "assigned": 30,
-    "unassigned": 25,
+    "total": 61,
+    "assigned": 41,
+    "unassigned": 20,
     "stale": 5,
-    "oldest_days": 229
+    "oldest_days": 230
   },
   "analysts": [
     {
@@ -22,7 +22,7 @@
           "analyst": "James Salas Guillen",
           "category": "Odyssey",
           "created": "18 Feb 2026",
-          "days": 229,
+          "days": 230,
           "team": "Health and Safety 2nd Line"
         },
         {
@@ -33,7 +33,7 @@
           "analyst": "James Salas Guillen",
           "category": "Odyssey",
           "created": "23 Sep 2026",
-          "days": 12,
+          "days": 13,
           "team": "Health and Safety 2nd Line"
         },
         {
@@ -44,7 +44,7 @@
           "analyst": "James Salas Guillen",
           "category": "Odyssey",
           "created": "28 Sep 2026",
-          "days": 7,
+          "days": 8,
           "team": "Health and Safety 2nd Line"
         },
         {
@@ -55,7 +55,7 @@
           "analyst": "James Salas Guillen",
           "category": "Cority - Occupational Health Management Service",
           "created": "28 Sep 2026",
-          "days": 7,
+          "days": 8,
           "team": "Health and Safety 2nd Line"
         },
         {
@@ -66,14 +66,14 @@
           "analyst": "James Salas Guillen",
           "category": "Odyssey",
           "created": "30 Sep 2026",
-          "days": 5,
+          "days": 6,
           "team": "Health and Safety 2nd Line"
         }
       ]
     },
     {
       "name": "Asta Palmer",
-      "ticket_count": 12,
+      "ticket_count": 22,
       "tickets": [
         {
           "task_num": "50977943",
@@ -83,127 +83,237 @@
           "analyst": "Asta Palmer",
           "category": "Recruitment",
           "created": "17 Aug 2026",
-          "days": 49,
+          "days": 50,
           "team": "HRIS Analysis"
-        },
-        {
-          "task_num": "50992620",
-          "summary": "Check Mady Buil's WFM access",
-          "status": "Accepted",
-          "priority": "5",
-          "analyst": "Asta Palmer",
-          "category": "",
-          "created": "05 Oct 2026",
-          "days": 0,
-          "team": "HRIS Analysis"
-        },
-        {
-          "task_num": "50992631",
-          "summary": "Matthew Towlson can not view his annual leave balance",
-          "status": "Accepted",
-          "priority": "5",
-          "analyst": "Asta Palmer",
-          "category": "",
-          "created": "05 Oct 2026",
-          "days": 0,
-          "team": "HRIS Analysis"
-        },
-        {
-          "task_num": "50991452",
-          "summary": "4-OCT HR User Remove Access - Elizabeth Anderson",
-          "status": "Accepted",
-          "priority": "5",
-          "analyst": "Asta Palmer",
-          "category": "",
-          "created": "01 Oct 2026",
-          "days": 4,
-          "team": "HRIS Sys Admin"
-        },
-        {
-          "task_num": "50991795",
-          "summary": "HR User Remove Access - Melanie Furniss",
-          "status": "Accepted",
-          "priority": "5",
-          "analyst": "Asta Palmer",
-          "category": "",
-          "created": "01 Oct 2026",
-          "days": 4,
-          "team": "HRIS Sys Admin"
-        },
-        {
-          "task_num": "50992037",
-          "summary": "[pending] HR Reporting Email - Anna Schneiderova",
-          "status": "Accepted",
-          "priority": "5",
-          "analyst": "Asta Palmer",
-          "category": "",
-          "created": "02 Oct 2026",
-          "days": 3,
-          "team": "HRIS Sys Admin"
         },
         {
           "task_num": "50992337",
-          "summary": "HR User Change Access - Emma Smith",
+          "summary": "10-OCT HR User Change Access - Emma Smith",
           "status": "Accepted",
           "priority": "5",
           "analyst": "Asta Palmer",
           "category": "",
           "created": "05 Oct 2026",
+          "days": 1,
+          "team": "HRIS Sys Admin"
+        },
+        {
+          "task_num": "50992837",
+          "summary": "HR User Change Access - Emma Ludlow",
+          "status": "Accepted",
+          "priority": "5",
+          "analyst": "Asta Palmer",
+          "category": "",
+          "created": "06 Oct 2026",
           "days": 0,
           "team": "HRIS Sys Admin"
         },
         {
-          "task_num": "50992364",
-          "summary": "Manager Self Service Change - Andrea Jones",
+          "task_num": "50992898",
+          "summary": "Manager Self Service Add - Darragh O'Brien",
           "status": "Accepted",
           "priority": "3",
           "analyst": "Asta Palmer",
           "category": "",
-          "created": "05 Oct 2026",
+          "created": "06 Oct 2026",
           "days": 0,
           "team": "HRIS Sys Admin"
         },
         {
-          "task_num": "50992388",
-          "summary": "Manager Self Service Add - Jamie Wood",
+          "task_num": "50992915",
+          "summary": "HR User Access New - Lucy Kiddier",
           "status": "Accepted",
-          "priority": "3",
+          "priority": "5",
           "analyst": "Asta Palmer",
           "category": "",
-          "created": "05 Oct 2026",
+          "created": "06 Oct 2026",
           "days": 0,
           "team": "HRIS Sys Admin"
         },
         {
-          "task_num": "50992389",
-          "summary": "Manager Self Service Add - Catherine Purtell",
+          "task_num": "50992917",
+          "summary": "Manager Self Service Change - James Hamilton",
           "status": "Accepted",
           "priority": "3",
           "analyst": "Asta Palmer",
           "category": "",
-          "created": "05 Oct 2026",
+          "created": "06 Oct 2026",
           "days": 0,
           "team": "HRIS Sys Admin"
         },
         {
-          "task_num": "50992578",
-          "summary": "Manager Self Service Add - Jan Rosenow",
+          "task_num": "50992918",
+          "summary": "Manager Self Service Change - Joanne Drury",
           "status": "Accepted",
           "priority": "3",
           "analyst": "Asta Palmer",
           "category": "",
-          "created": "05 Oct 2026",
+          "created": "06 Oct 2026",
           "days": 0,
           "team": "HRIS Sys Admin"
         },
         {
-          "task_num": "50992580",
-          "summary": "Manager Self Service Change - Donal Brown",
+          "task_num": "50992919",
+          "summary": "Manager Self Service Change - Jenna Boyce",
           "status": "Accepted",
           "priority": "3",
           "analyst": "Asta Palmer",
           "category": "",
-          "created": "05 Oct 2026",
+          "created": "06 Oct 2026",
+          "days": 0,
+          "team": "HRIS Sys Admin"
+        },
+        {
+          "task_num": "50992920",
+          "summary": "Manager Self Service Change - Jenna Boyce",
+          "status": "Accepted",
+          "priority": "3",
+          "analyst": "Asta Palmer",
+          "category": "",
+          "created": "06 Oct 2026",
+          "days": 0,
+          "team": "HRIS Sys Admin"
+        },
+        {
+          "task_num": "50992921",
+          "summary": "Manager Self Service Change - Joanne Drury",
+          "status": "Accepted",
+          "priority": "3",
+          "analyst": "Asta Palmer",
+          "category": "",
+          "created": "06 Oct 2026",
+          "days": 0,
+          "team": "HRIS Sys Admin"
+        },
+        {
+          "task_num": "50992922",
+          "summary": "Manager Self Service Change - James Hamilton",
+          "status": "Accepted",
+          "priority": "3",
+          "analyst": "Asta Palmer",
+          "category": "",
+          "created": "06 Oct 2026",
+          "days": 0,
+          "team": "HRIS Sys Admin"
+        },
+        {
+          "task_num": "50992928",
+          "summary": "Add Shift Type - Alice Leyman",
+          "status": "Accepted",
+          "priority": "3",
+          "analyst": "Asta Palmer",
+          "category": "",
+          "created": "06 Oct 2026",
+          "days": 0,
+          "team": "HRIS Sys Admin"
+        },
+        {
+          "task_num": "50992965",
+          "summary": "Add Shift Type - Keely Fathers",
+          "status": "Accepted",
+          "priority": "3",
+          "analyst": "Asta Palmer",
+          "category": "",
+          "created": "06 Oct 2026",
+          "days": 0,
+          "team": "HRIS Sys Admin"
+        },
+        {
+          "task_num": "50992969",
+          "summary": "Add Shift Type - Keely Fathers",
+          "status": "Accepted",
+          "priority": "3",
+          "analyst": "Asta Palmer",
+          "category": "",
+          "created": "06 Oct 2026",
+          "days": 0,
+          "team": "HRIS Sys Admin"
+        },
+        {
+          "task_num": "50992994",
+          "summary": "Rename Work Group - Michelle Robb",
+          "status": "Accepted",
+          "priority": "3",
+          "analyst": "Asta Palmer",
+          "category": "",
+          "created": "06 Oct 2026",
+          "days": 0,
+          "team": "HRIS Sys Admin"
+        },
+        {
+          "task_num": "50993004",
+          "summary": "Add Shift Type - Rosemary Musesengwa",
+          "status": "Accepted",
+          "priority": "3",
+          "analyst": "Asta Palmer",
+          "category": "",
+          "created": "06 Oct 2026",
+          "days": 0,
+          "team": "HRIS Sys Admin"
+        },
+        {
+          "task_num": "50993036",
+          "summary": "Add Shift Type - Louise Badham",
+          "status": "Accepted",
+          "priority": "3",
+          "analyst": "Asta Palmer",
+          "category": "",
+          "created": "06 Oct 2026",
+          "days": 0,
+          "team": "HRIS Sys Admin"
+        },
+        {
+          "task_num": "50993042",
+          "summary": "Manager Self Service Add - Tom Wynn",
+          "status": "Accepted",
+          "priority": "3",
+          "analyst": "Asta Palmer",
+          "category": "",
+          "created": "06 Oct 2026",
+          "days": 0,
+          "team": "HRIS Sys Admin"
+        },
+        {
+          "task_num": "50993044",
+          "summary": "Manager Self Service Add - Rachel Murray",
+          "status": "Accepted",
+          "priority": "3",
+          "analyst": "Asta Palmer",
+          "category": "",
+          "created": "06 Oct 2026",
+          "days": 0,
+          "team": "HRIS Sys Admin"
+        },
+        {
+          "task_num": "50993047",
+          "summary": "Create Work Group - Jessy Graham",
+          "status": "Accepted",
+          "priority": "3",
+          "analyst": "Asta Palmer",
+          "category": "",
+          "created": "06 Oct 2026",
+          "days": 0,
+          "team": "HRIS Sys Admin"
+        },
+        {
+          "task_num": "50993050",
+          "summary": "Create Work Group - Clive Brown",
+          "status": "Accepted",
+          "priority": "3",
+          "analyst": "Asta Palmer",
+          "category": "",
+          "created": "06 Oct 2026",
+          "days": 0,
+          "team": "HRIS Sys Admin"
+        },
+        {
+          "task_num": "50993060",
+          "summary": "Add Shift Type - Trista Cheung",
+          "status": "Accepted",
+          "priority": "3",
+          "analyst": "Asta Palmer",
+          "category": "",
+          "created": "06 Oct 2026",
           "days": 0,
           "team": "HRIS Sys Admin"
         }
@@ -211,7 +321,7 @@
     },
     {
       "name": "Michael O'Sullivan",
-      "ticket_count": 7,
+      "ticket_count": 9,
       "tickets": [
         {
           "task_num": "50975098",
@@ -221,7 +331,7 @@
           "analyst": "Michael O'Sullivan",
           "category": "",
           "created": "05 Aug 2026",
-          "days": 61,
+          "days": 62,
           "team": "HRIS Analysis"
         },
         {
@@ -232,7 +342,7 @@
           "analyst": "Michael O'Sullivan",
           "category": "",
           "created": "05 Aug 2026",
-          "days": 61,
+          "days": 62,
           "team": "HRIS Analysis"
         },
         {
@@ -243,7 +353,7 @@
           "analyst": "Michael O'Sullivan",
           "category": "HR Reporting",
           "created": "10 Sep 2026",
-          "days": 25,
+          "days": 26,
           "team": "HRIS Analysis"
         },
         {
@@ -254,7 +364,7 @@
           "analyst": "Michael O'Sullivan",
           "category": "People Management",
           "created": "15 Sep 2026",
-          "days": 20,
+          "days": 21,
           "team": "HRIS Analysis"
         },
         {
@@ -265,7 +375,7 @@
           "analyst": "Michael O'Sullivan",
           "category": "Payroll",
           "created": "21 Sep 2026",
-          "days": 14,
+          "days": 15,
           "team": "HRIS Analysis"
         },
         {
@@ -276,18 +386,40 @@
           "analyst": "Michael O'Sullivan",
           "category": "Time and Attendance",
           "created": "30 Sep 2026",
-          "days": 5,
+          "days": 6,
           "team": "HRIS Analysis"
         },
         {
-          "task_num": "50992005",
-          "summary": "YOSHIAKI NAKAMURA (2415601)  broken record",
+          "task_num": "50992461",
+          "summary": "New TUPE Balance for the AL-Robb (TUPE) work group",
           "status": "Accepted",
           "priority": "5",
           "analyst": "Michael O'Sullivan",
-          "category": "People Management",
-          "created": "02 Oct 2026",
-          "days": 3,
+          "category": "Time and Attendance",
+          "created": "05 Oct 2026",
+          "days": 1,
+          "team": "HRIS Analysis"
+        },
+        {
+          "task_num": "50992855",
+          "summary": "AG DA Ref:  215476261560017 - PAYRUN failed - PG20",
+          "status": "Accepted",
+          "priority": "3",
+          "analyst": "Michael O'Sullivan",
+          "category": "Payroll",
+          "created": "06 Oct 2026",
+          "days": 0,
+          "team": "HRIS Analysis"
+        },
+        {
+          "task_num": "50993284",
+          "summary": "Sickness absence appearing in TIMDEP02",
+          "status": "Accepted",
+          "priority": "5",
+          "analyst": "Michael O'Sullivan",
+          "category": "HR Reporting",
+          "created": "06 Oct 2026",
+          "days": 0,
           "team": "HRIS Analysis"
         }
       ]
@@ -304,14 +436,14 @@
           "analyst": "Simon Burford",
           "category": "Recruitment",
           "created": "23 Apr 2026",
-          "days": 165,
+          "days": 166,
           "team": "HRIS Analysis"
         }
       ]
     },
     {
       "name": "Kevin Lelitte",
-      "ticket_count": 5,
+      "ticket_count": 4,
       "tickets": [
         {
           "task_num": "50985406",
@@ -321,18 +453,7 @@
           "analyst": "Kevin Lelitte",
           "category": "Recruitment",
           "created": "14 Sep 2026",
-          "days": 21,
-          "team": "HRIS Analysis"
-        },
-        {
-          "task_num": "50987608",
-          "summary": "FOI/202609/1014 - Recruitment records 2021-2023",
-          "status": "Waiting",
-          "priority": "5",
-          "analyst": "Kevin Lelitte",
-          "category": "Data Protection Request",
-          "created": "21 Sep 2026",
-          "days": 14,
+          "days": 22,
           "team": "HRIS Analysis"
         },
         {
@@ -343,29 +464,29 @@
           "analyst": "Kevin Lelitte",
           "category": "Time and Attendance",
           "created": "23 Sep 2026",
-          "days": 12,
-          "team": "HRIS Analysis"
-        },
-        {
-          "task_num": "50991092",
-          "summary": "Name change to Cross-RDM Professional Services",
-          "status": "Assigned",
-          "priority": "5",
-          "analyst": "Kevin Lelitte",
-          "category": "People Management",
-          "created": "30 Sep 2026",
-          "days": 5,
+          "days": 13,
           "team": "HRIS Analysis"
         },
         {
           "task_num": "50992077",
           "summary": "Report PeopleXD changes to Card Office",
-          "status": "Accepted",
+          "status": "Waiting",
           "priority": "5",
           "analyst": "Kevin Lelitte",
           "category": "Interfaces",
           "created": "02 Oct 2026",
-          "days": 3,
+          "days": 4,
+          "team": "HRIS Analysis"
+        },
+        {
+          "task_num": "50992997",
+          "summary": "Request to update Holiday Schedule for five English Work Groups",
+          "status": "Accepted",
+          "priority": "5",
+          "analyst": "Kevin Lelitte",
+          "category": "Time and Attendance",
+          "created": "06 Oct 2026",
+          "days": 0,
           "team": "HRIS Analysis"
         }
       ]
@@ -380,7 +501,7 @@
       "analyst": "",
       "category": "IRIS - Health and Safety Incident Reporting and Investigatio",
       "created": "21 Sep 2026",
-      "days": 14,
+      "days": 15,
       "team": "Health and Safety 2nd Line"
     },
     {
@@ -391,7 +512,7 @@
       "analyst": "",
       "category": "IRIS - Health and Safety Incident Reporting and Investigatio",
       "created": "29 Sep 2026",
-      "days": 6,
+      "days": 7,
       "team": "Health and Safety 2nd Line"
     },
     {
@@ -402,7 +523,7 @@
       "analyst": "",
       "category": "Cority - Occupational Health Management Service",
       "created": "01 Oct 2026",
-      "days": 4,
+      "days": 5,
       "team": "Health and Safety 2nd Line"
     },
     {
@@ -413,39 +534,28 @@
       "analyst": "",
       "category": "IRIS - Health and Safety Incident Reporting and Investigatio",
       "created": "02 Oct 2026",
-      "days": 3,
+      "days": 4,
       "team": "Health and Safety 2nd Line"
     },
     {
-      "task_num": "50992461",
-      "summary": "New TUPE Balance for the AL-Robb (TUPE) work group",
+      "task_num": "50993319",
+      "summary": "Cority Request",
+      "status": "Logged",
+      "priority": "5",
+      "analyst": "",
+      "category": "Cority - Occupational Health Management Service",
+      "created": "06 Oct 2026",
+      "days": 0,
+      "team": "Health and Safety 2nd Line"
+    },
+    {
+      "task_num": "50993150",
+      "summary": "Identify who has deleted sickness absence for Benjamin Green (2410697)",
       "status": "Logged",
       "priority": "5",
       "analyst": "",
       "category": "Time and Attendance",
-      "created": "05 Oct 2026",
-      "days": 0,
-      "team": "HRIS Analysis"
-    },
-    {
-      "task_num": "50992579",
-      "summary": "Best way to record temporary change in working pattern",
-      "status": "Logged",
-      "priority": "5",
-      "analyst": "",
-      "category": "Time and Attendance",
-      "created": "05 Oct 2026",
-      "days": 0,
-      "team": "HRIS Analysis"
-    },
-    {
-      "task_num": "50992588",
-      "summary": "Approved annual leave not taken from balance",
-      "status": "Logged",
-      "priority": "5",
-      "analyst": "",
-      "category": "",
-      "created": "05 Oct 2026",
+      "created": "06 Oct 2026",
       "days": 0,
       "team": "HRIS Analysis"
     },
@@ -457,29 +567,18 @@
       "analyst": "",
       "category": "SSO Account Management",
       "created": "25 Sep 2026",
-      "days": 10,
+      "days": 11,
       "team": "HRIS Service Desk"
     },
     {
       "task_num": "50989973",
       "summary": "Update records to trigger X5 interface",
       "status": "Logged",
-      "priority": "3",
+      "priority": "2",
       "analyst": "",
       "category": "X5 - System Administration",
       "created": "28 Sep 2026",
-      "days": 7,
-      "team": "HRIS Service Desk"
-    },
-    {
-      "task_num": "50992340",
-      "summary": "HR Reporting Email - Anna Schneiderova",
-      "status": "Logged",
-      "priority": "3",
-      "analyst": "",
-      "category": "",
-      "created": "05 Oct 2026",
-      "days": 0,
+      "days": 8,
       "team": "HRIS Service Desk"
     },
     {
@@ -490,160 +589,127 @@
       "analyst": "",
       "category": "HR Self-Service",
       "created": "05 Oct 2026",
+      "days": 1,
+      "team": "HRIS Service Desk"
+    },
+    {
+      "task_num": "50992942",
+      "summary": "HR Reporting Email - Joe Butcher",
+      "status": "Logged",
+      "priority": "5",
+      "analyst": "",
+      "category": "",
+      "created": "06 Oct 2026",
       "days": 0,
       "team": "HRIS Service Desk"
     },
     {
-      "task_num": "50992659",
-      "summary": "Rename Work Group - Clive Brown",
+      "task_num": "50993128",
+      "summary": "Manager Self Service Add - Susan Way",
       "status": "Logged",
       "priority": "3",
       "analyst": "",
       "category": "",
-      "created": "05 Oct 2026",
+      "created": "06 Oct 2026",
       "days": 0,
       "team": "HRIS Sys Admin"
     },
     {
-      "task_num": "50992661",
-      "summary": "Rename Work Group - Clive Brown",
+      "task_num": "50993141",
+      "summary": "Add Shift Type - Keely Fathers",
       "status": "Logged",
       "priority": "3",
       "analyst": "",
       "category": "",
-      "created": "05 Oct 2026",
+      "created": "06 Oct 2026",
       "days": 0,
       "team": "HRIS Sys Admin"
     },
     {
-      "task_num": "50992663",
-      "summary": "Rename Work Group - Clive Brown",
+      "task_num": "50993193",
+      "summary": "Manager Self Service Add - Branwen Hide",
       "status": "Logged",
       "priority": "3",
       "analyst": "",
       "category": "",
-      "created": "05 Oct 2026",
+      "created": "06 Oct 2026",
       "days": 0,
       "team": "HRIS Sys Admin"
     },
     {
-      "task_num": "50992666",
-      "summary": "Delete Work Group - Clive Brown",
+      "task_num": "50993212",
+      "summary": "Add Shift Type - Laura Jones",
       "status": "Logged",
       "priority": "3",
       "analyst": "",
       "category": "",
-      "created": "05 Oct 2026",
+      "created": "06 Oct 2026",
       "days": 0,
       "team": "HRIS Sys Admin"
     },
     {
-      "task_num": "50992667",
-      "summary": "HR User Change Access - Sophie Hill-White",
-      "status": "Logged",
-      "priority": "5",
-      "analyst": "",
-      "category": "",
-      "created": "05 Oct 2026",
-      "days": 0,
-      "team": "HRIS Sys Admin"
-    },
-    {
-      "task_num": "50992668",
-      "summary": "Add Shift Type - Lois Parle",
+      "task_num": "50993227",
+      "summary": "Add Shift Type - Adrita Mitra",
       "status": "Logged",
       "priority": "3",
       "analyst": "",
       "category": "",
-      "created": "05 Oct 2026",
+      "created": "06 Oct 2026",
       "days": 0,
       "team": "HRIS Sys Admin"
     },
     {
-      "task_num": "50992669",
-      "summary": "Delete Work Group - Clive Brown",
+      "task_num": "50993239",
+      "summary": "Add Shift Type - Faye Mellis",
       "status": "Logged",
       "priority": "3",
       "analyst": "",
       "category": "",
-      "created": "05 Oct 2026",
+      "created": "06 Oct 2026",
       "days": 0,
       "team": "HRIS Sys Admin"
     },
     {
-      "task_num": "50992670",
-      "summary": "Rename Work Group - Clive Brown",
+      "task_num": "50993251",
+      "summary": "Add Shift Type - Isabel Riddy",
       "status": "Logged",
       "priority": "3",
       "analyst": "",
       "category": "",
-      "created": "05 Oct 2026",
+      "created": "06 Oct 2026",
       "days": 0,
       "team": "HRIS Sys Admin"
     },
     {
-      "task_num": "50992674",
-      "summary": "HR User Access New - Joe Butcher",
-      "status": "Logged",
-      "priority": "5",
-      "analyst": "",
-      "category": "",
-      "created": "05 Oct 2026",
-      "days": 0,
-      "team": "HRIS Sys Admin"
-    },
-    {
-      "task_num": "50992695",
-      "summary": "GURPREET KAUR (2402187) Active appointment/dormant record",
-      "status": "Logged",
-      "priority": "5",
-      "analyst": "",
-      "category": "People Management",
-      "created": "05 Oct 2026",
-      "days": 0,
-      "team": "HRIS Sys Admin"
-    },
-    {
-      "task_num": "50992749",
-      "summary": "ESS set up Maya Hearsum (2421541) univ6009",
-      "status": "Logged",
-      "priority": "5",
-      "analyst": "",
-      "category": "HR Self-Service",
-      "created": "05 Oct 2026",
-      "days": 0,
-      "team": "HRIS Sys Admin"
-    },
-    {
-      "task_num": "50992781",
-      "summary": "Manager Self Service Add - Jennifer Opare-Kumi",
+      "task_num": "50993312",
+      "summary": "Manager Self Service Add - Alyssa Chase-Vilchez",
       "status": "Logged",
       "priority": "3",
       "analyst": "",
       "category": "",
-      "created": "05 Oct 2026",
+      "created": "06 Oct 2026",
       "days": 0,
       "team": "HRIS Sys Admin"
     },
     {
-      "task_num": "50992785",
-      "summary": "Create Work Group - Martin Ray",
+      "task_num": "50993360",
+      "summary": "Add Shift Type - Jinseo Kim",
       "status": "Logged",
       "priority": "3",
       "analyst": "",
       "category": "",
-      "created": "05 Oct 2026",
+      "created": "06 Oct 2026",
       "days": 0,
       "team": "HRIS Sys Admin"
     },
     {
-      "task_num": "50992788",
-      "summary": "Create Work Group - Martin Ray",
+      "task_num": "50993401",
+      "summary": "Delete Work Group - Ruth Hilland",
       "status": "Logged",
       "priority": "3",
       "analyst": "",
       "category": "",
-      "created": "05 Oct 2026",
+      "created": "06 Oct 2026",
       "days": 0,
       "team": "HRIS Sys Admin"
     }
