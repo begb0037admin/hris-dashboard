@@ -1,9 +1,9 @@
 {
-  "timestamp": "2026-10-09T08:48:10",
-  "timestamp_display": "Friday 09 October 2026 at 08:48",
-  "status": "failure",
-  "step": "fetch_failed",
-  "detail": "no matching OSM report email found for today yet",
+  "timestamp": "2026-10-09T09:17:15",
+  "timestamp_display": "Friday 09 October 2026 at 09:17",
+  "status": "success",
+  "step": "dashboard_update_ok",
+  "detail": "connector-based fetch (fetch_osm_report_connector.py)",
   "trigger": "automated",
   "attempt": 1,
   "max_attempts": 1
